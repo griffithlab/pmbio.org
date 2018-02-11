@@ -375,10 +375,10 @@ table tr th, table tr td
     margin-bottom: 2rem;
     padding: 1rem;
     white-space: pre;
-    #white-space: pre-wrap; #Turn off to prevent wrapping in code blocks
+    #white-space: pre-wrap;
     word-break: break-all;
     word-wrap: break-word;
-    overflow: auto; #Added to activate horizontal scroll bar when long (unwrapped) code lines occur
+    overflow: auto;
   }
 
   code {
