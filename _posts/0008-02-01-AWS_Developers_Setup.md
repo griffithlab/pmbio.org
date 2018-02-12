@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: AWS Developers Setup
 categories:
-    - Module 7
+    - Module 8
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-01-01
+date: 0008-02-01
 ---
 
 This module is primarily for the course developers to document how the AWS AMI and datasets were developed for the course.
