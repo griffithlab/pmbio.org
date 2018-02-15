@@ -66,8 +66,8 @@ The plan is to provide students with raw fastq files as starting point. Download
 
 ```bash
 cd ~/data
-mkdir bams
-cd bams
+mkdir unaligned_bams
+cd unaligned_bams
 wget https://xfer.genome.wustl.edu/gxfer1/project/gms/testdata/bams/hcc1395/gerald_D1VCPACXX_6.bam
 wget https://xfer.genome.wustl.edu/gxfer1/project/gms/testdata/bams/hcc1395/gerald_D1VCPACXX_6.bam
 wget https://xfer.genome.wustl.edu/gxfer1/project/gms/testdata/bams/hcc1395/gerald_D1VCPACXX_7.bam
@@ -84,13 +84,14 @@ wget https://xfer.genome.wustl.edu/gxfer1/project/gms/testdata/bams/hcc1395/gera
 For newer RNAseq data (See [https://confluence.gsc.wustl.edu/pages/viewpage.action?spaceKey=CI&title=Cancer+Informatics+Test+Data](https://confluence.gsc.wustl.edu/pages/viewpage.action?spaceKey=CI&title=Cancer+Informatics+Test+Data)) download from inside MGI filesystem.
 
 ```bash
-scp -i ~/PMB.pem /gscmnt/gc2764/cad/HCC1395/rna_seq/GRCh38/alignments/H_NJ-HCC1395-HCC1395_RNA.bam ubuntu@18.217.114.211:data/bams/
-scp -i ~/PMB.pem /gscmnt/gc2764/cad/HCC1395/rna_seq/GRCh38/alignments/H_NJ-HCC1395-HCC1395_BL_RNA.bam ubuntu@18.217.114.211:data/bams/
+scp -i ~/PMB.pem /gscmnt/gc2764/cad/HCC1395/rna_seq/GRCh38/alignments/H_NJ-HCC1395-HCC1395_RNA.bam ubuntu@18.217.114.211:data/unaligned_bams/
+scp -i ~/PMB.pem /gscmnt/gc2764/cad/HCC1395/rna_seq/GRCh38/alignments/H_NJ-HCC1395-HCC1395_BL_RNA.bam ubuntu@18.217.114.211:data/unaligned_bams/
 ```
 
 Rename bam files for easier reference.
 
 ```bash
+cd /home/ubuntu/data/unaligned_bams
 mv gerald_D1VCPACXX_6.bam WGS_Norm_Lane1_gerald_D1VCPACXX_6.bam
 mv gerald_D1VCPACXX_7.bam WGS_Norm_Lane2_gerald_D1VCPACXX_7.bam
 mv gerald_D1VCPACXX_8.bam WGS_Norm_Lane3_gerald_D1VCPACXX_8.bam
@@ -105,6 +106,15 @@ mv H_NJ-HCC1395-HCC1395_BL_RNA.bam RNAseq_Norm_H_NJ-HCC1395-HCC1395_BL_RNA.bam
 mv H_NJ-HCC1395-HCC1395_RNA.bam RNAseq_Tumor_H_NJ-HCC1395-HCC1395_RNA.bam
 ```
 
+Save read group information from each bam file (already separated by read group) for later use
+
+```bash
+cd /home/ubuntu/data/unaligned_bams
+ls -1 | perl -ne 'chomp; print "samtools view -H $_ | grep -H --label=$_ \@RG\n"' | bash > readgroup_info.txt
+cat readgroup_info.txt | perl -ne 'my ($bam, $id, $pl, $pu, $lb, $sm); if ($_=~/(\S+\.bam)\:/){$bam=$1} if ($_=~/(ID\:\d+)/){$id=$1} if ($_=~/(PL\:\w+)/){$pl=$1} if ($_=~/(PU\:\S+)/){$pu=$1} if($_=~/LB\:\"(.+)\"/){$lb=$1} if ($_=~/(SM\:\S+)/){$sm=$1} print "$bam\t$id\t$pl\t$pu\t$lb\t$sm\n";' > readgroup_info.clean.txt
+```
+
+
 Revert bams before conversion to fastq (best practice with MGI bams)
 - Run times: ~41-318min
 - Memory: 2.4-6.3GB
@@ -114,18 +124,18 @@ cd ~/data
 mkdir reverted_bams
 cd reverted_bams
 mkdir Exome_Norm Exome_Tumor WGS_Norm WGS_Tumor RNAseq_Norm RNAseq_Tumor
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/Exome_Norm_gerald_C1TD1ACXX_7_CGATGT.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/Exome_Norm/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/Exome_Tumor_gerald_C1TD1ACXX_7_ATCACG.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/Exome_Tumor/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Norm_Lane1_gerald_D1VCPACXX_6.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Norm/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Norm_Lane2_gerald_D1VCPACXX_7.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Norm/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Norm_Lane3_gerald_D1VCPACXX_8.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Norm/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Tumor_Lane1_gerald_D1VCPACXX_1.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Tumor_Lane2_gerald_D1VCPACXX_2.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Tumor_Lane3_gerald_D1VCPACXX_3.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Tumor_Lane4_gerald_D1VCPACXX_4.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/WGS_Tumor_Lane5_gerald_D1VCPACXX_5.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/RNAseq_Norm_H_NJ-HCC1395-HCC1395_BL_RNA.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/RNAseq_Norm/
-java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/bams/RNAseq_Tumor_H_NJ-HCC1395-HCC1395_RNA.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/RNAseq_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/Exome_Norm_gerald_C1TD1ACXX_7_CGATGT.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/Exome_Norm/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/Exome_Tumor_gerald_C1TD1ACXX_7_ATCACG.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/Exome_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Norm_Lane1_gerald_D1VCPACXX_6.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Norm/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Norm_Lane2_gerald_D1VCPACXX_7.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Norm/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Norm_Lane3_gerald_D1VCPACXX_8.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Norm/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Tumor_Lane1_gerald_D1VCPACXX_1.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Tumor_Lane2_gerald_D1VCPACXX_2.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Tumor_Lane3_gerald_D1VCPACXX_3.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Tumor_Lane4_gerald_D1VCPACXX_4.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/WGS_Tumor_Lane5_gerald_D1VCPACXX_5.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/WGS_Tumor/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/RNAseq_Norm_H_NJ-HCC1395-HCC1395_BL_RNA.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/RNAseq_Norm/
+java -Xmx16g -jar $PICARD RevertSam I=/home/ubuntu/data/unaligned_bams/RNAseq_Tumor_H_NJ-HCC1395-HCC1395_RNA.bam OUTPUT_BY_READGROUP=true O=/home/ubuntu/data/reverted_bams/RNAseq_Tumor/
 ```
 
 Convert bams to fastq files
