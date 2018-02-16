@@ -35,7 +35,7 @@ Notes:
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk
+sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2
 ```
 
 Format and mount an extra data volume. Create symlink from homedir for convenience. Create a tmp dir on the larger volume for tools (e.g., picard) that need more temp space than the default system temp dir.
@@ -57,6 +57,38 @@ Make ephemeral storage mounts persistent. See [http://docs.aws.amazon.com/AWSEC2
 ```bash
 echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /data ext4 defaults,nofail 0 2" | sudo tee /etc/fstab
 ```
+
+Set up apache web server for convenient access to files. First, edit config to allow files to be served from /data/.
+
+```bash
+sudo vim /etc/apache2/apache2.conf
+```
+
+Add the following content to apache2.conf
+```bash
+<Directory /data/>
+       Options Indexes FollowSymLinks
+       AllowOverride None
+       Require all granted
+</Directory>
+```
+
+Edit vhost file
+
+```bash
+sudo vim /etc/apache2/sites-available/000-default.conf
+```
+
+Change document root in 000-default.conf
+```bash
+DocumentRoot /data
+```
+
+Restart apache
+```bash
+sudo service apache2 restart
+```
+
 
 See [Installation](/module 1/0001/02/01/Software_Installation/) for software tools needed for next parts of this set up.
 
