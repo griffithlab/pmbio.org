@@ -82,7 +82,7 @@ logo_link: "http://www.griffithlab.org"
 description: "This resource is structured in a modular format. Users would benefit from familiarity with topics covered in previous modules however it is not a requirement unless stated otherwise." # Site description and default description, also used in jekyll-seo-tag
 url: "http://www.genviz.org/" # Site url, also used in jekyll-seo-tag
 baseurl: ""
-repo: "https://griffithlab/gen-viz-workshop/"
+repo: "https://github.com/griffithlab/gen-viz-workshop"
 email: "zskidmor@wustl.edu"
 avatarurl:  "/assets/DNA.jpg"# Uses avatars for favicons to get multple sites, eg Gravatar, Twitter, GitHub
 
@@ -118,7 +118,7 @@ social_links:
   #Twitter:
   #LinkedIn:
   #Google+:
-  GitHub: https://github.com/griffithlab
+  GitHub: https://github.com/griffithlab/gen-viz-workshop
   #link:
 
 sharing_links:
