@@ -375,9 +375,10 @@ table tr th, table tr td
     margin-bottom: 2rem;
     padding: 1rem;
     white-space: pre;
-    white-space: pre-wrap;
+    #white-space: pre-wrap;
     word-break: break-all;
     word-wrap: break-word;
+    overflow: auto;
   }
 
   code {

@@ -1,6 +1,6 @@
 ## Overview
 
-This is the github repo for the Precision Medicine [website](http://pmbio.org). The website uses the static site generator [jekyll](https://jekyllrb.com/) and is based on the [Alembic theme](https://github.com/daviddarnes/alembic). Development occurs on the master branch, the live site is located on the live branch.
+This is the github repo for the Precision Medicine Workshop [website](http://pmbio.org). The website uses the static site generator [jekyll](https://jekyllrb.com/) and is based on the [Alembic theme](https://github.com/daviddarnes/alembic). Development occurs on the dev branch, the live site is located on the master branch.
 
 ## Installation
 
@@ -38,4 +38,4 @@ In General all markdown files should have a `layout:` front matter tag. The exce
 
 ### License
 
-The code base for this website originates from the [alembic jekyll theme](https://github.com/daviddarnes/alembic) by David Darnes and is licensed under an [MIT license](https://github.com/griffithlab/gen-viz-workshop/blob/gh-pages/LICENSE). Course content, is licensed under [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) unless otherwise stated.
+The code base for this website originates from the [alembic jekyll theme](https://github.com/daviddarnes/alembic) by David Darnes and is licensed under an [MIT license](https://github.com/griffithlab/pmbio.org/blob/master/LICENSE). Course content, is licensed under [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) unless otherwise stated.
