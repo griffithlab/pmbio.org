@@ -34,7 +34,7 @@ WGS and Exome fastq data will be aligned with BWA MEM using the following option
 
 ### Run bwa mem using the above information
 
-Runtimes: Exome, 18 - 23min; WGS, 89-95min 
+Runtimes: Exome, 18 - 23min (32 cores); WGS, 89-95min (32 cores); WGS, 196-223min (16 cores) 
 
 ```bash
 cd ~/data
@@ -59,16 +59,34 @@ Runtimes: Exome, 13min;
 ```bash
 cd ~/data/alignment
 samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o Exome_Norm_2891351068.cram Exome_Norm_2891351068.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o Exome_Tumor_2891351066.cram Exome_Tumor_2891351066.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane1_2891323123.cram WGS_Norm_Lane1_2891323123.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane2_2891323124.cram WGS_Norm_Lane2_2891323124.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane3_2891323125.cram WGS_Norm_Lane3_2891323125.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane1_2891322951.cram WGS_Tumor_Lane1_2891322951.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane2_2891323174.cram WGS_Tumor_Lane2_2891323174.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane3_2891323175.cram WGS_Tumor_Lane3_2891323175.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane4_2891323150.cram WGS_Tumor_Lane4_2891323150.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane5_2891323147.cram WGS_Tumor_Lane5_2891323147.sam
 ```
 
-### Sort cram file
+### Merge cram files
+
+
+### Query name sort cram files
+
+
+### Mark duplicates
+
+
+### Position sort cram file
 
 ```bash
 cd ~/data/alignment
 samtools sort -o Exome_Norm_2891351068.sorted.cram Exome_Norm_2891351068.cram
 ```
 
-### Merge cram files for WGS data
+### Perform Base Quality Score Recalibration 
 
 
 ### Index cram file
@@ -77,8 +95,6 @@ samtools sort -o Exome_Norm_2891351068.sorted.cram Exome_Norm_2891351068.cram
 cd ~/data/alignment
 samtools index Exome_Norm_2891351068.sorted.cram
 ```
-
-### Mark duplicates
 
 
 
