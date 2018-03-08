@@ -40,16 +40,16 @@ Runtimes: Exome, 18 - 23min (32 cores); WGS, 89-95min (32 cores); WGS, 196-223mi
 cd ~/data
 mkdir alignment
 cd alignment
-bwa mem -t 32 -Y -R "@RG\tID:2891351068\tPL:ILLUMINA\tPU:C1TD1ACXX-CGATGT.7\tLB:exome_norm_lib1\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/Exome_Norm_2891351068.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/Exome_Norm/2891351068_1.fastq.gz /home/ubuntu/data/fastqs/Exome_Norm/2891351068_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891351066\tPL:ILLUMINA\tPU:C1TD1ACXX-ATCACG.7\tLB:exome_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/Exome_Tumor_2891351066.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/Exome_Tumor/2891351066_1.fastq.gz /home/ubuntu/data/fastqs/Exome_Tumor/2891351066_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323123\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane1_2891323123.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323123_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323123_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323124\tPL:ILLUMINA\tPU:D1VCPACXX.7\tLB:wgs_norm_lib2\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane2_2891323124.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323124_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323124_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323125\tPL:ILLUMINA\tPU:D1VCPACXX.8\tLB:wgs_norm_lib3\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane3_2891323125.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323125_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323125_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891322951\tPL:ILLUMINA\tPU:D1VCPACXX.1\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane1_2891322951.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891322951_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891322951_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323174\tPL:ILLUMINA\tPU:D1VCPACXX.2\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane2_2891323174.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323174_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323174_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323175\tPL:ILLUMINA\tPU:D1VCPACXX.3\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane3_2891323175.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323175_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323175_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323150\tPL:ILLUMINA\tPU:D1VCPACXX.4\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane4_2891323150.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323150_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323150_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891323147\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tumor_lib3\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane5_2891323147.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323147_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323147_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891351068\tPL:ILLUMINA\tPU:C1TD1ACXX-CGATGT.7\tLB:exome_norm_lib1\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/Exome_Norm.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/Exome_Norm/2891351068_1.fastq.gz /home/ubuntu/data/fastqs/Exome_Norm/2891351068_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891351066\tPL:ILLUMINA\tPU:C1TD1ACXX-ATCACG.7\tLB:exome_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/Exome_Tumor.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/Exome_Tumor/2891351066_1.fastq.gz /home/ubuntu/data/fastqs/Exome_Tumor/2891351066_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323123\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane1.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323123_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323123_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323124\tPL:ILLUMINA\tPU:D1VCPACXX.7\tLB:wgs_norm_lib2\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane2.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323124_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323124_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323125\tPL:ILLUMINA\tPU:D1VCPACXX.8\tLB:wgs_norm_lib3\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane3.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323125_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323125_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891322951\tPL:ILLUMINA\tPU:D1VCPACXX.1\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane1.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891322951_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891322951_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323174\tPL:ILLUMINA\tPU:D1VCPACXX.2\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane2.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323174_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323174_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323175\tPL:ILLUMINA\tPU:D1VCPACXX.3\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane3.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323175_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323175_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323150\tPL:ILLUMINA\tPU:D1VCPACXX.4\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane4.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323150_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323150_2.fastq.gz
+bwa mem -t 32 -Y -R "@RG\tID:2891323147\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tumor_lib3\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane5.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323147_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323147_2.fastq.gz
 ```
 
 ### Convert sam to cram format
@@ -58,23 +58,45 @@ Runtimes: Exome, 13min;
 
 ```bash
 cd ~/data/alignment
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o Exome_Norm_2891351068.cram Exome_Norm_2891351068.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o Exome_Tumor_2891351066.cram Exome_Tumor_2891351066.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane1_2891323123.cram WGS_Norm_Lane1_2891323123.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane2_2891323124.cram WGS_Norm_Lane2_2891323124.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane3_2891323125.cram WGS_Norm_Lane3_2891323125.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane1_2891322951.cram WGS_Tumor_Lane1_2891322951.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane2_2891323174.cram WGS_Tumor_Lane2_2891323174.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane3_2891323175.cram WGS_Tumor_Lane3_2891323175.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane4_2891323150.cram WGS_Tumor_Lane4_2891323150.sam
-samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane5_2891323147.cram WGS_Tumor_Lane5_2891323147.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o Exome_Norm.cram Exome_Norm.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o Exome_Tumor.cram Exome_Tumor.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane1.cram WGS_Norm_Lane1.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane2.cram WGS_Norm_Lane2.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Norm_Lane3.cram WGS_Norm_Lane3.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane1.cram WGS_Tumor_Lane1.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane2.cram WGS_Tumor_Lane2.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane3.cram WGS_Tumor_Lane3.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane4.cram WGS_Tumor_Lane4.sam
+samtools view -h -C -T /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -o WGS_Tumor_Lane5.cram WGS_Tumor_Lane5.sam
 ```
 
 ### Merge cram files
 
+Run times: WGS_Norm, 86m; WGS_Tumor, 
+
+```bash
+cd ~/data/alignment
+samtools merge -@ 4 WGS_Norm_merged.cram WGS_Norm_Lane1.cram WGS_Norm_Lane2.cram WGS_Norm_Lane3.cram
+samtools merge -@ 4 WGS_Tumor_merged.cram WGS_Tumor_Lane1.cram WGS_Tumor_Lane2.cram WGS_Tumor_Lane3.cram WGS_Tumor_Lane4.cram WGS_Tumor_Lane5.cram
+```
+
+### Clean up un-needed sam/cram files
+
+```bash
+cd ~/data/alignment
+rm /home/ubuntu/data/alignment/*.sam
+rm /home/ubuntu/data/alignment/WGS_*_Lane*.cram
+
+```
 
 ### Query name sort cram files
-
+```bash
+cd ~/data/alignment
+samtools sort -@ 8 -n -o Exome_Norm_namesorted.cram Exome_Norm.cram
+samtools sort -@ 8 -n -o Exome_Tumor_namesorted.cram Exome_Tumor.cram
+samtools sort -@ 24 -n -o WGS_Norm_merged_namesorted.cram WGS_Norm_merged.cram
+samtools sort -@ 24 -n -o WGS_Tumor_merged_namesorted.cram WGS_Tumor_merged.cram
+```
 
 ### Mark duplicates
 
