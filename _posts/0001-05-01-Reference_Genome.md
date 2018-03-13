@@ -29,3 +29,16 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_referen
 wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/README.20150309.GRCh38_full_analysis_set_plus_decoy_hla
 ```
 
+### Obtain Additional GATK resources needed
+
+```bash
+cd ~/data/reference/
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf /home/ubuntu/data/reference
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz /home/ubuntu/data/reference
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz /home/ubuntu/data/reference
+
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list /home/ubuntu/data/reference
+gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling_intervals/ /home/ubuntu/data/reference
+
+```
+
