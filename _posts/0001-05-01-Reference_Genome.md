@@ -34,6 +34,8 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_referen
 ```bash
 cd ~/data/reference/
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf /home/ubuntu/data/reference
+bgzip /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf
+
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz /home/ubuntu/data/reference
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz /home/ubuntu/data/reference
 

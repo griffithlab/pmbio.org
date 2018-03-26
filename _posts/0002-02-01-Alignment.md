@@ -92,7 +92,7 @@ rm /home/ubuntu/data/alignment/WGS_*_Lane*.bam
 
 ### Query name sort bam files
 
-Runtimes: Exome, 57min; WGS
+Runtimes: Exome, 57min; WGS, 311-563min
 
 ```bash
 cd ~/data/alignment
@@ -105,48 +105,53 @@ java -Xmx64g -jar $PICARD SortSam I=WGS_Tumor_merged.bam O=WGS_Tumor_merged_name
 
 ### Mark duplicates
 
+Runtimes: Exome, XXX; WGS 386min, 
+
 ```bash
 cd ~/data/alignment
 java -Xmx64g -jar $PICARD MarkDuplicates I=Exome_Norm_namesorted.bam O=Exome_Norm_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=Exome_Norm_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 java -Xmx64g -jar $PICARD MarkDuplicates I=Exome_Tumor_namesorted.bam O=Exome_Tumor_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=Exome_Tumor_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
-
-java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Norm_merged_namesorted.bam O=WGS_Norm_merged_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=Exome_Norm_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
-java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Tumor_merged_namesorted.bam O=WGS_Tumor_merged_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=Exome_Norm_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Norm_merged_namesorted.bam O=WGS_Norm_merged_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=WGS_Norm_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Tumor_merged_namesorted.bam O=WGS_Tumor_merged_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=WGS_Tumor_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 ```
-
 
 ### Position sort bam file
 
+Runtimes: Exome, 43-56min; WGS XXX
+
 ```bash
 cd ~/data/alignment
-samtools sort -o Exome_Norm_sorted_mrkdup.bam Exome_Norm_namesorted_mrkdup.bam
-samtools sort -o Exome_Tumor_sorted_mrkdup.bam Exome_Tumor_namesorted_mrkdup.bam
-samtools sort -o WGS_Norm_merged_sorted_mrkdup.bam WGS_Norm_merged_namesorted_mrkdup.bam
-samtools sort -o WGS_Tumor_merged_sorted_mrkdup.bam WGS_Tumor_merged_namesorted_mrkdup.bam
+java -Xmx64g -jar $PICARD SortSam I=Exome_Norm_namesorted_mrkdup.bam O=Exome_Norm_sorted_mrkdup.bam SO=coordinate
+java -Xmx64g -jar $PICARD SortSam I=Exome_Tumor_namesorted_mrkdup.bam O=Exome_Tumor_sorted_mrkdup.bam SO=coordinate
+java -Xmx64g -jar $PICARD SortSam I=WGS_Norm_merged_namesorted_mrkdup.bam O=WGS_Norm_merged_sorted_mrkdup.bam SO=coordinate
+java -Xmx64g -jar $PICARD SortSam I=WGS_Tumor_merged_namesorted_mrkdup.bam O=WGS_Tumor_merged_sorted_mrkdup.bam SO=coordinate
+```
+
+### Create bam index for use with GATK, IGV, etc
+```bash
+cd ~/data/alignment
+java -Xmx64g -jar $PICARD BuildBamIndex I=Exome_Norm_sorted_mrkdup.bam
+java -Xmx64g -jar $PICARD BuildBamIndex I=Exome_Tumor_sorted_mrkdup.bam
+java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Norm_merged_sorted_mrkdup.bam
+java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Tumor_merged_sorted_mrkdup.bam
 ```
 
 ### Perform Base Quality Score Recalibration 
 
-```bash
-java -Xmx64g -jar $GATK -T BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup.bam -o /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.table -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz -knownSites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve_qscores_less_than 6 --disable_auto_index_creation_and_locking_when_reading_rods --disable_bam_indexing -dfrac .1 -nct 4 -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 
+Upgraded to GATK4. This gets around license issues I believe.
 
-java -Xmx64g -jar $GATK -T BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup.bam -o /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.table -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz -knownSites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve_qscores_less_than 6 --disable_auto_index_creation_and_locking_when_reading_rods --disable_bam_indexing -dfrac .1 -nct 4 -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
+Questions about GATK step.
+Why not specify chrX and chrY, only chr1-22 with -L options?
 
-java -Xmx64g -jar $GATK -T BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup.bam -o /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.table -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz -knownSites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve_qscores_less_than 6 --disable_auto_index_creation_and_locking_when_reading_rods --disable_bam_indexing -dfrac .1 -nct 4 -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
-
-java -Xmx64g -jar $GATK -T BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup.bam -o /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.table -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf -knownSites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz -knownSites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve_qscores_less_than 6 --disable_auto_index_creation_and_locking_when_reading_rods --disable_bam_indexing -dfrac .1 -nct 4 -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
-
-```
-
-
-### Index bam file
 
 ```bash
-cd ~/data/alignment
-samtools index Exome_Norm_sorted_mrkdup.bam
-samtools index Exome_Tumor_sorted_mrkdup.bam
-samtools index WGS_Norm_merged_sorted_mrkdup.bam
-samtools index WGS_Tumor_merged_sorted_mrkdup.bam
+gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 
+
+gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
+
+gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
+
+gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
 ```
 
 
