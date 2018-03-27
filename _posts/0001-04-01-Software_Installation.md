@@ -50,27 +50,13 @@ make
 ./bwa
 ```
 
-### Install GATK 3.8
-Manually download GATK (https://www.broadinstitute.org/gatk/download/auth?package=GATK) after accepting the license. Then copy to working instance (e.g., with scp). From your local computer:
-
-```bash
-scp -i PMB.pem ~/Downloads/GenomeAnalysisTK-3.8-0.tar.bz2 ubuntu@[YOUR_AWS_IP]:bin/
-```
-
-Unzip and test
-
-```bash
-tar --bzip2 -xvf GenomeAnalysisTK-3.8-0.tar.bz2
-export GATK='/home/ubuntu/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar'
-java -jar $GATK -h
-```
-
 ### Install GATK 4
 
 ```bash
 cd ~/bin
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
+cd gatk-4.0.2.1/
 ./gatk
 ```
 

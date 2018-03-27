@@ -35,12 +35,14 @@ Notes:
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix
+sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip 
+sudo pip install gsutil
 ```
 
 Format and mount an extra data volume. Create symlink from homedir for convenience. Create a tmp dir on the larger volume for tools (e.g., picard) that need more temp space than the default system temp dir.
 
 ```bash
+lsblk
 sudo mkfs -t ext4 /dev/xvdb
 sudo mkdir /data
 sudo mount /dev/xvdb /data
