@@ -160,6 +160,8 @@ Apply BQSR
 
 Runtimes: Exome 39-48min; WGS 264-508min
 
+Question: Why do we only use -L option for calculating BQSR table, not for applying BQSR?
+
 ```bash
 gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam --bqsr-recal-file /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
 gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.bam --bqsr-recal-file /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
