@@ -60,14 +60,27 @@ cd gatk-4.0.2.1/
 ./gatk
 ```
 
-
 ### Install gsutil - should these apt-get commands be moved to basic set up of instance?
+
 ```bash
 sudo apt-get install gcc python-dev python-setuptools libffi-dev
 sudo apt-get install python-pip
 sudo pip install gsutil
-
 ```
+
+### Install VEP
+
+During the installation make sure to accept (y) when asked whether you'd like to install cache files, fastas, and plugins.
+Install all homo sapiens build 38 cache files (For VEP v91, this corresponded to options 172, 174 and 176), the homo sapiens fasta (option XX), and the Downstream plugin (option XX).
+Note, the cache, fasta and plugin files can be quite large, therefore the default (root volume) location may be insufficient. Specify another path with the CACHEDIR option.
+
+```bash
+cd ~/bin
+git clone https://github.com/Ensembl/ensembl-vep.git
+cd ensembl-vep
+perl INSTALL.pl --CACHEDIR /home/ubuntu/data/vep_cache
+```
+
 
 ### Environment setup
 

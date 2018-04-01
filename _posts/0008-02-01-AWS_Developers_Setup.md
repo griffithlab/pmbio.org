@@ -35,8 +35,22 @@ Notes:
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip 
+sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus 
 sudo pip install gsutil
+```
+
+Install mysql-server - set a root password (e.g., pmbiotest)
+
+```bash
+sudo apt-get install mysql-server libmysqlclient-dev
+```
+
+Install perl dependencies (e.g., for VEP)
+
+```bash
+sudo cpanm DBI
+sudo cpanm DBD::mysql
+sudo cpanm Bio::Root::Version
 ```
 
 Format and mount an extra data volume. Create symlink from homedir for convenience. Create a tmp dir on the larger volume for tools (e.g., picard) that need more temp space than the default system temp dir.
