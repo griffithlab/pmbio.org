@@ -71,16 +71,39 @@ sudo pip install gsutil
 ### Install VEP
 
 During the installation make sure to accept (y) when asked whether you'd like to install cache files, fastas, and plugins.
-Install all homo sapiens build 38 cache files (For VEP v91, this corresponded to options 172, 174 and 176), the homo sapiens fasta (option XX), and the Downstream plugin (option XX).
+Install all homo sapiens build 38 cache files (For VEP v91, this corresponded to options 172, 174 and 176), the homo sapiens fasta (option 40), and the Downstream plugin (option 29) or all plugins (option 0).
+If you choose to download all plugins, some will not work without installation (dbNSFP, Carol, Condel, PolyPhen_SIFT, LoF, dbscSNV, GeneSplicer, MaxEntScan) or downloading data (dbNSFP, CADD, FATHMM_MKL, Gwava, LoF, LoFtool, ExACpLI, MPC, MTR, dbscSNV, AncestralAllele, ExAC)
+
 Note, the cache, fasta and plugin files can be quite large, therefore the default (root volume) location may be insufficient. Specify another path with the CACHEDIR option.
 
+Note, VEP natively supports gnomad allele frequencies but it is unclear if this works for all variants or only for dbSNP subset of variants.
+See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_other.html#assembly
+
+To access the full gnomAD data set, it is possible to use VEP's custom annotation feature to retrieve the frequency data directly from the gnomAD VCF files. See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_example.html#gnomad
+
 ```bash
+cd ~/data
+mkdir vep_cache
 cd ~/bin
 git clone https://github.com/Ensembl/ensembl-vep.git
 cd ensembl-vep
 perl INSTALL.pl --CACHEDIR /home/ubuntu/data/vep_cache
 ```
 
+Download additional data files need for various VEP plugins - CADD, gnomAD, 
+
+```bash
+cd ~/data/vep_cache
+mkdir data
+cd ~/data/vep_cache/data
+wget http://krishna.gs.washington.edu/download/CADD/v1.3/whole_genome_SNVs.tsv.gz
+wget http://krishna.gs.washington.edu/download/CADD/v1.3/whole_genome_SNVs.tsv.gz.tbi
+wget http://krishna.gs.washington.edu/download/CADD/v1.3/InDels.tsv.gz
+wget http://krishna.gs.washington.edu/download/CADD/v1.3/InDels.tsv.gz.tbi
+
+wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz
+wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
+```
 
 ### Environment setup
 

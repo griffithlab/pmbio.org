@@ -138,6 +138,15 @@ java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Norm_merged_sorted_mrkdup.bam
 java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Tumor_merged_sorted_mrkdup.bam
 ```
 
+### Perform Indel Realignment
+
+If desired, add this step.
+See docs here: https://software.broadinstitute.org/gatk/documentation/article?id=7156
+Note that as announced in the GATK v3.6 highlights, variant calling workflows that use HaplotypeCaller or MuTect2 now omit indel realignment. HaplotypeCaller includes a local read assembly that mostly deprecates/replaces the need for a separate indel realignment step. See the following blog for a detailed discussion of this issue:
+
+https://software.broadinstitute.org/gatk/blog?id=7847
+
+
 ### Perform Base Quality Score Recalibration 
 
 Upgraded to GATK4. This gets around license issues I believe.
@@ -170,6 +179,10 @@ gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_fu
 ```
 
 
-Add Quality Control sections from here:
-https://github.com/genome/cancer-genomics-workflow/wiki/Alignment
+### Assess alignment quality
+
+TO DO: Add Quality Control sections:
+
+See docs here: https://github.com/genome/cancer-genomics-workflow/wiki/Alignment
+
 
