@@ -36,7 +36,7 @@ Notes:
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus 
-sudo pip install gsutil
+sudo pip install gsutil cmake
 ```
 
 Install mysql-server - set a root password (e.g., pmbiotest)
