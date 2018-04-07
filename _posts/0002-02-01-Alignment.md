@@ -12,25 +12,7 @@ WGS and Exome fastq data will be aligned with BWA MEM using the following option
 
 - t: number of threads
 - Y: use soft clipping for supplementary alignments
-- R: read group header line info. See table below for sample details.
-
-| Data | Readgroup ID | Platform | FC[-BC].Lane | Library | Sample Name |
-|-----|--------------|----------|------------|---------|-------------|
-| Exome_Norm | 2891351068 | Illumina | C1TD1ACXX-CGATGT.7 | exome_norm_lib1 | HCC1395BL_DNA |
-| Exome_Tumor | 2891351066 | Illumina | C1TD1ACXX-ATCACG.7 | exome_tumor_lib1 | HCC1395_DNA |
-| RNAseq_Norm_Lane1 | 2895625992 | Illumina | H3MYFBBXX-CTTGTA.4 | rna_norm_lib1 | HCC1395BL_RNA |
-| RNAseq_Norm_Lane2 | 2895626097 | Illumina | H3MYFBBXX-CTTGTA.5 | rna_norm_lib1 | HCC1395BL_RNA |
-| RNAseq_Tumor_Lane1 | 2895626107 | Illumina | H3MYFBBXX-GCCAAT.4 | rna_tumor_lib1 | HCC1395_RNA |
-| RNAseq_Tumor_Lane2 | 2895626112 | Illumina | H3MYFBBXX-GCCAAT.5 | rna_tumor_lib1 | HCC1395_RNA |
-| WGS_Norm_Lane1 | 2891323123 | Illumina | D1VCPACXX.6 | wgs_norm_lib1 | HCC1395BL_DNA |
-| WGS_Norm_Lane2 | 2891323124 | Illumina | D1VCPACXX.7 | wgs_norm_lib2 | HCC1395BL_DNA |
-| WGS_Norm_Lane3 | 2891323125 | Illumina | D1VCPACXX.8 | wgs_norm_lib3 | HCC1395BL_DNA |
-| WGS_Tumor_Lane1 | 2891322951 | Illumina | D1VCPACXX.1 | wgs_tumor_lib1 | HCC1395_DNA |
-| WGS_Tumor_Lane2 | 2891323174 | Illumina | D1VCPACXX.2 | wgs_tumor_lib1 | HCC1395_DNA |
-| WGS_Tumor_Lane3 | 2891323175 | Illumina | D1VCPACXX.3 | wgs_tumor_lib2 | HCC1395_DNA |
-| WGS_Tumor_Lane4 | 2891323150 | Illumina | D1VCPACXX.4 | wgs_tumor_lib2 | HCC1395_DNA |
-| WGS_Tumor_Lane5 | 2891323147 | Illumina | D1VCPACXX.5 | wgs_tumor_lib3 | HCC1395_DNA |
-|-----|--------------|----------|------------|---------|-------------|
+- R: read group header line info. See table in [Data Module](http://pmbio.org/module%201/0001/08/31/Data/) sample details.
 
 ### Run bwa mem using the above information
 
