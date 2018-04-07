@@ -1,9 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: AWS Setup
+title: Annotation
 categories:
     - Module 1
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0001-02-01
+date: 0001-07-01
 ---
+

@@ -105,11 +105,3 @@ wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype
 wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
 ```
 
-### Environment setup
-
-```bash
-export PICARD='/home/ubuntu/bin/picard.jar'
-export _JAVA_OPTIONS=-Djava.io.tmpdir=/data/tmp/ #Consider changing this to separate volume for performance
-export PATH=/home/ubuntu/bin/samtools-1.7/bin:/home/ubuntu/bin/bwa-0.7.17:/home/ubuntu/bin/gatk-4.0.2.1:$PATH
-```
-

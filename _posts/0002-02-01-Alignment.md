@@ -143,8 +143,10 @@ java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Tumor_merged_sorted_mrkdup.bam
 If desired, add this step.
 See docs here: https://software.broadinstitute.org/gatk/documentation/article?id=7156
 Note that as announced in the GATK v3.6 highlights, variant calling workflows that use HaplotypeCaller or MuTect2 now omit indel realignment. HaplotypeCaller includes a local read assembly that mostly deprecates/replaces the need for a separate indel realignment step. See the following blog for a detailed discussion of this issue:
-
 https://software.broadinstitute.org/gatk/blog?id=7847
+
+See here for latest versions of all GATK tutorials:
+https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt
 
 
 ### Perform Base Quality Score Recalibration 
