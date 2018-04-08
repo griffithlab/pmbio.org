@@ -105,6 +105,3 @@ Restart apache
 sudo service apache2 restart
 ```
 
-
-See [Installation](/module 1/0001/02/01/Software_Installation/) for software tools needed for next parts of this set up.
-

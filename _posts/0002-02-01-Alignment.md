@@ -62,15 +62,6 @@ samtools merge -@ 4 WGS_Norm_merged.bam WGS_Norm_Lane1.bam WGS_Norm_Lane2.bam WG
 samtools merge -@ 4 WGS_Tumor_merged.bam WGS_Tumor_Lane1.bam WGS_Tumor_Lane2.bam WGS_Tumor_Lane3.bam WGS_Tumor_Lane4.bam WGS_Tumor_Lane5.bam
 ```
 
-### Clean up un-needed sam/bam files
-
-```bash
-cd ~/data/alignment
-rm /home/ubuntu/data/alignment/*.sam
-rm /home/ubuntu/data/alignment/WGS_*_Lane*.bam
-
-```
-
 
 ### Query name sort bam files
 
@@ -97,6 +88,7 @@ java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Norm_merged_namesorted.bam O=WGS_
 java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Tumor_merged_namesorted.bam O=WGS_Tumor_merged_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=WGS_Tumor_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 ```
 
+
 ### Position sort bam file
 
 Runtimes: Exome, 43-56min; WGS XXX
@@ -109,6 +101,7 @@ java -Xmx64g -jar $PICARD SortSam I=WGS_Norm_merged_namesorted_mrkdup.bam O=WGS_
 java -Xmx64g -jar $PICARD SortSam I=WGS_Tumor_merged_namesorted_mrkdup.bam O=WGS_Tumor_merged_sorted_mrkdup.bam SO=coordinate
 ```
 
+
 ### Create bam index for use with GATK, IGV, etc
 Runtimes: Exome XXX; WGS 43-78min;
 
@@ -120,25 +113,21 @@ java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Norm_merged_sorted_mrkdup.bam
 java -Xmx64g -jar $PICARD BuildBamIndex I=WGS_Tumor_merged_sorted_mrkdup.bam
 ```
 
+
 ### Perform Indel Realignment
 
-If desired, add this step.
-See docs here: https://software.broadinstitute.org/gatk/documentation/article?id=7156
-Note that as announced in the GATK v3.6 highlights, variant calling workflows that use HaplotypeCaller or MuTect2 now omit indel realignment. HaplotypeCaller includes a local read assembly that mostly deprecates/replaces the need for a separate indel realignment step. See the following blog for a detailed discussion of this issue:
-https://software.broadinstitute.org/gatk/blog?id=7847
+If desired, add this step. See docs [here](https://software.broadinstitute.org/gatk/documentation/article?id=7156). But, note that as announced in the GATK v3.6 highlights, variant calling workflows that use HaplotypeCaller or MuTect2 now omit indel realignment. HaplotypeCaller includes a local read assembly that mostly deprecates/replaces the need for a separate indel realignment step. See the following [blog](https://software.broadinstitute.org/gatk/blog?id=7847) for a detailed discussion of this issue.
 
-See here for latest versions of all GATK tutorials:
-https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt
+See [here](https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt) for latest versions of all GATK tutorials:
 
 
 ### Perform Base Quality Score Recalibration 
 
-Upgraded to GATK4. This gets around license issues I believe.
-
+Note that 
 Questions about GATK step.
-Why not specify chrX and chrY, only chr1-22 with -L options?
+Why that the BQSR commands below limit the modeling step to chr1-22. This is where the majority of known variants are located and the autosomes are expected to have more even coverage than sex chromosomes. However, once the model is built, we apply to all bases on all contigs.
 
-Calculate BQSR Table
+#### Calculate BQSR Table
 
 Runtimes: Exome 57-67min; WGS 335-585min
 
@@ -149,17 +138,32 @@ gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GR
 gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
 ```
 
-Apply BQSR
+#### Apply BQSR
 
 Runtimes: Exome 39-48min; WGS 264-508min
-
-Question: Why do we only use -L option for calculating BQSR table, not for applying BQSR?
 
 ```bash
 gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam --bqsr-recal-file /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
 gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.bam --bqsr-recal-file /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
 gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.bam --bqsr-recal-file /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
 gatk --java-options '-Xmx64g' ApplyBQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --bqsr-recal-file /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
+```
+
+
+### Clean up un-needed sam/bam files
+
+Keep final sorted, duplicated marked, bqsr bam/bai/table files and mrkdup.txt files. Delete everything else.
+
+```bash
+cd ~/data/alignment
+mkdir final
+mv *_sorted_mrkdup_bqsr.* final/
+mv *.txt final/
+
+rm *.sam
+rm *.bam
+rm *.bai
+
 ```
 
 
