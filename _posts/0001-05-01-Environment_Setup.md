@@ -8,6 +8,8 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-05-01
 ---
 
+We will set up a number of environment variables and perform other operating system configurations for various reasons of convenience. This might include creating shortcuts for longer file paths, setting default values for commonly used parameters, and other configurations.
+
 ### Set up environment/path variables for convenience
 
 ```bash

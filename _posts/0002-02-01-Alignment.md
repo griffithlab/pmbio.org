@@ -12,7 +12,7 @@ WGS and Exome fastq data will be aligned with BWA MEM using the following option
 
 - t: number of threads
 - Y: use soft clipping for supplementary alignments
-- R: read group header line info. See table in [Data Module](http://pmbio.org/module%201/0001/08/31/Data/) sample details.
+- R: read group header line info. See table in [Data Module](/module 1/0001/09/01/Data/) sample details.
 
 ### Run bwa mem using the above information
 
