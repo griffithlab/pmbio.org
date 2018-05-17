@@ -45,3 +45,7 @@ gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling
 
 ```
 
+### Reference Genome Options
+
+To do: Create a table documenting key reference genome options (builds/sources) and pros/cons
+- e.g., 1000G, ensembl, UCSC, GDC
