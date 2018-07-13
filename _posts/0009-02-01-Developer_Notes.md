@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: Developer Notes
 categories:
-    - Module 8
+    - Module 9
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0008-02-01
+date: 0009-02-01
 ---
 
 This module is used to document background details, generally considered to obscure for use in the main workshop but to help developers keep track of certain details.
@@ -121,4 +121,3 @@ Create tarball of all fastq files to host for later use
 cd /data/
 tar -cvf fastqs.tar fastqs/
 ```
-
