@@ -60,6 +60,8 @@ A typical CWL workflow consists of three main pieces, the first piece is simply 
 
 # The inputs.yml file
 
+Okay lets start by going over what the input.yml file is. Simply put, as it sounds it is simply specifying the inputs given to the workflow. In our workflow we only have two inputs, a bam file and a reference file. The inputs.yml is specifying what the input is (i.e. files), where the inputs exist (i.e. file paths) and the identifier the cwl workflow will use to refer to the inputs.
+
 <div class="highlight"><pre class="highlight"><code><span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="Identifier for input bam file">bam</span><span class="pi">:</span>
   <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="Field indicating the object type to expect">class</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates that input is a file">File</span>
   <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating where the file is located">path</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="path to the input bam file">/Users/zskidmor/Desktop/lab_meeting/gerald_C1TD1ACXX_7_ATCACG.bam</span>
@@ -69,6 +71,8 @@ A typical CWL workflow consists of three main pieces, the first piece is simply 
 </code></pre></div>
 
 # The workflow.cwl files
+
+The workflow file specifies how things should be run, the inputs, outputs, and steps corresponding to the specific workflow.
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="shebang line indicating the cwl runner to use" >#!/usr/bin/env cwl-runner</span>
 
@@ -139,6 +143,8 @@ A typical CWL workflow consists of three main pieces, the first piece is simply 
 
 # Command.yml files
 
+The command.yml files specify how to run a given command for a step in the workflow. In the example below we go over how the file is structured for the gnu_unzip step specified in the workflow.yaml.
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="shebang line indicating the runner">#!/usr/bin/env cwl-runner</span>
 
 <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the type of cwl file">class</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="specifies that this cwl file is for running a command not a workflow">CommandLineTool</span>
@@ -170,6 +176,14 @@ A typical CWL workflow consists of three main pieces, the first piece is simply 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+# Putting it all together
+
+Now that we've gone over the basics let's go ahead and run this workflow. On a typical computer the workflow should run in aprox. 7-10 minutes depending on if docker images need to be pulled down from the web. 
+
+```bash
+cwltool --outdir ~/Desktop/cwl_test workflow.cwl inputs.yml
+```
 
 <script>
 $(function () {
