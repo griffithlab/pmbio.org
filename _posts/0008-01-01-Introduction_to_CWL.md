@@ -141,9 +141,9 @@ The workflow file specifies how things should be run, the inputs, outputs, and s
     <span class="na">out</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">bam_index</span> <span class="pi">]</span>
 </code></pre></div></div>
 
-# Command.yml files
+# Command.cwl files
 
-The command.yml files specify how to run a given command for a step in the workflow. In the example below we go over how the file is structured for the gnu_unzip step specified in the workflow.yaml.
+The command.cwl files specify how to run a given command for a step in the workflow. In the example below we go over how the file is structured for the gnu_unzip step specified in the workflow.cwl.
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="shebang line indicating the runner">#!/usr/bin/env cwl-runner</span>
 
