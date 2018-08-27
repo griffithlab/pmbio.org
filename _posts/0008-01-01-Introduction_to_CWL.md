@@ -154,17 +154,17 @@ A typical CWL workflow consists of three main pieces, the first piece is simply 
     <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the name of the docker image on your computer">dockerImageId</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the docker image name is ubuntu:xenial">ubuntu:xenial</span>
     <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the name of the docker image to pull if no image id is found locally">dockerPull</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the docker image name to pull is ubuntu:xenial">ubuntu:xenial</span>
 
-<span class="na">inputs</span><span class="pi">:</span>
-    <span class="na">reference_file</span><span class="pi">:</span>
-        <span class="na">type</span><span class="pi">:</span> <span class="s">File</span>
-        <span class="na">inputBinding</span><span class="pi">:</span>
-            <span class="na">position</span><span class="pi">:</span> <span class="s">1</span>
+<span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field specifying the inputs for this command">inputs</span><span class="pi">:</span>
+    <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the identifier associated with the input given in workflow.cwl">reference_file</span><span class="pi">:</span>
+        <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field specifying the class of input to expect">type</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the input is expected to be a file">File</span>
+        <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field specifying various options for the input">inputBinding</span><span class="pi">:</span>
+            <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the position of this input relative to the base command">position</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates this input is at position 1 i.e. right after the base command and arguments">1</span>
 
-<span class="na">outputs</span><span class="pi">:</span>
-    <span class="na">unzipped_fasta</span><span class="pi">:</span>
-        <span class="na">type</span><span class="pi">:</span> <span class="s">stdout</span>
+<span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field specifying the output from this command">outputs</span><span class="pi">:</span>
+    <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="identifier for the output of this command">unzipped_fasta</span><span class="pi">:</span>
+        <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the type of output to expect">type</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the type of output to pbe printed to stdout">stdout</span>
 
-<span class="na">stdout</span><span class="pi">:</span> <span class="s">reference.fa</span>
+<span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field for capturing output in stdout">stdout</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates that stdout should go to a file named reference.fa">reference.fa</span>
 </code></pre></div></div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
