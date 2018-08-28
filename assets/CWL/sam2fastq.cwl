@@ -16,7 +16,6 @@ arguments:
 
 requirements:
   - class: DockerRequirement
-    dockerImageId: broadinstitute/picard:2.18.2
     dockerPull: broadinstitute/picard:2.18.2
 
 inputs:

@@ -10,7 +10,6 @@ arguments: [ "-c" ]
 
 requirements:
   - class: DockerRequirement
-    dockerImageId: ubuntu:xenial
     dockerPull: ubuntu:xenial
 
 inputs:

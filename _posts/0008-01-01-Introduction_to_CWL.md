@@ -157,7 +157,6 @@ The command.yml files specify how to run a given command for a step in the workf
 
 <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating any additional requirements when running the gunzip command">requirements</span><span class="pi">:</span>
   <span class="pi">-</span> <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the class of the requirement">class</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates that the command needs to run with docker">DockerRequirement</span>
-    <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the name of the docker image on your computer">dockerImageId</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the docker image name is ubuntu:xenial">ubuntu:xenial</span>
     <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating the name of the docker image to pull if no image id is found locally">dockerPull</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates the docker image name to pull is ubuntu:xenial">ubuntu:xenial</span>
 
 <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field specifying the inputs for this command">inputs</span><span class="pi">:</span>

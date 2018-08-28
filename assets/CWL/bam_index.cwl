@@ -8,7 +8,6 @@ baseCommand: [ "index" ]
 
 requirements:
   - class: DockerRequirement
-    dockerImageId: mgibio/samtools:1.9
     dockerPull: mgibio/samtools:1.9
   - class: InitialWorkDirRequirement
     listing:

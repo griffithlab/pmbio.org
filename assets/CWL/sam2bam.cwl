@@ -8,7 +8,6 @@ baseCommand: [ "view" ]
 
 requirements:
   - class: DockerRequirement
-    dockerImageId: mgibio/samtools:1.9
     dockerPull: mgibio/samtools:1.9
 
 arguments:

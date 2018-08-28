@@ -14,7 +14,6 @@ inputs:
 
 requirements:
   - class: DockerRequirement
-    dockerImageId: biocontainers/bwa:0.7.15
     dockerPull: biocontainers/bwa:0.7.15
   - class: InitialWorkDirRequirement
     listing:
