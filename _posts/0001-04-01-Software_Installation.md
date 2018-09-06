@@ -105,3 +105,32 @@ wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype
 wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
 ```
 
+### Varscan
+```bash
+cd ~/bin
+curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar
+
+java -jar ~/bin/VarScan.v2.4.2.jar
+```
+
+
+### BCFtools
+```bash
+cd ~/bin
+curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
+tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
+cd bcftools-1.3.1
+make -j
+make prefix=~/bin/software install
+
+bcftools -h
+```
+
+### Strelka
+```bash
+cd ~/bin
+curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
+tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2
+
+java -jar ~/bin/VarScan.v2.4.2.jar
+```
