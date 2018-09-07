@@ -18,7 +18,7 @@ This website provides a current version of all course materials (including copie
 
 These materials have been developed with the support of [PR Informatics](https://www.prinformatics.com/). The first in-person workshop was held in Glasgow, Scotland, UK, 29. Oct - 2 Nov. 2018 ([course page](https://www.prinformatics.com/course/introduction-to-bioinformatics-for-dna-and-rna-sequence-analysis-ibdr01/)). For future offerings by PR Informatics (including this workshop) please visit the [upcoming courses page](https://www.prinformatics.com/courses/).
 
-{% include figure.html image="/assets/prinfo-logo.png" position="left" width="250" %}
+{% include figure.html image="/assets/prinfo-logo.png" position="left" width="225" %}
 
 PR informatics provides training courses and workshops in bioinformatics and associated fields. Each course we deliver comprises of a carefully thought out combination of lectures, group discussions and hands on practicals. We believe it is this combination of teaching mediums that underpins the success of our courses and workshops.
 
