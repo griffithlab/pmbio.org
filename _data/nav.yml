@@ -1,0 +1,21 @@
+- title: Home
+  url: /
+
+- title: Course
+  url: /course/
+
+- title: Schedule
+  url: /schedule/
+
+- title: Authors
+  url: /authors/
+  dropdown:
+
+- title: Resources
+  url: /resources/
+
+- title: Acknowledgements
+  url: /acknowledgements/
+
+- title: Search
+  url: /search/

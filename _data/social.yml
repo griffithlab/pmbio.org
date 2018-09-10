@@ -1,0 +1,4 @@
+- name: GitHub
+  url: https://github.com/griffithlab/CIViC_PM
+  fa_class: "fab fa-github fa-3x"
+  title: Github Title

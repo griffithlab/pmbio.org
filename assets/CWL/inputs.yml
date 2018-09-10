@@ -1,6 +1,0 @@
-bam:
-  class: File
-  path: /Users/zskidmor/Desktop/lab_meeting/gerald_C1TD1ACXX_7_ATCACG.bam
-reference:
-  class: File
-  path: /Users/zskidmor/Desktop/lab_meeting/Homo_sapiens.GRCh38.dna.chromosome.22.fa.gz

@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse_target">
+    <span class="navbar-toggler-icon">
+    </span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="collapse_target">
+    <ul class="navbar-nav">
+      {% for item in site.data.nav %}
+        {% if item.dropdown == nil %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ item.url }}">{{ item.title }}</a>
+          </li>
+        {% else %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ item.title }}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            {% for dropdown_link in item.dropdown %}
+              <a class="dropdown-item" href="{{ dropdown_link.url }}">{{ dropdown_link.title }}</a>
+            {% endfor %}
+          </div>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</nav>

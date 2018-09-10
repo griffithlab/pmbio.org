@@ -1,0 +1,9 @@
+<section id="social_subfooter">
+  {% for social_item in site.data.social %}
+    <li class="list-inline-item">
+      <a href="{{ social_item.url}}">
+        <i class="{{ social_item.fa_class }}"></i>
+      </a>
+    </li>
+  {% endfor %}
+</section>
