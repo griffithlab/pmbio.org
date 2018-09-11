@@ -1,9 +1,9 @@
 ---
-feature_text: |
-  ## Precision Medicine
-title: Introduction to Precision Medicine
+layout: default
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: Introduction to Precision Medicine
 categories:
     - Module 1
-feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-01-01
 ---

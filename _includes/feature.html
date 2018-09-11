@@ -1,6 +1,10 @@
-<div class="jumbotron jumbotron-fluid" {% if page.bgimage %} style="background-image: url({{ page.bgimage }})" {% endif %}>
+{% if page.header.bgimage %}
+
+<div class="jumbotron jumbotron-fluid jumbotron_image" {% if page.header.bgimage %} style="background-image: url({{ page.header.bgimage }})" {% endif %}>
   <div class="container">
-    <h1 class="display-4">Fluid jumbotron</h1>
-    <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+    <h1 class="display-4">{{ page.header.feature_title }}</h1>
+    <p class="lead">{{ page.header.feature_text }}</p>
   </div>
 </div>
+
+{% endif %}

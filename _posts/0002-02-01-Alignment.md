@@ -1,10 +1,10 @@
 ---
-feature_text: |
-  ## Precision Medicine
-title: Alignment
+layout: default
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: Alignment
 categories:
     - Module 2
-feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0002-02-01
 ---
 
@@ -16,7 +16,7 @@ WGS and Exome fastq data will be aligned with BWA MEM using the following option
 
 ### Run bwa mem using the above information
 
-Runtimes: Exome, 20 - 25min (32 cores); WGS, 89-95min (32 cores); WGS, 196-223min (16 cores) 
+Runtimes: Exome, 20 - 25min (32 cores); WGS, 89-95min (32 cores); WGS, 196-223min (16 cores)
 
 ```bash
 cd ~/data
@@ -36,7 +36,7 @@ bwa mem -t 16 -Y -R "@RG\tID:2891323147\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tum
 
 ### Convert sam to bam format
 
-Runtimes: Exome, 13min; 
+Runtimes: Exome, 13min;
 
 ```bash
 cd ~/data/alignment
@@ -54,7 +54,7 @@ samtools view -h -b -o WGS_Tumor_Lane5.bam WGS_Tumor_Lane5.sam
 
 ### Merge bam files
 
-Run times: WGS_Norm, 86m; WGS_Tumor, 
+Run times: WGS_Norm, 86m; WGS_Tumor,
 
 ```bash
 cd ~/data/alignment
@@ -78,7 +78,7 @@ java -Xmx64g -jar $PICARD SortSam I=WGS_Tumor_merged.bam O=WGS_Tumor_merged_name
 
 ### Mark duplicates
 
-Runtimes: Exome, XXX; WGS 386min, 
+Runtimes: Exome, XXX; WGS 386min,
 
 ```bash
 cd ~/data/alignment
@@ -121,9 +121,9 @@ If desired, add this step. See docs [here](https://software.broadinstitute.org/g
 See [here](https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt) for latest versions of all GATK tutorials:
 
 
-### Perform Base Quality Score Recalibration 
+### Perform Base Quality Score Recalibration
 
-Note that 
+Note that
 Questions about GATK step.
 Why that the BQSR commands below limit the modeling step to chr1-22. This is where the majority of known variants are located and the autosomes are expected to have more even coverage than sex chromosomes. However, once the model is built, we apply to all bases on all contigs.
 
@@ -132,7 +132,7 @@ Why that the BQSR commands below limit the modeling step to chr1-22. This is whe
 Runtimes: Exome 57-67min; WGS 335-585min
 
 ```bash
-gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 
+gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
 gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/Exome_Tumor_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
 gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
 gatk --java-options '-Xmx64g' BaseRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup.bam -O /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.table --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /home/ubuntu/data/reference/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
@@ -172,5 +172,3 @@ rm *.bai
 TO DO: Add Quality Control sections:
 
 See docs here: https://github.com/genome/cancer-genomics-workflow/wiki/Alignment
-
-

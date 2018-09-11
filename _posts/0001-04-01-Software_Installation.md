@@ -1,10 +1,10 @@
 ---
-feature_text: |
-  ## Precision Medicine
-title: Installation
+layout: default
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: Software Installation
 categories:
     - Module 1
-feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-04-01
 ---
 
@@ -90,7 +90,7 @@ cd ensembl-vep
 perl INSTALL.pl --CACHEDIR /home/ubuntu/data/vep_cache
 ```
 
-Download additional data files need for various VEP plugins - CADD, gnomAD, 
+Download additional data files need for various VEP plugins - CADD, gnomAD,
 
 ```bash
 cd ~/data/vep_cache
@@ -104,4 +104,3 @@ wget http://krishna.gs.washington.edu/download/CADD/v1.3/InDels.tsv.gz.tbi
 wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz
 wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
 ```
-

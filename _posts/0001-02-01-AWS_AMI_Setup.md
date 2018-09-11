@@ -1,10 +1,10 @@
 ---
-feature_text: |
-  ## Precision Medicine
-title: AWS AMI Setup
+layout: default
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: AWS AMI Setup
 categories:
     - Module 1
-feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-02-01
 ---
 
@@ -25,7 +25,7 @@ For development purposes we started with a very large instance (overkill). Futur
 
 ### Perform basic linux configuration
 
-These steps will update ubuntu packages and install dependencies for software needed in the course. 
+These steps will update ubuntu packages and install dependencies for software needed in the course.
 
 Notes:
 - picard requires at least java 1.8.x (Didn't check default ubuntu java version/install status)
@@ -35,7 +35,7 @@ Notes:
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus 
+sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus
 sudo pip install gsutil cmake
 ```
 
@@ -104,4 +104,3 @@ Restart apache
 ```bash
 sudo service apache2 restart
 ```
-

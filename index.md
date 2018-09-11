@@ -1,6 +1,9 @@
 ---
 layout: default
-bgimage: /assets/images/feature/header.png
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: PMBIO
+  feature_text:
 ---
 
 <h1 class="text-primary">Hello there!</h1>

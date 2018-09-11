@@ -1,10 +1,9 @@
 ---
-feature_text: |
-  ## Precision Medicine
-title: PreAlignment QC
+layout: default
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: Pre Alignment QC
 categories:
     - Module 1
-feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-10-01
 ---
-

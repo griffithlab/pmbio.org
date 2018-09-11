@@ -1,0 +1,22 @@
+<div class="card-columns">
+
+  {% assign sorted_categories = site.categories | sort %}
+  {% for category in sorted_categories %}
+      {% assign category_name = category | first %}
+
+    <div class="card">
+      <img class="card-img-top" src="/assets/images/module/card_placeholder.png" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{ category_name }}</h5>
+        {% for page in site.categories[category_name] reversed %}
+        <li>
+          <a href="{{ page.url | relative_url }}" class="card-link">{{ page.header.feature_title }}</a>
+        </li>
+
+        {% endfor %}
+      </div>
+    </div>
+
+{% endfor %}
+
+</div>

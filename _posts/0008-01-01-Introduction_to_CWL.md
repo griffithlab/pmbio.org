@@ -1,14 +1,12 @@
 ---
-feature_text: |
-  ## Precision Medicine
-title: Introduction to the Common Workflow Language
+layout: default
+header:
+  bgimage: /assets/images/feature/header.png
+  feature_title: Introduction to the Common Workflow Language
 categories:
     - Module 8
-feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0008-01-01
 ---
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
 # Introduction to the Common Workflow Language
 
@@ -173,26 +171,10 @@ The command.yml files specify how to run a given command for a step in the workf
 <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field for capturing output in stdout">stdout</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates that stdout should go to a file named reference.fa">reference.fa</span>
 </code></pre></div></div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
 # Putting it all together
 
-Now that we've gone over the basics let's go ahead and run this workflow. On a typical computer the workflow should run in aprox. 7-10 minutes depending on if docker images need to be pulled down from the web. 
+Now that we've gone over the basics let's go ahead and run this workflow. On a typical computer the workflow should run in aprox. 7-10 minutes depending on if docker images need to be pulled down from the web.
 
 ```bash
 cwltool --outdir ~/Desktop/cwl_test workflow.cwl inputs.yml
 ```
-
-<script>
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
-</script>
-
-<script>
-$('.popover-dismiss').popover({
-  trigger: 'focus'
-})
-</script>
