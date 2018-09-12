@@ -90,7 +90,7 @@ cd ensembl-vep
 perl INSTALL.pl --CACHEDIR /home/ubuntu/data/vep_cache
 ```
 
-Download additional data files need for various VEP plugins - CADD, gnomAD, 
+Download additional data files need for various VEP plugins - CADD, gnomAD,
 
 ```bash
 cd ~/data/vep_cache
@@ -105,7 +105,7 @@ wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype
 wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
 ```
 
-### Varscan
+### Install Varscan
 ```bash
 cd ~/bin
 curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar
@@ -114,7 +114,7 @@ java -jar ~/bin/VarScan.v2.4.2.jar
 ```
 
 
-### BCFtools
+### Install BCFtools
 ```bash
 cd ~/bin
 curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
@@ -126,11 +126,75 @@ make prefix=~/bin/software install
 bcftools -h
 ```
 
-### Strelka
+### Install Strelka
 ```bash
 cd ~/bin
 curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
 tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2
 
 java -jar ~/bin/VarScan.v2.4.2.jar
+```
+### Install HISAT
+
+```bash
+cd ~/bin
+wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_64.zip
+unzip hisat2-2.0.4-Linux_x86_64.zip
+ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
+
+./hisat2
+```
+
+### Install Sambamba
+
+```bash
+cd ~/bin
+curl -L -k -o sambamba_v0.6.4_linux.tar.bz2 https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2
+tar --bzip2 -xvf sambamba_v0.6.4_linux.tar.bz2
+ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
+
+./sambamba
+```
+### Install StringTie
+
+```bash
+cd ~/bin
+wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.0.Linux_x86_64.tar.gz
+tar -xzvf stringtie-1.3.0.Linux_x86_64.tar.gz
+ln -s ~/bin/stringtie-1.3.0.Linux_x86_64/stringtie ~/bin/stringtie
+```
+### Install Gffcompare
+
+```bash
+cd ~/bin
+wget http://ccb.jhu.edu/software/stringtie/dl/gffcompare-0.9.8.Linux_x86_64.tar.gz
+tar -xzvf gffcompare-0.9.8.Linux_x86_64.tar.gz
+ln -s ~/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/bin/gffcompare
+```
+### Install R
+
+```bash
+sudo apt-get install gfortran
+sudo apt-get install libreadline-dev
+sudo apt install libpcre3-dev
+sudo apt-get install libcurl4-openssl-dev
+
+export R_LIBS=
+wget https://cran.r-project.org/src/base/R-3/R-3.4.0.tar.gz
+tar -zxvf R-3.4.0.tar.gz
+cd R-3.4.0
+./configure --prefix=~/bin --with-x=no
+make
+make install
+sudo apt install r-base-core
+Rscript --version
+sudo apt-get install libssl-dev
+sudo apt-get install libxml2-dev
+
+~/bin/R
+<In the interactive section>:
+install.packages("devtools",repos="http://cran.us.r-project.org")
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("alyssafrazee/RSkittleBrewer","dplyr","genefilter","ballgown"))
+quit()
 ```

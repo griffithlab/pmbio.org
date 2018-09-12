@@ -7,72 +7,44 @@ categories:
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0003-02-01
 ---
-#### **Installation**
-__________________________  
-If you have a rather small instance in terms of root storage, we recommend that you install the listed softwares in your mounted directory (e.g. /data/bin/), where the size is easier to adjust.
-* **Varscan** \
-In your desired installation directory (e.g. `/data/bin/`):
-  * `curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar`
-
-  For testing:
-  * `java -jar /data/bin/VarScan.v2.4.2.jar`
-
-* **BCFtools** \
-In your desired installation directory (e.g. `/data/bin/`):
-  * `curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2`
-  * `tar --bzip2 -xvf bcftools-1.3.1.tar.bz2`
-  * `cd bcftools-1.3.1`
-  * `make -j`
-  * `make prefix=/data/bin install`
-
-  For testing:
-  * `bcftools -h`
-
-* **Strelka** \
-In your desired installation directory (e.g. `/data/bin/`):
-  * `curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2`
-  * `tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2`
-
-  For testing:
-  * `java -jar /data/bin/VarScan.v2.4.2.jar`
-
+TODO: Change directory names as needed for consistency across modules, also we will need a version for subset samples.
 #### **Downloading Reference Files**
 __________________________  
 In order to run the following variant detection algorithms, you will need to download a few reference files from `genome_data.org` to your directory for reference file storage (e.g. `/data/refseq/`):
 * `hglft_genome_304d_b78af0.bed`
 * `NimbleGenExome_v3.interval_list`
-#### **VARSCAN**
+
+#### **Running VARSCAN**
 __________________________  
 
-First, identify the directory where you have Varscan installed. If Varscan has not been installed, please follow the installation instructions described above. \
-Here are the commands for each step in order, please adjust according to how you have named and placed your directories:
+Given that you have VARSCAN properly installed, here are the commands for running VARSCAN in order, you may need to adjust according to how you have named and placed your directories:
 
-* `java -Xmx4g -jar /data/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup -l /data/refseq/hglft_genome_304d_b78af0.bed --no-BAQ -f /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf`
+* `java -Xmx4g -jar VarScan.v2.4.2.jar somatic <(samtools mpileup -l /data/refseq/hglft_genome_304d_b78af0.bed --no-BAQ -f /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf`
 * `cd /data/varscan/`
-* `java -Xmx4g -jar /data/bin/VarScan.v2.4.2.jar processSomatic exome.snp.vcf exome.snp`
-* `java -Xmx4g -jar /data/bin/VarScan.v2.4.2.jar processSomatic exome.indel.vcf exome.indel`
+* `java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.snp.vcf exome.snp`
+* `java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.indel.vcf exome.indel`
 * `find /data/varscan -name '*.vcf' -exec bgzip -f {} \;`
 * `find /data/varscan -name '*.vcf.gz' -exec tabix -f {} \;`
 
 In order to continue to the next step, you may need to redownload GATK if you run into errors with your current installation:
 1. Manually download GATK after accepting the license : `https://www.broadinstitute.org/gatk/download/auth?package=GATK`
-2. Copy the download to your instance: \
+2. Copy the download to your instance:
 `scp -i <your pem file> Downloads/GenomeAnalysisTK-3.6.tar.bz2 ubuntu@<IP address of your instance>:/data/bin`.
 3. Inside the instance, unzip the archive : `tar --bzip2 -xvf GenomeAnalysisTK-3.6.tar.bz2`
 4. Test with JAVA8 : `java -jar GenomeAnalysisTK.jar -h`
 
 Next steps:
-* `java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T VariantFiltration -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --variant exome.snp.Somatic.vcf.gz --mask exome.snp.Somatic.hc.vcf.gz --maskName "processSomatic" --filterNotInMask -o exome.snp.Somatic.hc.filter.vcf.gz`
-* `java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T VariantFiltration -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --variant exome.indel.Somatic.vcf.gz --mask exome.indel.Somatic.hc.vcf.gz --maskName "processSomatic" --filterNotInMask -o exome.indel.Somatic.hc.filter.vcf.gz`
+* `java -Xmx4g -jar GenomeAnalysisTK.jar -T VariantFiltration -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --variant exome.snp.Somatic.vcf.gz --mask exome.snp.Somatic.hc.vcf.gz --maskName "processSomatic" --filterNotInMask -o exome.snp.Somatic.hc.filter.vcf.gz`
+* `java -Xmx4g -jar GenomeAnalysisTK.jar -T VariantFiltration -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --variant exome.indel.Somatic.vcf.gz --mask exome.indel.Somatic.hc.vcf.gz --maskName "processSomatic" --filterNotInMask -o exome.indel.Somatic.hc.filter.vcf.gz`
 
-To continue, you will need to have bcftools installed, please refer to the installation section above if needed. 
+To continue, you will need to have bcftools installed, please refer to the installation section above if needed.
 
 * `bcftools concat -a -o exome.vcf.gz -O z exome.snp.Somatic.hc.filter.vcf.gz exome.indel.Somatic.hc.filter.vcf.gz`
 * `tabix -f /data/varscan/exome.vcf.gz`
 
-#### **STRELKA**
+#### **Running STRELKA**
 __________________________  
-Identify the directory where you have Strelka installed. If Strelka has not been installed, please follow the installation instructions accordingly.
+Given that you have STRELKA properly installed, here are the commands for running STRELKA in order, you may need to adjust according to how you have named and placed your directories:
 * `/data/strelka/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=../reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --exome --runDir=/data/strelka/exome`
 * `/data/strelka/exome/runWorkflow.py -m local -j 4` (Please specify according to the number of cpus avaliable. In this case I have 4 for my instance)
 *	`zcat exome/results/variants/somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.snvs.gt.vcf`
@@ -84,11 +56,11 @@ After installing BCFtools:
 * `bcftools concat -a -o exome.vcf.gz -O z exome/results/variants/somatic.snvs.gt.vcf.gz exome/results/variants/somatic.indels.gt.vcf.gz`
 * `tabix exome.vcf.gz`
 
-#### **MuTect2**
-__________________________ 
+#### **Running MuTect2**
+__________________________
 Before preceeding, you will need to download COSMIC reference file (e.g. in folder `/data/refseq/`) after registering on their website:
 * `sftp <your registered email address>@sftp-cancer.sanger.ac.uk`
-* `get /files/grch38/cosmic/v79/VCF/CosmicCodingMuts.vcf.gz` 
+* `get /files/grch38/cosmic/v79/VCF/CosmicCodingMuts.vcf.gz`
 * `get /files/grch38/cosmic/v79/VCF/CosmicNonCodingVariants.vcf.gz`
 * `Quit`
 * `zgrep "^#" CosmicCodingMuts.vcf.gz > VCF_Header`
@@ -99,16 +71,16 @@ Before preceeding, you will need to download COSMIC reference file (e.g. in fold
 * `rm VCF_Header CosmicCodingMuts.clean CosmicNonCodingVariants.clean Cosmic_v79`
 
 With picard tools installed:
-* `java -jar /data/bin/picard-tools-2.4.1/picard.jar SortVcf I=/data/refseq/Cosmic_v79.vcf O=/data/refseq/Cosmic_v79.dictsorted.vcf SEQUENCE_DICTIONARY=/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa` 
-* `java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T MuTect2 --disable_auto_index_creation_and_locking_when_reading_rods -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I:tumor /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -I:Normal /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam --dbsnp /data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --cosmic /data/refseq/Cosmic_v79.dictsorted.vcf.gz -o /data/mutect/exome.vcf.gz -L /data/refseq/NimbleGenExome_v3.interval_list`
+* `java -jar picard.jar SortVcf I=/data/refseq/Cosmic_v79.vcf O=/data/refseq/Cosmic_v79.dictsorted.vcf SEQUENCE_DICTIONARY=/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa`
+* `java -Xmx4g -jar GenomeAnalysisTK.jar -T MuTect2 --disable_auto_index_creation_and_locking_when_reading_rods -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I:tumor /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -I:Normal /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam --dbsnp /data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --cosmic /data/refseq/Cosmic_v79.dictsorted.vcf.gz -o /data/mutect/exome.vcf.gz -L /data/refseq/NimbleGenExome_v3.interval_list`
 * `echo /data/mutect/exome.vcf.gz > /data/mutect/exome_vcf.fof`
 * `bcftools concat --allow-overlaps --remove-duplicates --file-list /data/mutect/exome_vcf.fof --output-type z --output /data/mutect/exome.vcf.gz`
 * `tabix /data/mutect/exome.vcf.gz`
 
 #### **Merge Variants**
-__________________________ 
+__________________________
 With outputs from all three algorithms, we can now merge the variants to generate a comprehensive list of detected variants:
-* `java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions UNIQUIFY --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka /data/strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.unique.vcf.gz`
-* `java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.merged.vcf`
+* `java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions UNIQUIFY --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka /data/strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.unique.vcf.gz`
+* `java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.merged.vcf`
 
 **Please continue to the next section for instructions on how to filter, annotation and review variants**
