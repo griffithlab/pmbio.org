@@ -3,7 +3,7 @@ feature_text: |
   ## Precision Medicine
 title: AWS AMI Setup
 categories:
-    - Module 10 - Appendices
+    - Module 10. Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-01-01
 ---
