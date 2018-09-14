@@ -9,7 +9,6 @@
 				 	<article class="article  article--post  typeset">
 					 	<h3><a href="{{ page.url | relative_url }}" title="Post - {{ page.title }}">{{ page.title }}</a></h3>
 						{% include post-meta.html %}
-						{{ page.excerpt | markdownify | truncatewords: 20 }}
 				 	</article>
 			 </li>
 		 {% endfor %}
