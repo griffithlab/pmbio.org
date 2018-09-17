@@ -1,12 +1,14 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: AWS Instance Setup
+title: UNIX Primer
 categories:
     - Module 1
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-03-01
 ---
+
+A basic introduction to UNIX/LINUX command line operations. Students will learn how to navigate a linux file system and perform basic operations on files such as listing, copying, renaming, etc.
 
 ***
 
