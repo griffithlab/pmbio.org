@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: Introduction to the Common Workflow Language
 categories:
-    - Module 8
+    - Module 09. CWL
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0008-01-01
+date: 0009-01-01
 ---
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
