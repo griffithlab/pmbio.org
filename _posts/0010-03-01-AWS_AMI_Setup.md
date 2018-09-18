@@ -5,7 +5,7 @@ title: AWS AMI Setup
 categories:
     - Module 10. Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0010-01-01
+date: 0010-03-01
 ---
 
 This module is primarily for the course developers to document how the AWS AMI was developed for the course.

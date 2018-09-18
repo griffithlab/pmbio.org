@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: Developer Notes
 categories:
-    - Module 9
+    - Module 10. Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0009-02-01
+date: 0010-02-01
 ---
 
 This module is used to document background details, generally considered to obscure for use in the main workshop but to help developers keep track of certain details.
