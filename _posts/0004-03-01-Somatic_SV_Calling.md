@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Introduction to Clinical Application
+title: Somatic SV Calling
 categories:
-    - Module 07. Clinic
+    - Module 04. Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-01-01
+date: 0003-03-01
 ---
 

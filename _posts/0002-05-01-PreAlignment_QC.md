@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Introduction to Clinical Application
+title: PreAlignment QC
 categories:
-    - Module 07. Clinic
+    - Module 02. Inputs
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-01-01
+date: 0001-10-01
 ---
 

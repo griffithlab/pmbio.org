@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Introduction to Clinical Application
+title: RNAseq Fusion Filtering, Annotation, and Review
 categories:
-    - Module 07. Clinic
+    - Module 06. RNAseq
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-01-01
+date: 0005-05-02
 ---
 
