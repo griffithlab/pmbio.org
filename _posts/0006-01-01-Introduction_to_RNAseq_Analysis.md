@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: RNAseq Fusion Filtering, Annotation, and Review
+title: Introduction to RNAseq Analysis
 categories:
-    - Module 5
+    - Module 06. RNAseq
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0005-05-02
+date: 0005-01-01
 ---
 

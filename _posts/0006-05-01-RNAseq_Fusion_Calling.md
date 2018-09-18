@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Introduction to RNAseq Analysis
+title: RNAseq Fusion Calling
 categories:
-    - Module 5
+    - Module 06. RNAseq
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0005-01-01
+date: 0005-05-01
 ---
 
