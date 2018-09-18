@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Somatic SV Filtering, Annotation, and Review
+title: Somatic LOH Filtering, Annotation, and Review
 categories:
-    - Module 3
+    - Module 04. Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0003-03-02
+date: 0003-05-02
 ---
 

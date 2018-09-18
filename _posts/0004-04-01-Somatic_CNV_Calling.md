@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Somatic CNV Filtering, Annotation, and Review
+title: Somatic CNV Calling
 categories:
-    - Module 3
+    - Module 04. Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0003-04-02
+date: 0003-04-01
 ---
 
