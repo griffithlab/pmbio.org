@@ -1,10 +1,12 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Introduction to Clinical Application
+title: Germline Variant Interpretation
 categories:
-    - Module 08. Clinic
+    - Module 07. Clinic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-01-01
+date: 0007-03-01
 ---
+
+Introduction to ClinVar
 

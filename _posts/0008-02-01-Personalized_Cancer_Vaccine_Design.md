@@ -3,7 +3,7 @@ feature_text: |
   ## Precision Medicine
 title: Personalized Cancer Vaccine Design
 categories:
-    - Module 08. Clinic
+    - Module 08. Immune
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0007-04-01
 ---
