@@ -3,7 +3,7 @@ feature_text: |
   ## Precision Medicine
 title: Somatic Variant Interpretation
 categories:
-    - Module 7
+    - Module 08. Clinic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0007-02-01
 ---
