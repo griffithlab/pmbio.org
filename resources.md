@@ -7,3 +7,6 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 excerpt: ""
 layout: "home"
 ---
+
+### Somatic CNV Calling
+1. [Article on WGS CNV calling](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4394692/)
