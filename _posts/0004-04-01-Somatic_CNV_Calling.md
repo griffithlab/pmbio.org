@@ -16,8 +16,8 @@ To begin, the concept of a CNA is fairly straight forward, in the figure to the 
 
 ### VarScan
 
-talk about how algorith works
+talk about how algorithm works
 
 ### Delly
 
-talk about how algorith works
+talk about how algorithm works
