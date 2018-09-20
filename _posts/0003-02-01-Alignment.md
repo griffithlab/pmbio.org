@@ -5,7 +5,7 @@ title: Alignment
 categories:
     - Module 03. Align
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0002-02-01
+date: 0003-02-01
 ---
 
 WGS and Exome fastq data will be aligned with BWA MEM using the following options:

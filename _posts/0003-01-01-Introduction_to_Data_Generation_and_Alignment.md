@@ -5,6 +5,6 @@ title: Introduction to Data Generation and Alignment
 categories:
     - Module 03. Align
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0002-01-01
+date: 0003-01-01
 ---
 

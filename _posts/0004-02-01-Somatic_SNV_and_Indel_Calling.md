@@ -5,7 +5,7 @@ title: Somatic SNV and InDel Calling
 categories:
     - Module 04. Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0003-02-01
+date: 0004-02-01
 ---
 TODO: Change directory names as needed for consistency across modules, also we will need a version for subset samples.
 #### **Downloading Reference Files**
