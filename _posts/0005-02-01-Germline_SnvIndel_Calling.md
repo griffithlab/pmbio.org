@@ -1,7 +1,7 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Germline SNV and Indel Calling
+title: Germline SNV/Indel Calling
 categories:
     - Module 05. Germline
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"

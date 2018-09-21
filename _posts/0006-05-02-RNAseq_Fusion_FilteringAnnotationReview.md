@@ -1,10 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Somatic CNV Filtering, Annotation, and Review
+title: RNAseq Fusion Filtering/Annotation/Review
 categories:
-    - Module 04. Somatic
+    - Module 06. RNAseq
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0004-04-02
+date: 0006-05-02
 ---
 

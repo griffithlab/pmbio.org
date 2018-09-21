@@ -1,10 +1,9 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: RNAseq Fusion Filtering, Annotation, and Review
+title: Intro to Appendix and Additional Resources
 categories:
-    - Module 06. RNAseq
+    - Module 10. Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0006-05-02
+date: 0010-01-01
 ---
-
