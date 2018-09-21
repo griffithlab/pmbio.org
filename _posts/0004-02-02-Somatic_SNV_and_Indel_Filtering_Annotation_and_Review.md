@@ -33,14 +33,16 @@ __________________________
 
 
 
-### **Manual Review**
+##### **Manual Review**
 
 
 
-### **Automated Refinement**
+##### **Automated Refinement**
 
 
 
 
 #### **Somatic Variant Annotation**
 __________________________  
+
+##### **VEP Annotation**
