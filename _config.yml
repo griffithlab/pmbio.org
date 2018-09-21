@@ -47,6 +47,11 @@ permalink: pretty  # Permalink style (/YYYY/MM/DD/page-name/)
 excerpt_separator: <!-- more --> # Marks end of excerpt in posts
 timezone: America/Chicago # Timezone for blog posts and alike
 
+markdown: kramdown
+
+kramdown:
+  auto_ids: true
+
 # 5. Collections
 collections:
   posts:
