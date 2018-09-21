@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-03-01
 ---
 
-This module is primarily for the course developers to document how the AWS AMI was developed for the course.
+This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necesary bioinformatics files. If students are interested 
 
 ***
 

@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-02-01
 ---
 
-This module is used to document background details, generally considered to obscure for use in the main workshop but to help developers keep track of certain details.
+This module is used to document background details that are generally considered too obscure for use in the main workshop but are helpful for the course developers to keep track of certain details.
 
 ### Prepare data
 
