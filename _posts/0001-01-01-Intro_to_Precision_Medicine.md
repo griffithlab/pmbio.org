@@ -10,7 +10,7 @@ date: 0001-01-01
 
 Analysis of high throughput genome and transcriptome data is major component of many research projects ranging from large-scale precision medicine efforts to focused investigations in model systems. This analysis involves the identification of specific genome or transcriptome features that predispose individuals to disease, predict response to therapies, influence diagnosis/prognosis, or provide mechanistic insights into disease models. During this course (IBDR01), students will perform an example end-to-end bioinformatics analysis of genome (WGS and Exome) and transcriptome (RNA-seq) data.
 
-Basic principles of this course
+### Basic principles of this course
 * Key genomics and bioinformatics concepts are introduced by lectures and reinforced by hands-on exercises with real data
 * Use of real (not simulated) genomics data
 * Try to be self-contained. As much as possible everything needed to understand and run the analyses described here should be explained within this site.
