@@ -60,20 +60,24 @@ Optional: rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
 ~/bin/sambamba merge -t 4 /data/RNA_seq/alignments/HCC1395_RNA.bam /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam
 ```
 #### **Assembling transcript from merged bams**
+
 ```bash
 ~/bin/stringtie -G /data/RNA_seq/refseq/converted_Homo_sapiens.GRCh38.92.gtf -o /data/RNA_seq/transcripts/HCC1395_RNA.gtf -p 4 -l HCC1395_RNA /data/RNA_seq/alignments/HCC1395_RNA.bam
 
 ~/bin/stringtie -G /data/RNA_seq/refseq/converted_Homo_sapiens.GRCh38.92.gtf -o /data/RNA_seq/transcripts/HCC1395BL_RNA.gtf -p 4 -l HCC1395BL_RNA /data/RNA_seq/alignments/HCC1395BL_RNA.bam
 ```
 #### **Merging Transcripts from merged bams**
+
 ```bash
 ~/bin/stringtie --merge -p 4 -G /data/RNA_seq/refseq/converted_Homo_sapiens.GRCh38.92.gtf -o /data/RNA_seq/transcripts/stringtie_merged_bams.gtf /data/RNA_seq/transcripts/HCC1395_RNA.gtf $RNA_HOME/transcripts/HCC1395BL_RNA.gtf
 ```
 #### **Comparing transcripts**
+
 ```bash
 ~/bin/gffcompare -r /data/RNA_seq/refseq/converted_Homo_sapiens.GRCh38.92.gtf -o /data/RNA_seq/transcripts/gffcmp /data/RNA_seq/transcripts/stringtie_merged_bams.gtf
 ```
 #### **Estimate Abundance**
+
 ```bash
 mkdir -p /data/RNA_seq/ballgown/HCC1395_RNA_H3MYFBBXX_4_GCCAAT
 mkdir -p /data/RNA_seq/ballgown/HCC1395_RNA_H3MYFBBXX_5_GCCAAT

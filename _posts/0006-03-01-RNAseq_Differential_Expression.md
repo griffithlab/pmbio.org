@@ -9,6 +9,7 @@ date: 0006-03-01
 ---
 
 #### **Differential Expression**
+
 ```bash
 cd /data/RNA_seq
 # Make CSV/TSV for phenotype data

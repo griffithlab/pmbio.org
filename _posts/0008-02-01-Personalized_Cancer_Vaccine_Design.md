@@ -77,10 +77,6 @@ Ensure that you are running in a Python3.5 environment, and run the following ex
 
 Note that if the job has failed previously, you will need to delete the directories that have been created in the output file in order to rerun the command.  
 
-If you would like to transfer your own data from your laptop/PC, you may use the scp command with -i and your private key for the instance. 
+If you would like to transfer your own data from your laptop/PC, you may use the scp command with -i and your private key for the instance.
 
-For more specific details on usage options, please refer to the [pVACtools website](http://pvactools.readthedocs.io/en/latest/pvacseq/run.html). 
-
-
-
-
+For more specific details on usage options, please refer to the [pVACtools website](http://pvactools.readthedocs.io/en/latest/pvacseq/run.html).
