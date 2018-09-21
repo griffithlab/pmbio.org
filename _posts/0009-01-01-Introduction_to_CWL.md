@@ -178,7 +178,7 @@ The command.cwl files specify how to run a given command for a step in the workf
 
 # Putting it all together
 
-Now that we've gone over the basics let's go ahead and run this workflow. On a typical computer the workflow should run in approx. 7-10 minutes depending on if docker images need to be pulled down from the web. 
+Now that we've gone over the basics let's go ahead and run this workflow. On a typical computer the workflow should run in approx. 7-10 minutes depending on if docker images need to be pulled down from the web.
 
 ```bash
 cwltool --outdir ~/Desktop/cwl_test workflow.cwl inputs.yml

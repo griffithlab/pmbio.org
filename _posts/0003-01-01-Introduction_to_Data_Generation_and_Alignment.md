@@ -7,4 +7,3 @@ categories:
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0003-01-01
 ---
-

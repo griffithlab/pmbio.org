@@ -8,7 +8,11 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0004-04-01
 ---
 
-[Copy number alterations (CNA)](https://en.wikipedia.org/wiki/Copy-number_variation) occur when sections of a genome are duplicated or deleted. This phenomenom can actually be quite usefull from an evolutionary standpoint, an example would be the duplication of opsin genes allowing some vertebrate species to see more colors. These types of events however can have a significant impact in the context of disease with perhaps the most famous being an amplification of chromosome 21 resulting in down sydrome. In this section we will go over identifying these types of alterations with [VarScan](http://varscan.sourceforge.net/using-varscan.html) and [Delly](https://github.com/dellytools/delly). However first let's examine exactly what we mean when the segment of a genome is duplicated or deleted and how these types of events can be identified in sequencing data.
+# copycat Somatic
+# cnvnator germline
+# cnvkit exome
+
+[Copy number alterations (CNA)](https://en.wikipedia.org/wiki/Copy-number_variation) occur when sections of a genome are duplicated or deleted. This phenomenom can actually be quite usefull from an evolutionary standpoint, an example would be the duplication of opsin genes allowing some vertebrate species to see more colors. These types of events however can have a significant impact in the context of disease with perhaps the most famous being an amplification of chromosome 21 resulting in down sydrome. In this section we will go over identifying these types of alterations with [VarScan](http://varscan.sourceforge.net/using-varscan.html) and [CNVnator](https://github.com/dellytools/delly). However first let's examine exactly what we mean when the segment of a genome is duplicated or deleted and how these types of events can be identified in sequencing data.
 
 {% include figure.html image="/assets/module_4/CNA_illustration.png" position="left" width="450" %}
 

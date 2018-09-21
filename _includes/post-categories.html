@@ -7,7 +7,7 @@
 			{% for page in site.categories[category_name] reversed %}
 				<li class="item  item--post">
 				 	<article class="article  article--post  typeset">
-					 	<h4><a href="{{ page.url | relative_url }}" title="Post - {{ page.title }}">{{ page.title }}</a></h4>
+					 	<h4 class="test"><a href="{{ page.url | relative_url }}" title="Post - {{ page.title }}">{{ page.title }}</a></h4>
 						{% include post-meta.html %}
 				 	</article>
 			 </li>
