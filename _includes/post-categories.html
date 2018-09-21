@@ -1,7 +1,7 @@
 {% assign sorted_categories = site.categories | sort %}
 {% for category in sorted_categories %}
 	{% assign category_name = category | first %}
-	<section class="section  typeset">
+	<section class="section typeset">
 		<h3 id="{{ category_name | slugify }}">{{ category_name }}</h3>
 		<ul class="list  list--posts">
 			{% for page in site.categories[category_name] reversed %}
