@@ -1,12 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Germline Variant Interpretation
+title: Somatic SV Filtering, Annotation, and Review
 categories:
-    - Module 07. Clinic
+    - Module 04. Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-03-01
+date: 0004-03-02
 ---
-
-Introduction to ClinVar
 

@@ -1,12 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Germline Variant Interpretation
+title: Annotation
 categories:
-    - Module 07. Clinic
+    - Module 02. Inputs
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-03-01
+date: 0002-02-01
 ---
-
-Introduction to ClinVar
 

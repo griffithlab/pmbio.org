@@ -1,12 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Germline Variant Interpretation
+title: Introduction to RNAseq Analysis
 categories:
-    - Module 07. Clinic
+    - Module 06. RNAseq
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-03-01
+date: 0006-01-01
 ---
-
-Introduction to ClinVar
 

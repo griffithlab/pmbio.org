@@ -1,12 +1,10 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Germline Variant Interpretation
+title: Introduction to Germline WGS and Exome Variant Analysis
 categories:
-    - Module 07. Clinic
+    - Module 05. Germline
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0007-03-01
+date: 0005-01-01
 ---
-
-Introduction to ClinVar
 

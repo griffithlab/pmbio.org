@@ -3,7 +3,7 @@ feature_text: |
   ## Precision Medicine
 title: UNIX Primer
 categories:
-    - Module 1
+    - Module 01. Setup
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-03-01
 ---
