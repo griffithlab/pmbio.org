@@ -30,11 +30,24 @@ TO DO: INSERT CODE FOR FILTERING
 
 ##### **Manual Review**
 __________________________  
-After somatic variant filtering, manual review of aligned read sequences is required to identify a high-quality list of somatic variants.
+After somatic variant filtering, manual review of aligned read sequences is required to identify a high-quality list of somatic variants. Manual review allows individuals to incorporate information not considered by automated variant callers. For example, a trained eye can discern misclassifications attributable to overlapping errors at the ends of sequence reads, preferential amplification of smaller fragments, or poor alignment in areas of low complexity. A standard operating procedure described by our lab can be used to better understand how to setup and conduct manual review.
+
+Briefly, manual review requires use of a genomic viewer, a BAM file of aligned sequencing reads, and a BED or BED-like file for all variant that require manual review. Each variant can be observed in the genomic viewer and variants can be labeled as true somatic variants, false somatic variants, germline variants, or ambiguous. After manual review, only variants that are labeled as true somatic variants are subsequently used for annotation.
+
+For convenience, we provided examples of true somatic variants and false positives observed during manual review of our sequencing data.
+
+**Somatic Variant**
 
 
-##### **Manual Review**
-Manual review allows individuals to incorporate information not considered by automated variant callers. For example, a trained eye can discern misclassifications attributable to overlapping errors at the ends of sequence reads, preferential amplification of smaller fragments, or poor alignment in areas of low complexity.
+
+**False Variant -  [INSERT]**
+
+
+**False Variant -  [INSERT]**
+
+
+**False Variant -  [INSERT]**
+
 
 
 ##### **Automated Somatic Variant Refinement**
