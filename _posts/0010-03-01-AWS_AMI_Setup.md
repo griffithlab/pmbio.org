@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-03-01
 ---
 
-This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necesary bioinformatics files. If students are interested 
+This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necesary bioinformatics files. If students are interested
 
 ***
 
@@ -24,18 +24,31 @@ For development purposes we started with a very large instance (overkill). Futur
 - Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
 
 ### Perform basic linux configuration
+Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation.
 
-These steps will update ubuntu packages and install dependencies for software needed in the course. 
+```bash
+# Samtools
+sudo apt-get update -y && sudo apt-get install -y \
+     build-essential \
+     libncurses5-dev \
+     zlib1g-dev \
+     libbz2-dev \
+     liblzma-dev
+```
+
+```bash
+# PICARD
+sudo apt-get update -y && sudo apt-get install -y \
+     openjdk-8-jdk
+```
 
 Notes:
-- picard requires at least java 1.8.x (Didn't check default ubuntu java version/install status)
-- samtools (and likely others) require: make, gcc, libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev
 - For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
 
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus 
+sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus
 sudo pip install gsutil cmake
 ```
 
@@ -104,4 +117,3 @@ Restart apache
 ```bash
 sudo service apache2 restart
 ```
-

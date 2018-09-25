@@ -22,7 +22,7 @@ mkdir bin
 
 ```bash
 cd ~/bin
-wget https://github.com/broadinstitute/picard/releases/download/2.17.6/picard.jar
+wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 export PICARD='/home/ubuntu/bin/picard.jar'
 java -jar $PICARD -h
 ```
@@ -174,19 +174,26 @@ ln -s ~/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/bin/gffcompare
 ### Install R
 
 ```bash
-sudo apt-get install gfortran
-sudo apt-get install libreadline-dev
-sudo apt install libpcre3-dev
-sudo apt-get install libcurl4-openssl-dev
+cd ~/bin
+
+sudo apt-get install -y gfortran \
+                        libreadline-dev \
+                        libpcre3-dev \
+                        libcurl4-openssl-dev
 
 export R_LIBS=
 wget https://cran.r-project.org/src/base/R-3/R-3.4.0.tar.gz
 tar -zxvf R-3.4.0.tar.gz
 cd R-3.4.0
-./configure --prefix=~/bin --with-x=no
+./configure --prefix=/home/ubuntu/bin/ --with-x=no
 make
 make install
-sudo apt install r-base-core
+# left off here
+#configuring Java ...
+
+#*** Cannot find any Java interpreter
+#*** Please make sure 'java' is on your PATH or set JAVA_HOME correspondingly
+sudo apt install r-base-core # Do we need this, seems redundant unless were demonstrating the package manager can be used
 Rscript --version
 sudo apt-get install libssl-dev
 sudo apt-get install libxml2-dev
@@ -198,3 +205,5 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("alyssafrazee/RSkittleBrewer","dplyr","genefilter","ballgown"))
 quit()
 ```
+
+### Install
