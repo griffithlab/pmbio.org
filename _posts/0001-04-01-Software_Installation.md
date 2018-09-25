@@ -133,16 +133,6 @@ tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2
 
 .strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
 ```
-### Install HISAT
-
-```bash
-cd ~/bin
-wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_64.zip
-unzip hisat2-2.0.4-Linux_x86_64.zip
-ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
-
-./hisat2
-```
 
 ### Install Sambamba
 
@@ -154,6 +144,18 @@ ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
 
 ./sambamba
 ```
+
+### Install HISAT
+
+```bash
+cd ~/bin
+wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_64.zip
+unzip hisat2-2.0.4-Linux_x86_64.zip
+ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
+
+./hisat2-2.0.4/hisat2
+```
+
 ### Install StringTie
 
 ```bash
@@ -161,6 +163,8 @@ cd ~/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.0.Linux_x86_64.tar.gz
 tar -xzvf stringtie-1.3.0.Linux_x86_64.tar.gz
 ln -s ~/bin/stringtie-1.3.0.Linux_x86_64/stringtie ~/bin/stringtie
+
+./stringtie -h
 ```
 ### Install Gffcompare
 
@@ -169,16 +173,13 @@ cd ~/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/gffcompare-0.9.8.Linux_x86_64.tar.gz
 tar -xzvf gffcompare-0.9.8.Linux_x86_64.tar.gz
 ln -s ~/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/bin/gffcompare
+
+./gffcompare
 ```
 ### Install R
 
 ```bash
 cd ~/bin
-
-sudo apt-get install -y gfortran \
-                        libreadline-dev \
-                        libpcre3-dev \
-                        libcurl4-openssl-dev
 
 export R_LIBS=
 wget https://cran.r-project.org/src/base/R-3/R-3.4.0.tar.gz
@@ -187,22 +188,11 @@ cd R-3.4.0
 ./configure --prefix=/home/ubuntu/bin/ --with-x=no
 make
 make install
-# left off here
-#configuring Java ...
 
-#*** Cannot find any Java interpreter
-#*** Please make sure 'java' is on your PATH or set JAVA_HOME correspondingly
-sudo apt install r-base-core # Do we need this, seems redundant unless were demonstrating the package manager can be used
-Rscript --version
-sudo apt-get install libssl-dev
-sudo apt-get install libxml2-dev
+cd ~/bin
+./R-3.4.0/bin/Rscript --version
 
-~/bin/R
-<In the interactive section>:
-install.packages("devtools",repos="http://cran.us.r-project.org")
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("alyssafrazee/RSkittleBrewer","dplyr","genefilter","ballgown"))
-quit()
+R-3.4.0/bin/R --vanilla -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
 ```
 
 ### Install

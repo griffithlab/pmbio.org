@@ -102,28 +102,49 @@ sudo apt-get update -y && sudo apt-get install -y \
 sudo apt-get update -y && sudo apt-get install -y \
      python-dev
 ```
-Notes:
-- For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
 
 ```bash
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get -y install make gcc libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev default-jdk apache2 unzip tabix python-dev python-setuptools libffi-dev python-pip cpanminus
-sudo pip install gsutil cmake
+# sambamba
 ```
+
+```bash
+# hisat2
+```
+
+```bash
+# stringtie
+```
+
+```bash
+# Gffcompare
+```
+
+```bash
+# R
+sudo apt-get update -y && sudo apt-get install -y \
+     gfortran \
+     libreadline-dev \
+     libpcre3-dev \
+     libcurl4-openssl-dev \
+     build-essential \
+     zlib-dev \
+     libbz2-dev \
+     liblzma-dev \
+     openjdk-8-jdk
+
+# devtools
+sudo apt-get update -y && sudo apt-get install -y \
+     libssl-dev \
+     libxml2-dev
+```
+
+Notes:
+- For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
 
 Install mysql-server - set a root password (e.g., pmbiotest)
 
 ```bash
 sudo apt-get install mysql-server libmysqlclient-dev
-```
-
-Install perl dependencies (e.g., for VEP)
-
-```bash
-sudo cpanm DBI
-sudo cpanm DBD::mysql
-sudo cpanm Bio::Root::Version
 ```
 
 Format and mount an extra data volume. Create symlink from homedir for convenience. Create a tmp dir on the larger volume for tools (e.g., picard) that need more temp space than the default system temp dir.
