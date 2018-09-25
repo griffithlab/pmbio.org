@@ -109,7 +109,6 @@ wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype
 ```bash
 cd ~/bin
 curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar
-
 java -jar ~/bin/VarScan.v2.4.2.jar
 ```
 

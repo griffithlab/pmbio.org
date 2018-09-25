@@ -32,7 +32,8 @@ sudo apt-get update -y && sudo apt-get install -y \
      wget \
      bzip2 \
      unzip \
-     git
+     git \
+     curl
 ```
 
 ```bash
@@ -75,7 +76,6 @@ sudo apt-get update -y && sudo apt-get install -y \
 sudo apt-get update -y && sudo apt-get install -y \
      libdbi-perl \
      libdbd-mysql-perl \
-     curl \
      build-essential \
      zlib1g-dev \
      libmodule-build-perl \
@@ -84,6 +84,11 @@ sudo apt-get update -y && sudo apt-get install -y \
 cpanm -i Bio::Root::Version
 ```
 
+```bash
+# VarScan
+sudo apt-get update -y && sudo apt-get install -y \
+     openjdk-8-jdk
+```
 Notes:
 - For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
 
