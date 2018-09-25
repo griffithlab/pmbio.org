@@ -131,7 +131,7 @@ cd ~/bin
 curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
 tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2
 
-java -jar ~/bin/VarScan.v2.4.2.jar
+.strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
 ```
 ### Install HISAT
 
