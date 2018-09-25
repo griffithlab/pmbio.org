@@ -30,7 +30,8 @@ Many of the tools used also have underlying dependencies, in many linux distribu
 # general tools for installation
 sudo apt-get update -y && sudo apt-get install -y \
      wget \
-     bzip2
+     bzip2 \
+     unzip
 ```
 
 ```bash
@@ -52,6 +53,20 @@ sudo apt-get update -y && sudo apt-get install -y \
 ```bash
 # BWA
 sudo apt-get update -y && sudo apt-get install -y \
+    build-essential \
+    libz-dev
+```
+
+```bash
+# GATK 4
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+source ~/.bashrc
+conda env create -n gatk -f gatkcondaenv.yml
+source activate gatk
+sudo apt-get update -y && sudo apt-get install -y \
+     openjdk-8-jdk
+# for full functionality R and the libraries gsalib, ggplot2, reshape, gplots should be installed
 ```
 
 Notes:
