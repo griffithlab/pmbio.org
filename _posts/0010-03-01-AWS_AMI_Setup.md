@@ -31,7 +31,8 @@ Many of the tools used also have underlying dependencies, in many linux distribu
 sudo apt-get update -y && sudo apt-get install -y \
      wget \
      bzip2 \
-     unzip
+     unzip \
+     git
 ```
 
 ```bash
@@ -67,6 +68,20 @@ source activate gatk
 sudo apt-get update -y && sudo apt-get install -y \
      openjdk-8-jdk
 # for full functionality R and the libraries gsalib, ggplot2, reshape, gplots should be installed
+```
+
+```bash
+# VEP
+sudo apt-get update -y && sudo apt-get install -y \
+     libdbi-perl \
+     libdbd-mysql-perl \
+     curl \
+     build-essential \
+     zlib1g-dev \
+     libmodule-build-perl \
+     cpanminus
+
+cpanm -i Bio::Root::Version
 ```
 
 Notes:
