@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-03-01
 ---
 
-This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necesary bioinformatics files. If students are interested
+This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necesary bioinformatics files.
 
 ***
 
@@ -23,9 +23,11 @@ For development purposes we started with a very large instance (overkill). Futur
 - Configure security: Allow SSH access
 - Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
 
-### Perform basic linux configuration
-Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation.
+### Software Dependencies
+Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each tool bioinformatic tool used in the course is supplied.
 
+#### Pre-Installation
+Describes the general system wide dependencies required for downloading files neccessary for installation
 ```bash
 # general tools for installation
 sudo apt-get update -y && sudo apt-get install -y \
@@ -36,6 +38,8 @@ sudo apt-get update -y && sudo apt-get install -y \
      curl
 ```
 
+#### Samtools 1.7
+Describes dependencies for samtools 1.7, used in this course for general bam file manipulation.
 ```bash
 # Samtools
 sudo apt-get update -y && sudo apt-get install -y \
@@ -46,12 +50,16 @@ sudo apt-get update -y && sudo apt-get install -y \
      liblzma-dev
 ```
 
+#### PICARD 2.18.14
+Describes dependencies for PICARD 2.18.14, used in this course for general bam file manipulation and QC.
 ```bash
 # PICARD
 sudo apt-get update -y && sudo apt-get install -y \
      openjdk-8-jdk
 ```
 
+#### BWA 0.7.17
+Describes dependencies for BWA 0.7.17, used in this course for DNA alignment.
 ```bash
 # BWA
 sudo apt-get update -y && sudo apt-get install -y \
@@ -59,6 +67,8 @@ sudo apt-get update -y && sudo apt-get install -y \
     libz-dev
 ```
 
+#### GATK 4.0.2.1
+Describes dependencies for GATK 4.0.2.1, used in this course for .....
 ```bash
 # GATK 4
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -71,6 +81,8 @@ sudo apt-get update -y && sudo apt-get install -y \
 # for full functionality R and the libraries gsalib, ggplot2, reshape, gplots should be installed
 ```
 
+#### VEP 93.4
+Describes dependencies for VEP 93.4, used in this course for variant annotation.
 ```bash
 # VEP
 sudo apt-get update -y && sudo apt-get install -y \
@@ -84,12 +96,16 @@ sudo apt-get update -y && sudo apt-get install -y \
 cpanm -i Bio::Root::Version
 ```
 
+#### VarScan 2.4.2
+Describes dependencies for VarScan 2.4.2, used in this course for variant calling
 ```bash
 # VarScan
 sudo apt-get update -y && sudo apt-get install -y \
      openjdk-8-jdk
 ```
 
+#### BCFtools 1.3.1
+Describes dependencies for BCFtools 1.3.1, used in this course for manipulating VCF files.
 ```bash
 # BCFtools
 sudo apt-get update -y && sudo apt-get install -y \
@@ -97,28 +113,40 @@ sudo apt-get update -y && sudo apt-get install -y \
      libz-dev
 ```
 
+#### Strelka 2.7.1
+Describes dependencies for strelka, used in this course for variant calling.
 ```bash
 # strelka
 sudo apt-get update -y && sudo apt-get install -y \
      python-dev
 ```
 
+#### Sambamba 0.6.4
+Describes dependencies for Sambamba 0.6.4, used in this course for ....
 ```bash
 # sambamba
 ```
 
+#### HISAT 2.0.4
+Describes dependencies for HISAT 2.0.4, used in this course for RNA alignment.
 ```bash
 # hisat2
 ```
 
+#### StringTie 1.3.0
+Describes dependencies for StringTie 1.3.0, used in this course for transcript abundance estimates.
 ```bash
 # stringtie
 ```
 
+#### Gffcompare 0.9.8
+Describes dependencies for Gffcompare 0.9.8, used in this course for ....
 ```bash
 # Gffcompare
 ```
 
+#### R 3.4.0
+Describes dependencies for R 3.4.0, used in this course for general file manipulation/analysis.
 ```bash
 # R
 sudo apt-get update -y && sudo apt-get install -y \
@@ -140,6 +168,8 @@ sudo apt-get update -y && sudo apt-get install -y \
 
 Notes:
 - For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
+
+### Perform basic linux configuration
 
 Install mysql-server - set a root password (e.g., pmbiotest)
 

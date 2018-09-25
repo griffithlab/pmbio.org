@@ -60,14 +60,6 @@ cd gatk-4.0.2.1/
 ./gatk
 ```
 
-### Install gsutil - should these apt-get commands be moved to basic set up of instance?
-
-```bash
-sudo apt-get install gcc python-dev python-setuptools libffi-dev
-sudo apt-get install python-pip
-sudo pip install gsutil
-```
-
 ### Install VEP
 
 During the installation make sure to accept (y) when asked whether you'd like to install cache files, fastas, and plugins.
@@ -194,5 +186,3 @@ cd ~/bin
 
 R-3.4.0/bin/R --vanilla -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
 ```
-
-### Install
