@@ -116,13 +116,13 @@ java -jar ~/bin/VarScan.v2.4.2.jar
 ### Install BCFtools
 ```bash
 cd ~/bin
-curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
+curl -L -k -o bcftools-1.3.1.tar.bz2                https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
 tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
 cd bcftools-1.3.1
 make -j
 make prefix=~/bin/software install
 
-bcftools -h
+./bcftools -h
 ```
 
 ### Install Strelka

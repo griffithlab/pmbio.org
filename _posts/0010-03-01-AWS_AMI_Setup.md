@@ -89,6 +89,13 @@ cpanm -i Bio::Root::Version
 sudo apt-get update -y && sudo apt-get install -y \
      openjdk-8-jdk
 ```
+
+```bash
+# BCFtools
+sudo apt-get update -y && sudo apt-get install -y \
+     build-essential \
+     libz-dev
+```
 Notes:
 - For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
 
