@@ -27,6 +27,13 @@ For development purposes we started with a very large instance (overkill). Futur
 Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation.
 
 ```bash
+# general tools for installation
+sudo apt-get update -y && sudo apt-get install -y \
+     wget \
+     bzip2
+```
+
+```bash
 # Samtools
 sudo apt-get update -y && sudo apt-get install -y \
      build-essential \
@@ -40,6 +47,11 @@ sudo apt-get update -y && sudo apt-get install -y \
 # PICARD
 sudo apt-get update -y && sudo apt-get install -y \
      openjdk-8-jdk
+```
+
+```bash
+# BWA
+sudo apt-get update -y && sudo apt-get install -y \
 ```
 
 Notes:
