@@ -24,10 +24,10 @@ For development purposes we started with a very large instance (overkill). Futur
 - Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
 
 ### Software Dependencies
-Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each tool bioinformatic tool used in the course is supplied.
+Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each bioinformatic tool used in the course is supplied. In this we will use the normal linux convention where our own compiled binaries and executables are installed in `/usr/local/bin`.
 
 #### Pre-Installation
-Describes the general system wide dependencies required for downloading files neccessary for installation
+Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed.
 ```bash
 # general tools for installation
 sudo apt-get update -y && sudo apt-get install -y \
@@ -145,8 +145,8 @@ Describes dependencies for Gffcompare 0.9.8, used in this course for ....
 # Gffcompare
 ```
 
-#### R 3.4.0
-Describes dependencies for R 3.4.0, used in this course for general file manipulation/analysis.
+#### R 3.5.1
+Describes dependencies for R 3.5.1, used in this course for general file manipulation/analysis.
 ```bash
 # R
 sudo apt-get update -y && sudo apt-get install -y \
@@ -155,7 +155,7 @@ sudo apt-get update -y && sudo apt-get install -y \
      libpcre3-dev \
      libcurl4-openssl-dev \
      build-essential \
-     zlib-dev \
+     zlib1g-dev \
      libbz2-dev \
      liblzma-dev \
      openjdk-8-jdk
@@ -164,6 +164,40 @@ sudo apt-get update -y && sudo apt-get install -y \
 sudo apt-get update -y && sudo apt-get install -y \
      libssl-dev \
      libxml2-dev
+```
+
+#### copyCat 1.6.12
+Describes dependencies for copyCat 1.6.12, used in this course for WGS copy number calling.
+```bash
+# copyCat
+R-3.5.1/bin/R --vanilla -e 'BiocManager::install(c("GenomicRanges", "Organism.dplyr"))'
+```
+
+#### CNVnator
+Describes dependencies for CNVnator, used in this course for exome copy number calling.
+```bash
+# CNVnator
+sudo apt-get update -y && sudo apt-get install -y \
+     libxpm4
+wget https://root.cern.ch/download/root_v6.14.04.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+tar -xzvf root_v6.14.04.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+export ROOTSYS=/bin/root
+export PATH=$ROOTSYS/bin:$PATH
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+
+wget http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2
+tar -xvjf yeppp-1.0.0.tar.bz2
+export YEPPPLIBDIR=/bin/yeppp-1.0.0/binaries/linux/x86_64
+export YEPPPINCLUDEDIR=/bin/yeppp-1.0.0/library/headers
+export LD_LIBRARY_PATH=$YEPPPLIBDIR:$LD_LIBRARY_PATH
+```
+
+#### cnvkit
+Describes dependencies for cnvkit, used in this course for ...
+```bash
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+source ~/.bashrc
 ```
 
 Notes:
@@ -227,4 +261,22 @@ DocumentRoot /data
 Restart apache
 ```bash
 sudo service apache2 restart
+```
+
+### Formatting and mounting storage volumnes
+With the tools we will be using now installed we need to mount and format the storage volume we allocated when we initialized the instance. Students will use this volume to install their own copies of tools used as well as input data and results.
+```bash
+# make a workspace directory in root
+cd /
+sudo mkdir workspace
+
+# format the mount
+sudo mkfs /dev/xvdb
+
+# mount the drive with the allocated space
+sudo mount /dev/xvdb /workspace
+
+# make the mount persistent
+echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | sudo tee /etc/fstab
+
 ```

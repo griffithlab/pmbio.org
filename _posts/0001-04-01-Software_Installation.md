@@ -8,10 +8,10 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-04-01
 ---
 
-This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. See our [AWS Setup](/module )
+This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS Setup](http://pmbio.org/module%2010.%20appendix/0010/02/28/AWS_AMI_Setup/) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution.
 
 ### Prepare for installation
-First, choose a single directory for installing tools
+First, choose a single directory for installing tools, lets
 
 ```bash
 cd ~
@@ -174,15 +174,41 @@ ln -s ~/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/bin/gffcompare
 cd ~/bin
 
 export R_LIBS=
-wget https://cran.r-project.org/src/base/R-3/R-3.4.0.tar.gz
-tar -zxvf R-3.4.0.tar.gz
-cd R-3.4.0
+wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
+tar -zxvf R-3.5.1.tar.gz
+cd R-3.5.1
 ./configure --prefix=/home/ubuntu/bin/ --with-x=no
 make
 make install
 
 cd ~/bin
-./R-3.4.0/bin/Rscript --version
+./R-3.5.1/bin/Rscript --version
 
-R-3.4.0/bin/R --vanilla -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
+R-3.5.1/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+```
+
+### Install copyCat
+```
+R-3.5.1/bin/R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
+```
+
+### Install CNVnator
+```bash
+wget https://github.com/abyzovlab/CNVnator/releases/download/v0.3.3/CNVnator_v0.3.3.zip
+unzip CNVnator_v0.3.3.zip
+cd CNVnator_v0.3.3/src/samtools
+make
+cd ../
+make
+```
+
+### Install cnvkit
+```bash
+cd ~/bin
+wget https://github.com/etal/cnvkit/archive/v0.9.5.zip
+unzip v0.9.5.zip
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda config --add channels bioconda
+conda create -n cnvkit cnvkit
 ```
