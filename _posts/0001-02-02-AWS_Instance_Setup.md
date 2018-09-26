@@ -12,5 +12,5 @@ Covered in this section: logging into AWC EC2 console, starting an instance from
 
 Basic intro to the instance (top, resources available, mount location of volumes, etc.).
 
-
+NOTE: CHECK INSTANCE LIMITS FOR THE COURSE AWS REGION (EU LONDON) FOR THE INSTANCE TYPE WE CHOOSE
 
