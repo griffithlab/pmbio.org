@@ -8,8 +8,8 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0004-02-02
 ---
 
-#### **Somatic Variant Refinement**
-Automated pipelines can identify and filter many false variant calls that result from sequencing errors, misalignment of reads, and other factors; however, additional refinement of somatic variants is often required to eliminate variant caller inaccuracies. Following automated variant calling, heuristic filtering and manual review of aligned read sequences is required to identify a high-quality list of somatic variants. This process of filtering and manual review is deemed somatic variant refinement. Here we describe methods to filter the somatic variant identified by [insert variant calling method] for chromosome 6. First we filter the VCF file using VAF, total coverage, and variant coverage. We subsequently describe the Integrative Genomics Viewer (IGV) and IGVNavigator, which can be used to standardize and streamline manual review.
+### **Somatic Variant Refinement**
+Automated pipelines can identify and filter many false variant calls that result from sequencing errors, misalignment of reads, and other factors; however, additional refinement of somatic variants is often required to eliminate variant caller inaccuracies. Following automated variant calling, heuristic filtering and manual review of aligned read sequences is required to identify a high-quality list of somatic variants. This process of filtering and manual review is deemed somatic variant refinement. Here we describe methods to filter the somatic variant identified by mutect, varscan, and strelka for chromosome 6. First we filter the VCF file using VAF, total coverage, and variant coverage. We subsequently describe the Integrative Genomics Viewer (IGV) and IGVNavigator, which can be used to standardize and streamline manual review.
 
 
 ##### **Somatic Variant Filtering**
@@ -30,7 +30,7 @@ TO DO: INSERT CODE FOR FILTERING
 
 ##### **Manual Review**
 __________________________  
-After somatic variant filtering, manual review of aligned read sequences is required to identify a high-quality list of somatic variants. Manual review allows individuals to incorporate information not considered by automated variant callers. For example, a trained eye can discern misclassifications attributable to overlapping errors at the ends of sequence reads, preferential amplification of smaller fragments, or poor alignment in areas of low complexity. A standard operating procedure described by our lab can be used to better understand how to setup and conduct manual review.
+After somatic variant filtering, manual review of aligned read sequences is required to identify a high-quality list of somatic variants. Manual review allows individuals to incorporate information not considered by automated variant callers. For example, a trained eye can discern misclassifications attributable to overlapping errors at the ends of sequence reads, preferential amplification of smaller fragments, or poor alignment in areas of low complexity. A standard operating procedure described by our lab can be used to better understand how to setup and conduct manual review [INSERT LINK].
 
 Briefly, manual review requires use of a genomic viewer, a BAM file of aligned sequencing reads, and a BED or BED-like file for all variant that require manual review. Each variant can be observed in the genomic viewer and variants can be labeled as true somatic variants, false somatic variants, germline variants, or ambiguous. After manual review, only variants that are labeled as true somatic variants are subsequently used for annotation.
 
@@ -60,3 +60,5 @@ To date we have developed DeepSVR, which is a deep learning model that incorpora
 __________________________  
 
 ##### **VEP Annotation**
+
+**Please continue to the next section for instructions on how to perform somatic structural variant calling*
