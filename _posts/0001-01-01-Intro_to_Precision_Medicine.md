@@ -19,3 +19,5 @@ Analysis of high throughput genome and transcriptome data is major component of 
 * Each bioinformatics command is accompanied by explanation of its intent, inputs, parameters, etc.
 * While this course uses a hypothetical cancer precision medicine case for demonstration purposes, the concepts covered here should be generally applicable to other human diseases as well as other organisms and experimental systems. Similarly, while we focus on Whole Genome, Exome and RNA-seq data, many of the concepts covered here will be informative for analyses involving other assay types (particularly those that involve sequencing on the Illumina platform).
 
+### Key lecture concepts
+* Introduction to the intructors, precision medicine, course overview, course website review, cloud computing, UNIX/Linux OS, bioinformatics tool installation
