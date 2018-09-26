@@ -11,17 +11,16 @@ date: 0001-04-01
 This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS Setup](http://pmbio.org/module%2010.%20appendix/0010/02/28/AWS_AMI_Setup/) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution.
 
 ### Prepare for installation
-First, choose a single directory for installing tools, lets
-
+First we must choose a single directory for installing tools, typically in linux user compiled tools are installed in `/usr/local/bin` however it doesn't really matter where our tools are installed as long as we can find them. In this tutorial we will install tools in `~/bin`, the AMI has copies of all these tools in `/usr/local/bin` as well. For this workshop we will be using the workspace folder to store all of our results. Lets go ahead and make a `bin` directory in there as well for the tools we will be installing.
 ```bash
-cd ~
+cd ~/workspace
 mkdir bin
 ```
 
-### Install Picard
-
+### Install PICARD
+PICARD is a set of java based tools developed by the Broad institute. It is usefull for manipulating next generation sequencing data and is available under an open source MIT license. Go ahead and follow the instructions below to download the pre compiled jar file.
 ```bash
-cd ~/bin
+cd ~/workspace/bin
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 export PICARD='/home/ubuntu/bin/picard.jar'
 java -jar $PICARD -h

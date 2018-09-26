@@ -12,11 +12,8 @@ Covered in this section: logging into AWC EC2 console, starting an instance from
 
 Basic intro to the instance (top, resources available, mount location of volumes, etc.).
 
-<<<<<<< HEAD
 #### Logging into an instance
 
 In the previous section [AWS Intro](http://pmbio.org/module%2001.%20setup/0001/01/31/AWS_Intro/) we reviewed
-=======
-NOTE: CHECK INSTANCE LIMITS FOR THE COURSE AWS REGION (EU LONDON) FOR THE INSTANCE TYPE WE CHOOSE
 
->>>>>>> 007f774f3d1a103dc0b749d6f3670afe6999ba5e
+NOTE: CHECK INSTANCE LIMITS FOR THE COURSE AWS REGION (EU LONDON) FOR THE INSTANCE TYPE WE CHOOSE

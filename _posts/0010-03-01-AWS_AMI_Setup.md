@@ -30,6 +30,7 @@ Many of the tools used also have underlying dependencies, in many linux distribu
 Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed.
 ```bash
 # general tools for installation
+cd /usr/local/bin
 sudo apt-get update -y && sudo apt-get install -y \
      wget \
      bzip2 \
@@ -42,6 +43,7 @@ sudo apt-get update -y && sudo apt-get install -y \
 Describes dependencies for samtools 1.7, used in this course for general bam file manipulation.
 ```bash
 # Samtools
+cd /usr/local/bin
 sudo apt-get update -y && sudo apt-get install -y \
      build-essential \
      libncurses5-dev \
@@ -54,6 +56,7 @@ sudo apt-get update -y && sudo apt-get install -y \
 Describes dependencies for PICARD 2.18.14, used in this course for general bam file manipulation and QC.
 ```bash
 # PICARD
+cd /usr/local/bin
 sudo apt-get update -y && sudo apt-get install -y \
      openjdk-8-jdk
 ```
@@ -62,6 +65,7 @@ sudo apt-get update -y && sudo apt-get install -y \
 Describes dependencies for BWA 0.7.17, used in this course for DNA alignment.
 ```bash
 # BWA
+cd /usr/local/bin
 sudo apt-get update -y && sudo apt-get install -y \
     build-essential \
     libz-dev
@@ -71,9 +75,12 @@ sudo apt-get update -y && sudo apt-get install -y \
 Describes dependencies for GATK 4.0.2.1, used in this course for .....
 ```bash
 # GATK 4
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
+cd /usr/local/bin
+sudo wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+sudo bash Miniconda3-latest-Linux-x86_64.sh # choose /usr/local/bin/miniconda as install location
 source ~/.bashrc
+
+wget https://github.com/broadinstitute/gatk/blob/master/scripts/gatkcondaenv.yml
 conda env create -n gatk -f gatkcondaenv.yml
 source activate gatk
 sudo apt-get update -y && sudo apt-get install -y \
@@ -170,7 +177,7 @@ sudo apt-get update -y && sudo apt-get install -y \
 Describes dependencies for copyCat 1.6.12, used in this course for WGS copy number calling.
 ```bash
 # copyCat
-R-3.5.1/bin/R --vanilla -e 'BiocManager::install(c("GenomicRanges", "Organism.dplyr"))'
+R-3.5.1/bin/R --vanilla -e 'BiocManager::install(c("IRanges", "DNAcopy"))'
 ```
 
 #### CNVnator
@@ -200,9 +207,6 @@ bash Miniconda3-latest-Linux-x86_64.sh
 source ~/.bashrc
 ```
 
-Notes:
-- For performance reasons it may be desirable to create an instance with larger root volume and/or a separate tmp volume
-
 ### Perform basic linux configuration
 
 Install mysql-server - set a root password (e.g., pmbiotest)
@@ -211,27 +215,32 @@ Install mysql-server - set a root password (e.g., pmbiotest)
 sudo apt-get install mysql-server libmysqlclient-dev
 ```
 
-Format and mount an extra data volume. Create symlink from homedir for convenience. Create a tmp dir on the larger volume for tools (e.g., picard) that need more temp space than the default system temp dir.
-
+### Formatting and mounting storage volumnes
+With the tools we will be using now installed we need to mount and format the storage volume we allocated when we initialized the instance. Students will use this volume to install their own copies of tools used as well as input data and results. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
 ```bash
+# get structure
 lsblk
-sudo mkfs -t ext4 /dev/xvdb
-sudo mkdir /data
-sudo mount /dev/xvdb /data
-sudo chown -R ubuntu:ubuntu /data
 
+# make a workspace directory in root
+cd /
+sudo mkdir workspace
+
+# format the mount
+sudo mkfs /dev/xvdb
+
+# mount the drive with the allocated space
+sudo mount /dev/xvdb /workspace
+sudo chown -R ubuntu:ubuntu /workspace
+
+# Make ephemeral storage mounts persistent
+echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | sudo tee /etc/fstab
+
+# make symlink for convenience
 cd ~
-ln -s /data data
-
-mkdir /data/tmp
+ln -s /workspace workspace
 ```
 
-Make ephemeral storage mounts persistent. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
-
-```bash
-echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /data ext4 defaults,nofail 0 2" | sudo tee /etc/fstab
-```
-
+### apache web serve setup
 Set up apache web server for convenient access to files. First, edit config to allow files to be served from /data/.
 
 ```bash
@@ -255,28 +264,10 @@ sudo vim /etc/apache2/sites-available/000-default.conf
 
 Change document root in 000-default.conf
 ```bash
-DocumentRoot /data
+DocumentRoot /workspace
 ```
 
 Restart apache
 ```bash
 sudo service apache2 restart
-```
-
-### Formatting and mounting storage volumnes
-With the tools we will be using now installed we need to mount and format the storage volume we allocated when we initialized the instance. Students will use this volume to install their own copies of tools used as well as input data and results.
-```bash
-# make a workspace directory in root
-cd /
-sudo mkdir workspace
-
-# format the mount
-sudo mkfs /dev/xvdb
-
-# mount the drive with the allocated space
-sudo mount /dev/xvdb /workspace
-
-# make the mount persistent
-echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | sudo tee /etc/fstab
-
 ```
