@@ -11,23 +11,14 @@ date: 0001-04-01
 This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS Setup](http://pmbio.org/module%2010.%20appendix/0010/02/28/AWS_AMI_Setup/) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution.
 
 ### Prepare for installation
-First we must choose a single directory for installing tools, typically in linux user compiled tools are installed in `/usr/local/bin` however it doesn't really matter where our tools are installed as long as we can find them. In this tutorial we will install tools in `~/bin`, the AMI has copies of all these tools in `/usr/local/bin` as well. For this workshop we will be using the workspace folder to store all of our results. Lets go ahead and make a `bin` directory in there as well for the tools we will be installing.
+First we must choose a single directory for installing tools, typically in linux, user compiled tools are installed in `/usr/local/bin` however it doesn't really matter where our tools are installed as long as we can find them. In this tutorial we will install tools in `~/workspace/bin`, the AMI has copies of all these tools in `/usr/local/bin` as well. For this workshop we will be using the workspace folder to store all of our results. Lets go ahead and make a `bin` directory in there as well for the tools we will be installing.
 ```bash
 cd ~/workspace
 mkdir bin
 ```
 
-### Install PICARD
-PICARD is a set of java based tools developed by the Broad institute. It is usefull for manipulating next generation sequencing data and is available under an open source MIT license. Go ahead and follow the instructions below to download the pre compiled jar file.
-```bash
-cd ~/workspace/bin
-wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
-export PICARD='/home/ubuntu/bin/picard.jar'
-java -jar $PICARD -h
-```
-
 ### Install Samtools
-
+[Samtools](http://www.htslib.org/) is a software package based in C which provies utilities for manipulating alignment files (SAM/BAM/CRAM). It is open source and available under an [MIT license](https://opensource.org/licenses/MIT).
 ```bash
 cd ~/bin
 wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2
@@ -39,7 +30,17 @@ make install
 ./samtools
 ```
 
+### Install PICARD
+[PICARD](https://broadinstitute.github.io/picard/) is a set of java based tools developed by the Broad institute. It is usefull for manipulating next generation sequencing data and is available under an open source [MIT license]().
+```bash
+cd ~/workspace/bin
+wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
+export PICARD='/home/ubuntu/bin/picard.jar'
+java -jar $PICARD -h
+```
+
 ### Install BWA
+[BWA](http://bio-bwa.sourceforge.net/) is a popular DNA alignment tool used for mapping sequences to a reference genome. It is available under an open source [GPLv3 license](https://opensource.org/licenses/GPL-3.0).
 ```bash
 cd ~/bin
 wget https://cytranet.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
@@ -50,28 +51,19 @@ make
 ```
 
 ### Install GATK 4
-
+[GATK](https://software.broadinstitute.org/gatk/) is a toolkit developed by the broad institute focused primarily on variant discovery and genotyping. It is open source and available under a [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause).
 ```bash
 cd ~/bin
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
 cd gatk-4.0.2.1/
+conda env create -n gatk -f gatkcondaenv.yml
+source activate gatk
 ./gatk
 ```
 
-### Install VEP
-
-During the installation make sure to accept (y) when asked whether you'd like to install cache files, fastas, and plugins.
-Install all homo sapiens build 38 cache files (For VEP v91, this corresponded to options 172, 174 and 176), the homo sapiens fasta (option 40), and the Downstream plugin (option 29) or all plugins (option 0).
-If you choose to download all plugins, some will not work without installation (dbNSFP, Carol, Condel, PolyPhen_SIFT, LoF, dbscSNV, GeneSplicer, MaxEntScan) or downloading data (dbNSFP, CADD, FATHMM_MKL, Gwava, LoF, LoFtool, ExACpLI, MPC, MTR, dbscSNV, AncestralAllele, ExAC)
-
-Note, the cache, fasta and plugin files can be quite large, therefore the default (root volume) location may be insufficient. Specify another path with the CACHEDIR option.
-
-Note, VEP natively supports gnomad allele frequencies but it is unclear if this works for all variants or only for dbSNP subset of variants.
-See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_other.html#assembly
-
-To access the full gnomAD data set, it is possible to use VEP's custom annotation feature to retrieve the frequency data directly from the gnomAD VCF files. See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_example.html#gnomad
-
+### Install VEP 93.4
+[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl. During the installation you will be asked whether you want to install cache files, fasta files and plugins. These files are used to make annotation quicker and eliminate the need for VEP to make web-based API queries. Normally during installation we would want to accept (y) when asked whether you'd like to install cache files, fastas, and plugins. However these files take some time to download and so we will use versions of these files which have already been downloaded, please decline (n) when asked if you would like to install these.
 ```bash
 cd ~/data
 mkdir vep_cache
@@ -142,7 +134,6 @@ ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
 cd ~/bin
 wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_64.zip
 unzip hisat2-2.0.4-Linux_x86_64.zip
-ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
 
 ./hisat2-2.0.4/hisat2
 ```
@@ -172,7 +163,6 @@ ln -s ~/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/bin/gffcompare
 ```bash
 cd ~/bin
 
-export R_LIBS=
 wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
 tar -zxvf R-3.5.1.tar.gz
 cd R-3.5.1
