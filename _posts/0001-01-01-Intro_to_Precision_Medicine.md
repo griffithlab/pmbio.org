@@ -3,7 +3,7 @@ feature_text: |
   ## Precision Medicine
 title: Intro to Precision Medicine
 categories:
-    - Module 01. Setup
+    - Module-01-Setup
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-01-01
 ---

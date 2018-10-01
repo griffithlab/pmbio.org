@@ -3,7 +3,7 @@ feature_text: |
   ## Precision Medicine
 title: Alignment
 categories:
-    - Module 03. Align
+    - Module-03-Align
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0003-02-01
 ---
