@@ -91,14 +91,30 @@ source deactivate
 ```
 
 ### Install VEP 93.4
-[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl. During the installation you will be asked whether you want to install cache files, fasta files and plugins. These files are used to make annotation quicker and eliminate the need for VEP to make web-based API queries. Normally during installation we would want to accept (y) when asked whether you'd like to install cache files, fastas, and plugins. However these files take some time to download and so we will use versions of these files which have already been downloaded, please decline (n) when asked if you would like to install these.
+[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files as they can take a bit of time to download so to start we'll make a symlink to the directory where the vep_cache containing the HG38 annotation database which already exists. Next we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to not only install the cache files, but the fasta files and optional plugins as well.
+
+1. Do you wish to exit so you can get updates (y) or continue (n): n
+2. Do you want to continue installing the API (y/n)? y
+3. Do you want to install any cache files (y/n)? y
+4.
+#TODO left off here, permission denied error,
+
+During the installation you will be asked whether you want to install cache files, fasta files and plugins. These files are used to make annotation quicker and eliminate the need for VEP to make web-based API queries. Normally during installation we would want to accept (y) when asked whether you'd like to install cache files, fastas, and plugins. However these files take some time to download and so we will use versions of these files which have already been downloaded, please decline (n) when asked if you would like to install these.
 ```bash
-cd ~/data
-mkdir vep_cache
-cd ~/bin
-git clone https://github.com/Ensembl/ensembl-vep.git
-cd ensembl-vep
-perl INSTALL.pl --CACHEDIR /home/ubuntu/data/vep_cache
+# symlink the vep_cache directory
+mkdir -p ~/workspace/data
+ln -s ~/workspace/instructor/data/vep_cache/ ~/workspace/data/vep_cache
+
+# download and unzip vep
+cd ~/workspace/bin
+wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
+unzip 93.5.zip
+
+# run the INSTALL.pl script provided by VEP
+cd ensembl-vep-release-93.5/
+perl INSTALL.pl --CACHEDIR ~/workspace/data/vep_cache
+
+# check the installation
 ```
 
 Download additional data files need for various VEP plugins - CADD, gnomAD,

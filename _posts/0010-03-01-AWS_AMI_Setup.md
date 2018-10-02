@@ -180,11 +180,15 @@ cpanm -i Bio::Root::Version
 
 # install vep with the various plugins
 mkdir -p /workspace/instructor/data/vep_cache
-git clone https://github.com/Ensembl/ensembl-vep.git
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 cd ensembl-vep-release-93.5/
 perl INSTALL.pl --CACHEDIR /workspace/instructor/data/vep_cache # install cache, hg38:refseq,vep,merged
+
+# unlock permissions for downloaded cache
+find /workspace/instructor/data/vep_cache -type d -exec chmod 775 {} \;
+find /workspace/instructor/data/vep_cache -type f -exec chmod 664 {} \;
+
 #TODO need to figure out which plugins we are using and download data for them
 ```
 
