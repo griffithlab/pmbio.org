@@ -8,58 +8,86 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-04-01
 ---
 
-This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS Setup](http://pmbio.org/module%2010.%20appendix/0010/02/28/AWS_AMI_Setup/) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution.
+This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS AMI Setup](http://pmbio.org/module%2010.%20appendix/0010/02/28/AWS_AMI_Setup/) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution with the required dependencies.
 
 ### Prepare for installation
-First we must choose a single directory for installing tools, typically in linux, user compiled tools are installed in `/usr/local/bin` however it doesn't really matter where our tools are installed as long as we can find them. In this tutorial we will install tools in `~/workspace/bin`, the AMI has copies of all these tools in `/usr/local/bin` as well. For this workshop we will be using the workspace folder to store all of our results. Lets go ahead and make a `bin` directory in there as well for the tools we will be installing.
+For this workshop we will be using the workspace folder to store results, executables, and input files. To start we must choose a single directory for installing tools, typically in linux, user compiled tools are installed in `/usr/local/bin` however backups of the tools we will be using have already been installed there. In this tutorial we will install tools in `~/workspace/bin`. Lets go ahead and make a `bin` directory in `~/workspace` to get started.
 ```bash
-cd ~/workspace
-mkdir bin
+# make a bin directory
+mkdir -p ~/workspace/bin
 ```
 
 ### Install Samtools
-[Samtools](http://www.htslib.org/) is a software package based in C which provies utilities for manipulating alignment files (SAM/BAM/CRAM). It is open source and available under an [MIT license](https://opensource.org/licenses/MIT).
+[Samtools](http://www.htslib.org/) is a software package based in C which provies utilities for manipulating alignment files (SAM/BAM/CRAM). It is open source, available on github, and is under an [MIT license](https://opensource.org/licenses/MIT). Let's go ahead and download the source code from github to our bin directory and extract it with `tar`. Next we need to `cd` into our extracted samtools source code and configure the software. Running `./configure` will make sure all dependencies are available and will also let the software know where it should install to. After that we will need to run `make` to actually build the software. Finally we can run `make install` which will copy the built software and the underlying libraries, documentation, etc. to their final locations. We can check the installation and print out the help message by providing the full path to the executable.
 ```bash
-cd ~/bin
+# change to bin directory
+cd ~/workspace/bin
+
+# download and extract the source code
 wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2
 tar --bzip2 -xvf samtools-1.7.tar.bz2
+
+# configure and compile
 cd samtools-1.7/
-./configure --prefix=/home/ubuntu/bin/samtools-1.7
+./configure --prefix=/home/ubuntu/workspace/
 make
 make install
-./samtools
+
+# check instalation
+~/workspace/bin/samtools --help
 ```
 
 ### Install PICARD
-[PICARD](https://broadinstitute.github.io/picard/) is a set of java based tools developed by the Broad institute. It is usefull for manipulating next generation sequencing data and is available under an open source [MIT license]().
+[PICARD](https://broadinstitute.github.io/picard/) is a set of java based tools developed by the Broad institute. It is usefull for manipulating next generation sequencing data and is available under an open source [MIT license](https://opensource.org/licenses/MIT). The version of Picard we will be using requires java 8 which has already been installed. All we need to do is download the jar file which is a package file used to distribute java code. We can do this with `wget` from there, to run the software, we simply need to call java with the -jar option and provide the jar file.
 ```bash
+# change to the bin and download the jar file
 cd ~/workspace/bin
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
-export PICARD='/home/ubuntu/bin/picard.jar'
-java -jar $PICARD -h
+
+# check the installation
+java -jar ~/workspace/bin/picard.jar -h
 ```
 
 ### Install BWA
-[BWA](http://bio-bwa.sourceforge.net/) is a popular DNA alignment tool used for mapping sequences to a reference genome. It is available under an open source [GPLv3 license](https://opensource.org/licenses/GPL-3.0).
+[BWA](http://bio-bwa.sourceforge.net/) is a popular DNA alignment tool used for mapping sequences to a reference genome. It is available under an open source [GPLv3 license](https://opensource.org/licenses/GPL-3.0). To install BWA, we first need to download and extract the source code. Unlike with samtools theres no `./configure` file so we can just run `make` to build the software. We can then make a symlink with `ln -s` which is just a reference to another file. In this case we will make a symlink so the executable in `~/workspace/bin/bwa-0.7.17/bwa` and be found in `~/workspace/bin/bwa`.
 ```bash
-cd ~/bin
+# change to the bin folder, download, and extract the source code
+cd ~/workspace/bin
 wget https://cytranet.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
 tar --bzip2 -xvf bwa-0.7.17.tar.bz2
+
+# build the software
 cd  bwa-0.7.17
 make
-./bwa
+
+# make symlink
+ln -s ~/workspace/bin/bwa-0.7.17/bwa ~/workspace/bin/bwa
+
+# check the installation
+~/workspace/bin/bwa
 ```
 
 ### Install GATK 4
-[GATK](https://software.broadinstitute.org/gatk/) is a toolkit developed by the broad institute focused primarily on variant discovery and genotyping. It is open source and available under a [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause).
+[GATK](https://software.broadinstitute.org/gatk/) is a toolkit developed by the broad institute focused primarily on variant discovery and genotyping. It is open source, hosted on github, and available under a [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause). First let's download and unzip GATK from github. The creators of GATK recommend running GATK through [conda](https://conda.io/docs/) which is a package, environment, and dependency management software, in essence conda basically creates a virtual environment from which to run software. The next step then is to tell conda to create a virtual environment for GATK by using the yaml file included within GATK as the instructions for creating the virtual environment. We do this with the command `conda env create`, we also use the `-p` option to specify where this environment should be stored. We will also make a symlink so the executable downloaded is available directly from our `bin` folder. To run GATK we must first start up the virtual environment with the command `source activate`, we can then run the program by providing the path to the executable. To exit the virutal environment run the command `source deactivate`.
 ```bash
-cd ~/bin
+# download and unzip
+cd ~/workspace/bin
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
+
+# create conda environment for gatk
 cd gatk-4.0.2.1/
-conda env create -n gatk -f gatkcondaenv.yml
-source activate gatk
-./gatk
+conda env create -f gatkcondaenv.yml -p ~/workspace/bin/conda/gatk_4021
+
+# make symlink
+ln -s ~/workspace/bin/gatk-4.0.2.1/gatk ~/workspace/bin/gatk
+
+# test installation
+source activate ~/workspace/bin/conda/gatk_4021
+~/workspace/bin/gatk
+
+# to exit the virtual environment
+source deactivate
 ```
 
 ### Install VEP 93.4

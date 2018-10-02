@@ -445,3 +445,16 @@ sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/workspace/' /etc/apache2/
 # restart apache
 service apache2 restart
 ```
+
+### Final Cleanup
+To finnish up clean out the downloaded compressed binary files
+```bash
+# start sudo shell
+sudo bash
+
+# clean things out
+cd /usr/local/bin
+rm -f *.tar.gz
+rm -f *.zip
+rm -f *.bz2
+```
