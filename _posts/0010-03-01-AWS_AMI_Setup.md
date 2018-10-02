@@ -233,6 +233,7 @@ cd /usr/local/bin
 apt-get update -y && apt-get install -y \
   python-dev
 
+# install strelka
 curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
 tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2 # note uses python2
 ```
@@ -383,42 +384,62 @@ Describes dependencies for cnvkit, used in this course for ...
 sudo bash
 
 # install cnvkit
+cd /usr/local/bin
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 source ~/.bashrc
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda config --add channels bioconda
+conda create -n cnvkit cnvkit
+# source activate cnvkit
+```
+
+#### Kallisto 0.44.0
+```bash
+# start sudo shell
+sudo bash
+
+# install kallisto
+cd /usr/local/bin
+wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_linux-v0.44.0.tar.gz
+tar -zxvf kallisto_linux-v0.44.0.tar.gz
+ln -s /usr/local/bin/kallisto_linux-v0.44.0/kallisto /usr/local/bin/kallisto
+```
+
+#### Pizzly 0.37.3
+```bash
+# start sudo shell
+sudo bash
+
+# install Pizzly
+cd /usr/local/bin
+wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
+tar -zxvf pizzly_linux.tar.gz
 ```
 
 ### apache web serve setup
-Set up apache web server for convenient access to files. First, edit config to allow files to be served from /data/.
+Set up apache web server for convenient access to files. First, edit config to allow files to be served from /workspace/.
 
 ```bash
 # start sudo shell
 sudo bash
 
-vim /etc/apache2/apache2.conf
-```
+# install apache
+apt-get update -y && apt-get install -y \
+  apache2
 
-Add the following content to apache2.conf
-```bash
-<Directory /data/>
-       Options Indexes FollowSymLinks
-       AllowOverride None
-       Require all granted
-</Directory>
-```
+# add the following to the config
+#<Directory /workspace/>
+#       Options Indexes FollowSymLinks
+#       AllowOverride None
+#       Require all granted
+#</Directory>
+sed -ie '/#<\/Directory>/a <Directory /workspace/>\n        Options Indexes FollowSymLinks\n        AllowOverride None\n        Require all granted\n</Directory>' /etc/apache2/apache2.conf
 
-Edit vhost file
+# chenge the document root in vhost file (000-default.conf)
+sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/workspace/' /etc/apache2/sites-available/000-default.conf
 
-```bash
-vim /etc/apache2/sites-available/000-default.conf
-```
-
-Change document root in 000-default.conf
-```bash
-DocumentRoot /workspace
-```
-
-Restart apache
-```bash
+# restart apache
 service apache2 restart
 ```
