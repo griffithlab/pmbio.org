@@ -19,12 +19,13 @@ For development purposes we started with a very large instance (overkill). Futur
 - Launch an EC2 instance:
 - Select Ubuntu Server 16.04 LTS (HVM), SSD Volume Type - ami-2581aa40
 - Choose r4.16xlarge (64 vCPUs, 488 GiB Memory, 25 Gigabit Network Performance)
+- Increase root storage to 10GB
 - Add storage: 10,000 GiB (~10TB) EBS volume, not encrypted
 - Configure security: Allow SSH access
 - Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
 
-### Formatting and mounting storage volumnes
-With the tools we will be using now installed we need to mount and format the storage volume we allocated when we initialized the instance. Students will use this volume to install their own copies of tools used as well as input data and results. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
+### Formatting and mounting storage volumes
+After initializing the EC2 instance we will need to mount and format the storage volume we allocated. Students will use this volume to install their own copies of tools used as well as input data and results. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
 ```bash
 # start sudo shell
 sudo bash
@@ -52,7 +53,7 @@ ln -s /workspace workspace
 ```
 
 ### Software Dependencies
-Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each bioinformatic tool used in the course is supplied. In this we will use the normal linux convention where our own compiled binaries and executables are installed in `/usr/local/bin`.
+Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each bioinformatic tool used in the course are supplied. In this we will use the normal linux convention where our own compiled binaries and executables are installed in `/usr/local/bin`.
 
 #### Pre-Installation
 Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed.
@@ -71,7 +72,7 @@ apt-get update -y && apt-get install -y \
 ```
 
 #### Samtools 1.7
-Describes dependencies for samtools 1.7, used in this course for general bam file manipulation.
+Describes dependencies and installation for samtools 1.7, used in this course for general bam file manipulation.
 ```bash
 # start sudo shell
 sudo bash
@@ -95,7 +96,7 @@ make install
 ```
 
 #### PICARD 2.18.14
-Describes dependencies for PICARD 2.18.14, used in this course for general bam file manipulation and QC.
+Describes dependencies and installation for PICARD 2.18.14, used in this course for general bam file manipulation and QC.
 ```bash
 # start sudo shell
 sudo bash
@@ -111,7 +112,7 @@ export PICARD='/usr/local/bin/picard.jar'
 ```
 
 #### BWA 0.7.17
-Describes dependencies for BWA 0.7.17, used in this course for DNA alignment.
+Describes dependencies and installation for BWA 0.7.17, used in this course for DNA alignment.
 ```bash
 # start sudo shell
 sudo bash
@@ -131,7 +132,7 @@ ln -s /usr/local/bin/bwa-0.7.17/bwa /usr/local/bin/bwa
 ```
 
 #### GATK 4.0.2.1
-Describes dependencies for GATK 4.0.2.1, used in this course for .....
+Describes dependencies and installation for GATK 4.0.2.1, used in this course for .....
 ```bash
 # start sudo shell
 sudo bash
@@ -188,7 +189,7 @@ perl INSTALL.pl --CACHEDIR /workspace/instructor/data/vep_cache # install cache,
 ```
 
 #### VarScan 2.4.2
-Describes dependencies for VarScan 2.4.2, used in this course for variant calling
+Describes dependencies and installation for VarScan 2.4.2, used in this course for variant calling
 ```bash
 # start sudo shell
 sudo bash
@@ -203,7 +204,7 @@ curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/do
 ```
 
 #### BCFtools 1.3.1
-Describes dependencies for BCFtools 1.3.1, used in this course for manipulating VCF files.
+Describes dependencies and installation for BCFtools 1.3.1, used in this course for manipulating VCF files.
 ```bash
 # start sudo shell
 sudo bash
@@ -223,7 +224,7 @@ make prefix=/usr/local/ install
 ```
 
 #### Strelka 2.7.1
-Describes dependencies for strelka, used in this course for variant calling.
+Describes dependencies and installation for strelka, used in this course for variant calling. Note that Strelka requies python 2.
 ```bash
 # start sudo shell
 sudo bash
@@ -239,7 +240,7 @@ tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2 # note uses python2
 ```
 
 #### Sambamba 0.6.4
-Describes dependencies for Sambamba 0.6.4, used in this course for ....
+Describes dependencies and installation for Sambamba 0.6.4, used in this course for ....
 ```bash
 # start sudo shell
 sudo bash
@@ -252,7 +253,7 @@ ln -s /usr/local/bin/sambamba_v0.6.4 /usr/local/bin/sambamba
 ```
 
 #### HISAT 2.0.4
-Describes dependencies for HISAT 2.0.4, used in this course for RNA alignment.
+Describes dependencies and installation for HISAT 2.0.4, used in this course for RNA alignment.
 ```bash
 # start sudo shell
 sudo bash
@@ -265,7 +266,7 @@ ln -s /usr/local/bin/hisat2-2.0.4/hisat2 /usr/local/bin/hisat2
 ```
 
 #### StringTie 1.3.0
-Describes dependencies for StringTie 1.3.0, used in this course for transcript abundance estimates.
+Describes dependencies and installation for StringTie 1.3.0, used in this course for transcript abundance estimates.
 ```bash
 # start sudo shell
 sudo bash
@@ -278,7 +279,7 @@ ln -s /usr/local/bin/stringtie-1.3.0.Linux_x86_64/stringtie /usr/local/bin/strin
 ```
 
 #### Gffcompare 0.9.8
-Describes dependencies for Gffcompare 0.9.8, used in this course for ....
+Describes dependencies and installation for Gffcompare 0.9.8, used in this course for ....
 ```bash
 # start sudo shell
 sudo bash
@@ -291,7 +292,7 @@ ln -s /usr/local/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare /usr/local/bin/gff
 ```
 
 #### R 3.5.1
-Describes dependencies for R 3.5.1, used in this course for general file manipulation/analysis.
+Describes dependencies and installation for R 3.5.1, used in this course for general file manipulation/analysis.
 ```bash
 # start sudo shell
 sudo bash
@@ -326,7 +327,7 @@ R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cra
 ```
 
 #### copyCat 1.6.12
-Describes dependencies for copyCat 1.6.12, used in this course for WGS copy number calling.
+Describes dependencies and installation for copyCat 1.6.12, used in this course for WGS copy number calling.
 ```bash
 # start sudo shell
 sudo bash
@@ -340,7 +341,7 @@ R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
 ```
 
 #### CNVnator
-Describes dependencies for CNVnator, used in this course for exome copy number calling.
+Describes dependencies and installation for CNVnator, used in this course for exome copy number calling.
 ```bash
 # start sudo shell
 sudo bash
@@ -378,7 +379,7 @@ make
 ```
 
 #### cnvkit
-Describes dependencies for cnvkit, used in this course for ...
+Describes dependencies and installation for cnvkit, used in this course for ...
 ```bash
 # start sudo shell
 sudo bash
@@ -396,6 +397,7 @@ conda create -n cnvkit cnvkit
 ```
 
 #### Kallisto 0.44.0
+Describes dependencies and installation of Kallisto 0.44.0, used in this course for abundance estimation.
 ```bash
 # start sudo shell
 sudo bash
@@ -408,6 +410,7 @@ ln -s /usr/local/bin/kallisto_linux-v0.44.0/kallisto /usr/local/bin/kallisto
 ```
 
 #### Pizzly 0.37.3
+Describes dependencies and installation of Pizzly, used in this course for fusion detection.
 ```bash
 # start sudo shell
 sudo bash
@@ -419,8 +422,7 @@ tar -zxvf pizzly_linux.tar.gz
 ```
 
 ### apache web serve setup
-Set up apache web server for convenient access to files. First, edit config to allow files to be served from /workspace/.
-
+Set up apache web server for convenient access to files. This will allow students to easily download generated data from the `/workspace` directory. This directory is served from the IPv4 Public IP, which will be different for each user. This IP address can be viewed from the AWS EC2 instance site.
 ```bash
 # start sudo shell
 sudo bash
