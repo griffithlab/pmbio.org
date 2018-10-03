@@ -56,19 +56,20 @@ ln -s /workspace workspace
 Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each bioinformatic tool used in the course are supplied. In this we will use the normal linux convention where our own compiled binaries and executables are installed in `/usr/local/bin`.
 
 #### Pre-Installation
-Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed.
+Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed. Also a few general use tools are listed as well.
 ```bash
 # start sudo shell
 sudo bash
 
-# general tools for installation
+# general tools for installation and use
 cd /usr/local/bin
 apt-get update -y && apt-get install -y \
   wget \
   bzip2 \
   unzip \
   git \
-  curl
+  curl \
+  tree
 ```
 
 #### Samtools 1.7
@@ -457,6 +458,35 @@ sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/workspace/' /etc/apache2/
 
 # restart apache
 service apache2 restart
+```
+
+### Results Directory structure
+Here we create the directory structure for holding results as well as downloading some of the larger raw_data files for the students.
+```bash
+# make directory structure
+mkdir -p /workspace/data/raw_data/fastqs/all
+mkdir -p /workspace/data/raw_data/fastqs/chr6
+mkdir -p /workspace/data/raw_data/references/
+mkdir -p /workspace/data/results/module-01-setup
+mkdir -p /workspace/data/results/module-02-inputs
+mkdir -p /workspace/data/results/module-03-align
+mkdir -p /workspace/data/results/module-04-somatic
+mkdir -p /workspace/data/results/module-05-germline
+mkdir -p /workspace/data/results/module-06-rnaseq
+mkdir -p /workspace/data/results/module-07-clinical
+mkdir -p /workspace/data/results/module-08-immune
+mkdir -p /workspace/data/results/module-09-cwl
+mkdir -p /workspace/data/results/module-10-appendix
+
+# download the raw data
+wget -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
+wget -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Tumor.tar
+wget -P /workspace/data/raw_data/references http://genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
+wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Norm_sorted_mrkdup.bam
+wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Tumor_sorted_mrkdup.bam
+
+# view directory structure
+tree -d /workspace/data
 ```
 
 ### Final Cleanup

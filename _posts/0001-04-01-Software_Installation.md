@@ -141,30 +141,39 @@ java -jar ~/workspace/bin/VarScan.v2.4.2.jar
 
 
 ### Install BCFtools
+[BCFtools](https://samtools.github.io/bcftools/) is an open source program for variant calling and manipulating files in Variant Call Format (VCF) or Binary Variant Call Format (BCF). To install we first need to download and extract the source code with `curl` and `tar` respectively. We can then call `make` to build the program and `make install` to copy the program to the desired directory.
 ```bash
-cd ~/bin
+# download and extract
+cd ~/workspace/bin
 curl -L -k -o bcftools-1.3.1.tar.bz2                https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
 tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
+
+# install the software
 cd bcftools-1.3.1
 make -j
-make prefix=~/bin/software install
+make prefix=~/workspace/ install
 
-./bcftools -h
+# test installation
+~/workspace/bin/bcftools -h
 ```
 
 ### Install Strelka
+[Strekla](https://github.com/Illumina/strelka) is a germline and somatic variant caller developed by illumina and available under an open source [GPLv3 license](https://opensource.org/licenses/GPL-3.0). The binary distribution for strelka is already built and hosted on github so to install all we have to do is download and extract the software. It is important to note that strelka is built on `python 2` and won't work for python 3. The AMI we're using contains both python versions so we just have to make sure we invoke strelka with python2, you can view the python versions on the AMI with `python2 --version` and `python3 --version`.
 ```bash
-cd ~/bin
+# download and extract
+cd ~/workspace/bin
 curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
 tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2
 
-.strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
+# test installation
+python2 ~/workspace/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
 ```
 
 ### Install Sambamba
 
 ```bash
-cd ~/bin
+
+cd ~/workspace/bin
 curl -L -k -o sambamba_v0.6.4_linux.tar.bz2 https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2
 tar --bzip2 -xvf sambamba_v0.6.4_linux.tar.bz2
 ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
