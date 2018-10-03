@@ -91,15 +91,14 @@ source deactivate
 ```
 
 ### Install VEP 93.4
-[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files as they can take a bit of time to download so to start we'll make a symlink to the directory where the vep_cache containing the HG38 annotation database which already exists. Next we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to not only install the cache files, but the fasta files and optional plugins as well.
+[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files as they can take a bit of time to download so to start we'll make a symlink to the directory where the vep_cache containing the HG38 annotation database which already exists. Next we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software, the program will ask a series of questions listed below to get a feel for what it's like installing cache and fasta files we'll tell the program to install these for petromyzon_marinus, a much smaller genome.
 
-1. Do you wish to exit so you can get updates (y) or continue (n): n
-2. Do you want to continue installing the API (y/n)? y
-3. Do you want to install any cache files (y/n)? y
-4.
-#TODO left off here, permission denied error,
+1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
+2. Do you want to continue installing the API (y/n)? y [ENTER]
+3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
+4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
+5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
 
-During the installation you will be asked whether you want to install cache files, fasta files and plugins. These files are used to make annotation quicker and eliminate the need for VEP to make web-based API queries. Normally during installation we would want to accept (y) when asked whether you'd like to install cache files, fastas, and plugins. However these files take some time to download and so we will use versions of these files which have already been downloaded, please decline (n) when asked if you would like to install these.
 ```bash
 # symlink the vep_cache directory
 mkdir -p ~/workspace/data
@@ -113,30 +112,31 @@ unzip 93.5.zip
 # run the INSTALL.pl script provided by VEP
 cd ensembl-vep-release-93.5/
 perl INSTALL.pl --CACHEDIR ~/workspace/data/vep_cache
+#1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
+#2. Do you want to continue installing the API (y/n)? y [ENTER]
+#3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
+#4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
+#5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
 
-# check the installation
-```
+# make a symlink
+ln -s ~/workspace/bin/ensembl-vep-release-93.5/vep ~/workspace/bin/vep
 
-Download additional data files need for various VEP plugins - CADD, gnomAD,
+# test the Installation
+~/workspace/bin/vep --help
 
-```bash
-cd ~/data/vep_cache
-mkdir data
-cd ~/data/vep_cache/data
-wget http://krishna.gs.washington.edu/download/CADD/v1.3/whole_genome_SNVs.tsv.gz
-wget http://krishna.gs.washington.edu/download/CADD/v1.3/whole_genome_SNVs.tsv.gz.tbi
-wget http://krishna.gs.washington.edu/download/CADD/v1.3/InDels.tsv.gz
-wget http://krishna.gs.washington.edu/download/CADD/v1.3/InDels.tsv.gz.tbi
-
-wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz
-wget ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
+# download additional required files for plugins
+cd ~/workspace/data/vep_cache/data
+wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/InDels.tsv.gz
+wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/InDels.tsv.gz.tbi
 ```
 
 ### Install Varscan
+[Varscan](http://dkoboldt.github.io/varscan/) is a java program designed to call variants in sequencing data. It was developed at the Genome Institute at Washington University and is hosted on [github](https://github.com/dkoboldt/varscan/). To use Varscan we simply need to download the distributed jar file into our `~/workspace/bin`. As with the other java programs which have already been installed in this section we can envoke Varscan via `java -jar`.
 ```bash
-cd ~/bin
+# Install Varscan
+cd ~/workspace/bin
 curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar
-java -jar ~/bin/VarScan.v2.4.2.jar
+java -jar ~/workspace/bin/VarScan.v2.4.2.jar
 ```
 
 

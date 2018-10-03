@@ -185,11 +185,20 @@ unzip 93.5.zip
 cd ensembl-vep-release-93.5/
 perl INSTALL.pl --CACHEDIR /workspace/instructor/data/vep_cache # install cache, hg38:refseq,vep,merged
 
-# unlock permissions for downloaded cache
-find /workspace/instructor/data/vep_cache -type d -exec chmod 775 {} \;
-find /workspace/instructor/data/vep_cache -type f -exec chmod 664 {} \;
+# make a symlink
+ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
 
-#TODO need to figure out which plugins we are using and download data for them
+# Install required data for plugins
+mkdir -p /workspace/data/vep_cache/data
+cd /workspace/data/vep_cache/data
+wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz.tbi
+wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz
+wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
+
+# unlock permissions for downloaded cache
+find /workspace/instructor/data/vep_cache -type d -exec chmod 777 {} \;
+find /workspace/instructor/data/vep_cache -type f -exec chmod 664 {} \;
 ```
 
 #### VarScan 2.4.2
