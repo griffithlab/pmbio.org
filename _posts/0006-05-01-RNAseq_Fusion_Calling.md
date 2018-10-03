@@ -42,9 +42,9 @@ conda create pizzly --name pizzly -c bioconda
 cd ~/data/fastqs/RNAseq_Tumor
 cat RNAseq_Tumor_Lane1_R1.fastq.gz RNAseq_Tumor_Lane2_R1.fastq.gz > RNAseq_TumorR1.fastq.gz
 cat RNAseq_Tumor_Lane1_R2.fastq.gz RNAseq_Tumor_Lane2_R2.fastq.gz > RNAseq_TumorR2.fastq.gz
-cd ~/data/fastqs/RNAseq_Normal
-cat RNAseq_Normal_Lane1_R1.fastq.gz RNAseq_Normal_Lane2_R1.fastq.gz > RNAseq_NormalR1.fastq.gz
-cat RNAseq_Normal_Lane1_R2.fastq.gz RNAseq_Normal_Lane2_R2.fastq.gz > RNAseq_NormalR2.fastq.gz
+cd ~/data/fastqs/RNAseq_Norm
+cat RNAseq_Norm_Lane1_R1.fastq.gz RNAseq_Norm_Lane2_R1.fastq.gz > RNAseq_NormalR1.fastq.gz
+cat RNAseq_Norm_Lane1_R2.fastq.gz RNAseq_Norm_Lane2_R2.fastq.gz > RNAseq_NormalR2.fastq.gz
 ```
 - To save space, you may wish to remove the original zipped fastq files as well as the unzipped but unmerged fastq files.
 
@@ -62,7 +62,7 @@ kallisto index -i index.idx -k 31 ~/data/reference/Homo_sapiens.GRCh38.cdna.all.
 ```bash
 cd ~/rna-fusion
 kallisto quant -i index.idx --fusion -o output-tumor ~/data/fastqs/RNAseq_Tumor/RNAseq_TumorR1.fastq.gz ~/data/fastqs/RNAseq_Tumor/RNAseq_TumorR2.fastq.gz
-kallisto quant -i index.idx --fusion -o output-normal ~/data/fastqs/RNAseq _Normal/RNAseq_NormalR1.fastq.gz ~/data/fastqs/RNAseq_Normal/RNAseq_NormalR2.fastq.gz
+kallisto quant -i index.idx --fusion -o output-normal ~/data/fastqs/RNAseq_Norm/RNAseq_NormalR1.fastq.gz ~/data/fastqs/RNAseq_Norm/RNAseq_NormalR2.fastq.gz
 ```
 
 - Filter fusions with pizzly:
