@@ -435,6 +435,8 @@ wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.t
 tar -zxvf pizzly_linux.tar.gz
 ```
 
+#### manta 
+
 ### apache web serve setup
 Set up apache web server for convenient access to files. This will allow students to easily download generated data from the `/workspace` directory. This directory is served from the IPv4 Public IP, which will be different for each user. This IP address can be viewed from the AWS EC2 instance site.
 ```bash

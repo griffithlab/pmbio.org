@@ -254,8 +254,14 @@ cd ~/workspace/bin
 ```
 
 ### Install copyCat
-```
-R-3.5.1/bin/R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
+[copyCat](https://github.com/chrisamiller/copyCat) is an R library for detecting copy number aberrations in sequencing data. The library is only available on github so we will have to use the [BiocManager](https://cran.r-project.org/web/packages/BiocManager/index.html) library to install a few of the underlying package dependencies. If installing a package from cran or bioconductor these dependencies would be automatically installed. After these dependencies are installed we can use the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package to install copycat directory from its github repository.
+```bash
+# Install R Library dependencies
+cd ~/workspace/bin
+~/workspace/bin/R --vanilla -e 'BiocManager::install(c("IRanges", "DNAcopy"))'
+
+# install copyCat
+~/workspace/bin/R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
 ```
 
 ### Install CNVnator
@@ -278,3 +284,9 @@ conda config --add channels conda-forge
 conda config --add channels bioconda
 conda create -n cnvkit cnvkit
 ```
+
+### Install Kallisto
+
+### Install Pizzly
+
+### manta
