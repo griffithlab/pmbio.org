@@ -170,63 +170,87 @@ python2 ~/workspace/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflo
 ```
 
 ### Install Sambamba
-
+[Sambamba](http://lomereiter.github.io/sambamba/) is a high performance alternative to samtools and provides a subset of samtools functionality. It is up to 6x faster for duplicate read marking and 4x faster for viewing alignment files. To install sambamba we can just download the binary distribution and extract it. From there we just make a symlink to make using it a bit more intuitive.
 ```bash
-
+# download and extract
 cd ~/workspace/bin
 curl -L -k -o sambamba_v0.6.4_linux.tar.bz2 https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2
 tar --bzip2 -xvf sambamba_v0.6.4_linux.tar.bz2
-ln -s ~/bin/sambamba_v0.6.4 ~/bin/sambamba
 
-./sambamba
+# create symlink
+ln -s ~/workspace/bin/sambamba_v0.6.4 ~/workspace/bin/sambamba
+
+# test installation
+~/workspace/bin/sambamba
 ```
 
-### Install HISAT
-
+### Install HISAT2
+[HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) is a graph based alignment algorithm devoloped at Johns Hopkins University. It is heavily used in the bioinformatics community for RNAseq based alignments. To Install we will need to download and extract the binary executable. We then make a symlink to put it with the other executables we've installed.
 ```bash
-cd ~/bin
+# download and extract
+cd ~/workspace/bin
 wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_64.zip
 unzip hisat2-2.0.4-Linux_x86_64.zip
 
-./hisat2-2.0.4/hisat2
+# create symlink
+ln -s ~/workspace/bin/hisat2-2.0.4/hisat2 ~/workspace/bin/hisat2
+
+# test installation
+~/workspace/bin/hisat2 --help
 ```
 
 ### Install StringTie
-
+[StringTie](https://ccb.jhu.edu/software/stringtie/) is a software program to perform transcript assembly and quantification of RNAseq data. The binary distributions are available so to install we can just download this distribution and extract it. Like with our other programs we also make a symlink to make it easier to find.
 ```bash
-cd ~/bin
+# download and extract
+cd ~/workspace/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.0.Linux_x86_64.tar.gz
 tar -xzvf stringtie-1.3.0.Linux_x86_64.tar.gz
-ln -s ~/bin/stringtie-1.3.0.Linux_x86_64/stringtie ~/bin/stringtie
 
-./stringtie -h
+# make symlink
+ln -s ~/workspace/bin/stringtie-1.3.0.Linux_x86_64/stringtie ~/workspace/bin/stringtie
+
+# test installation
+~/workspace/bin/stringtie -h
 ```
 ### Install Gffcompare
-
+[Gffcompare](https://ccb.jhu.edu/software/stringtie/gffcompare.shtml) is a prgram that is used to perform operations on general feature format (GFF) and general transfer format (GTF) files. It has a binary distribution compatible with the linux we're using so we will just download, extract, and make a symlink.
 ```bash
-cd ~/bin
+# download and extract
+cd ~/workspace/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/gffcompare-0.9.8.Linux_x86_64.tar.gz
 tar -xzvf gffcompare-0.9.8.Linux_x86_64.tar.gz
-ln -s ~/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/bin/gffcompare
 
-./gffcompare
+# make symlink
+ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/gffcompare
+
+# check Installation
+~/workspace/bin/gffcompare
 ```
 ### Install R
-
+[R](https://www.r-project.org/) is an feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). To install R we first need to download and extract the source code. Next we configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We also specify `--prefix` which is where the R.framework will go, this includes the additional R libraries we'll download later. From there we do make and make install to build the software and copy the files to their proper location and create symlinks for the executables. Finally we install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier.
 ```bash
-cd ~/bin
-
+# download and extract
+cd ~/workspace/bin
 wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
 tar -zxvf R-3.5.1.tar.gz
+
+# configure the installation, build the code
 cd R-3.5.1
-./configure --prefix=/home/ubuntu/bin/ --with-x=no
+./configure --prefix=/home/ubuntu/workspace/bin --with-x=no
 make
 make install
 
-cd ~/bin
-./R-3.5.1/bin/Rscript --version
+# make symlinks
+ln -s ~/workspace/bin/R-3.5.1/bin/Rscript ~/workspace/bin/Rscript
+ln -s ~/workspace/bin/R-3.5.1/bin/R ~/workspace/bin/R
 
-R-3.5.1/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+# test installation
+cd ~/workspace/bin
+~/workspace/bin/Rscript --version
+
+# install additional packages
+~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
 ```
 
 ### Install copyCat

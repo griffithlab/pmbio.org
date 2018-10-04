@@ -484,6 +484,8 @@ wget -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-worksho
 wget -P /workspace/data/raw_data/references http://genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
 wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Norm_sorted_mrkdup.bam
 wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Tumor_sorted_mrkdup.bam
+wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Norm_merged_sorted_mrkdup.bam
+wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Tumor_merged_sorted_mrkdup.bam
 
 # view directory structure
 tree -d /workspace/data
