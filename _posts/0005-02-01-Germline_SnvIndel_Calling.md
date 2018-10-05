@@ -1,31 +1,37 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Germline SNV/Indel Calling
+title: Germline SNV and Indel Calling
 categories:
     - Module-05-Germline
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-02-01
 ---
 
-Analysis based on suggestions here:
-https://gatkforums.broadinstitute.org/gatk/discussion/7869/howto-discover-variants-with-gatk-a-gatk-workshop-tutorial
+### Module objectives
+
+- Perform single sample germline variant calling with GATK on WGS and Exome data
+- Discuss the GATK GVCF workflow
+
+In this module we will use the GATK HaplotypeCaller to call variants from our aligned bams. Since we are only interested in germline variants in this module, we will only call variants in the normal samples. The following tutorial and example commands are based on suggestions from following [GATK tutorial](https://gatkforums.broadinstitute.org/gatk/discussion/7869/howto-discover-variants-with-gatk-a-gatk-workshop-tutorial), provided by the Broad Institute. 
 
 ### Run GATK HaplotypeCaller
 
-Include option to generate bam output from haplotype caller so that local reassembly/ralignment around called variants can be visualized.
+Include option to generate bam output from haplotype caller so that local reassembly/realignment around called variants can be visualized.
 
 Runtimes: Exome, 160min; 
 
-TO DO: Consider whether the following variant calling steps should be run on alt contigs as well
+NOTE: In the following command we have limited to calling variants on chr1-22, X, Y and MT. You may wish to also run on alt contigs.
 
 ```bash
 cd ~/data
 mkdir germline_variants
 cd germline_variants
 
+# Call variants for exome data
 gatk --java-options '-Xmx64g' HaplotypeCaller -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.vcf --bam-output /home/ubuntu/data/germline_variants/Exome_Norm_HC_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
+# Call variants for WGS data
 gatk --java-options '-Xmx64g' HaplotypeCaller -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.vcf --bam-output /home/ubuntu/data/germline_variants/WGS_Norm_HC_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM                                      
 ```
 
