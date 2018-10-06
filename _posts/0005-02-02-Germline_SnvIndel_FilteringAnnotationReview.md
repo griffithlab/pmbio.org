@@ -39,8 +39,13 @@ gatk --java-options '-Xmx64g' MergeVcfs -I /home/ubuntu/data/germline_variants/E
 ```
 
 ### Perform VEP annotation of filtered results
-~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.vcf 
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.vcf
 
+```
+
+### Filter VEP annotated VCF further for variant of potential clinical relevance
+
+~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.interesting.vcf -filter "MAX_AF < 0.01"
 
 
 Note, for running VQSR on exome data. There will be a smaller number of variants per sample compared to WGS. These are typically insufficient to build a robust recalibration model. If running on only a few samples, GATK recommends that you analyze samples jointly in cohorts of at least 30 samples. If necessary, add exomes from 1000G Project or comparable. These should be processed with similar technical generation (technology, capture, read length, depth). 
