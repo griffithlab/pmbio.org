@@ -180,11 +180,11 @@ apt-get update -y && apt-get install -y \
 cpanm -i Bio::Root::Version
 
 # install vep with the various plugins
-mkdir -p /workspace/instructor/data/vep_cache
+mkdir -p /opt/vep_cache
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 cd ensembl-vep-release-93.5/
-perl INSTALL.pl --CACHEDIR /workspace/instructor/data/vep_cache # install cache, hg38:refseq,vep,merged
+perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:refseq,vep,merged
 
 # make a symlink
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
@@ -435,7 +435,7 @@ wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.t
 tar -zxvf pizzly_linux.tar.gz
 ```
 
-#### manta 
+#### Manta 1.4.0
 
 ### apache web serve setup
 Set up apache web server for convenient access to files. This will allow students to easily download generated data from the `/workspace` directory. This directory is served from the IPv4 Public IP, which will be different for each user. This IP address can be viewed from the AWS EC2 instance site.

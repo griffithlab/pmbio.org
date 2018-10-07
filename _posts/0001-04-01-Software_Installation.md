@@ -265,28 +265,90 @@ cd ~/workspace/bin
 ```
 
 ### Install CNVnator
+[CNVnator](https://github.com/abyzovlab/CNVnator) is a depth based copy number caller. It is open source and available on github under a creative common public license (CCPL). To install we first download and extract the source code. CNVnator relies on a specific version of samtools which is distributed with CNVnator, so our first step is to run `make` on that samtools. To finnish the installation process we can then run `make` in CNVnator's main source directory.
 ```bash
+# download and decompress
+cd ~/workspace/bin
 wget https://github.com/abyzovlab/CNVnator/releases/download/v0.3.3/CNVnator_v0.3.3.zip
 unzip CNVnator_v0.3.3.zip
+
+# make the samtools dependency distributed with CNVnator
 cd CNVnator_v0.3.3/src/samtools
 make
+
+# make CNVnator
 cd ../
 make
+
+# make a symlink
+ln -s ~/workspace/bin/CNVnator_v0.3.3/src/cnvnator ~/workspace/bin/cnvnator
+
+# test installation
+~/workspace/bin/cnvnator
 ```
 
-### Install cnvkit
+### Install CNVkit
+[CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python based copy number caller designed for use with hybrid capture. To install we can download and extract the package, we then must use [conda](https://conda.io/docs/) to set up the environment to run cnvkit. This process while straight forward takes some time so we've commented out the installation instructions for this tool and will use the conda environment that has already been set up.
 ```bash
-cd ~/bin
+## download and unzip
+cd ~/workspace/bin
 wget https://github.com/etal/cnvkit/archive/v0.9.5.zip
 unzip v0.9.5.zip
-conda config --add channels defaults
-conda config --add channels conda-forge
-conda config --add channels bioconda
-conda create -n cnvkit cnvkit
+
+## add conda channels
+#conda config --add channels defaults
+#conda config --add channels conda-forge
+#conda config --add channels bioconda
+
+## create conda environment
+#conda create -n cnvkit cnvkit
+
+# test installation
+source activate cnvkit
+~/workspace/bin/gatk
+
+# to exit the virtual environment
+source deactivate
 ```
 
 ### Install Kallisto
+[Kallisto](https://pachterlab.github.io/kallisto/) is a kmer-based alignment algorithm used for quantifying transcripts in RNAseq data. Kallisto has a binary distribution available so to use the program we only have to download and extract the software from github.
+```bash
+# download and extract
+cd ~/workspace/bin
+wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_linux-v0.44.0.tar.gz
+tar -zxvf kallisto_linux-v0.44.0.tar.gz
+
+# make symlink
+ln -s ~/workspace/bin/kallisto_linux-v0.44.0/kallisto ~/workspace/bin/kallisto
+
+# test installation
+~/workspace/bin/kallisto --help
+```
 
 ### Install Pizzly
+[Pizzly](https://github.com/pmelsted/pizzly) is a fusion detection algorithm which uses output from Kallisto. Pizzly is has a binary distribution so we can download and extract that from github to get started.
+```bash
+# download and extract
+cd ~/workspace/bin
+wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
+tar -zxvf pizzly_linux.tar.gz
 
-### manta
+# test executable
+~/workspace/bin/pizzly --help
+```
+
+### Manta
+[Manta](https://github.com/Illumina/manta) is a structural variant caller developed by Illumina and available on gitub under the GPL_v3 license. It uses paired-end sequencing reads to build a breakend association graph to identify structural varaints.
+```bash
+# download and extract
+cd ~/workspace/bin
+wget https://github.com/Illumina/manta/releases/download/v1.4.0/manta-1.4.0.centos6_x86_64.tar.bz2
+tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
+
+# create symlink
+ln -s ~/workspace/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py ~/workspace/bin/configManta.py
+
+# test installation
+python2 ~/workspace/bin/configManta.py --help
+```
