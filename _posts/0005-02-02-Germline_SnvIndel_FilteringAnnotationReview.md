@@ -55,6 +55,15 @@ gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh
 
 ### Filter VEP annotated VCF further for variants of potential clinical relevance
 
+Use the `filter_vep` tool to filter to interesting variants.
+
+Note - I'm obtaining different results depending on the order of filters supplied if using separate "--filter" options. This should not be the case. Combining into a single expression seems to work though.
+
+Note - there is a difference between the information available for filtering in VEP VCF output vs VEP tabular output. Namely some VCF fields (e.g., FILTER) are not included in the tabular output. Therefore, if you wish to use filter_vep on tabular output (for ease of reading) make sure to complete any vcf-specific filtering first (e.g., using GATK SelectVariants). Alternatively, it may be possible to proceed with filtering on the VCF and then reannotate with VEP specifying tabular output to convert. Yet another option would be to use VCF annotation tools ([vatools.org](http://vatools.org)).
+
+Note - the filter_vep tool immediately and automatically limits to variants with a CSQ entry when filtering VCFs. Keep in this mind if you have annotated your VCF with the coding_only option which only adds CSQ entries for coding region alterations.
+
+
 ```
 
 #Filter VEP VCF
@@ -65,13 +74,18 @@ gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh
 
 ```
 
-Note - I'm obtaining different results depending on the order of filters supplied if using separate "--filter" options. This should not be the case. Combining into a single expression seems to work though.
+### Explore the filtered results
 
-Note - there is a difference between the information available for filtering in VEP VCF output vs VEP tabular output. Namely some VCF fields (e.g., FILTER) are not included in the tabular output. Therefore, if you wish to use filter_vep on tabular output (for ease of reading) make sure to complete any vcf-specific filtering first (e.g., using GATK SelectVariants). Alternatively, it may be possible to proceed with filtering on the VCF and then reannotate with VEP specifying tabular output to convert. Yet another option would be to use VCF annotation tools ([vatools.org](http://vatools.org)).
+The above filtering has limited the results to approximately 200 germline variants of potential interest. 
 
-Note - the filter_vep tool immediately and automatically limits to variants with a CSQ entry when filtering VCFs. Keep in this mind if you have annotated your VCF with the coding_only option which only adds CSQ entries for coding region alterations.
+- Are there any variants with known clinical significance (See CLIN_SIG column)? Use their HGVS IDs (See HGVSc or HGVSp columns) to search the [ClinGen Allele Registry](http://reg.clinicalgenome.org), and then follow the links (if any) to ClinVar or other resources of interest.
+- Are there any variants in known cancer genes? Try intersecting the remaining genes with variants with the [Cancer Gene Census](https://cancer.sanger.ac.uk/census) genes?
+- Manually review any variants of interest in IGV
 
-Note, for running VQSR on exome data. There will be a smaller number of variants per sample compared to WGS. These are typically insufficient to build a robust recalibration model. If running on only a few samples, GATK recommends that you analyze samples jointly in cohorts of at least 30 samples. If necessary, add exomes from 1000G Project or comparable. These should be processed with similar technical generation (technology, capture, read length, depth). 
+
+### Filter with VQSR
+
+When using VQSR filtering on exome data, there will be a smaller number of variants per sample compared to WGS. These are typically insufficient to build a robust recalibration model. If running on only a few samples, GATK recommends that you analyze samples jointly in cohorts of at least 30 samples. If necessary, add exomes from 1000G Project or comparable. Ideally, these should be processed with similar technical generation (technology, capture, read length, depth). 
 
 See also: https://drive.google.com/drive/folders/0BzI1CyccGsZiWlU5SXNvNnFGbVE (GATK Workshops -> 1709 -> GATKwr19-05-Variant_filtering.pdf)
 
