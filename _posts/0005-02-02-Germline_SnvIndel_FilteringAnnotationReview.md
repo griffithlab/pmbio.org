@@ -12,7 +12,7 @@ date: 0005-02-02
 
 - Perform filtering of germline SNVs and indels 
 
-The raw output of GATK HaplotypeCaller will include many variants with varying degrees of quality. For various reasons we might wish to further filter these to a higher confident set of variants. The recommended approach is to use GATK VQSR. However, this requires a large (i.e., at least 30-50), preferably platform-matched (i.e., similar sequencing strategy), set of samples with variant calls. For our purposes, we will first demonstrate the less optimal hard filtering strategy. 
+The raw output of GATK HaplotypeCaller will include many variants with varying degrees of quality. For various reasons we might wish to further filter these to a higher confidence set of variants. The recommended approach is to use GATK VQSR. However, this requires a large (i.e., at least 30-50), preferably platform-matched (i.e., similar sequencing strategy), set of samples with variant calls. For our purposes, we will first demonstrate the less optimal hard filtering strategy. 
 
 It is strongly recommended to read the following documentation from GATK:
 - [How to run VQSR](https://software.broadinstitute.org/gatk/documentation/article?id=2805)
@@ -36,17 +36,40 @@ gatk --java-options '-Xmx64g' VariantFiltration -R /home/ubuntu/data/reference/G
 # Merge filtered SNP and INDEL vcfs back together
 gatk --java-options '-Xmx64g' MergeVcfs -I /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.snps.filtered.vcf -I /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.indels.filtered.vcf -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf
 
+# Extract PASS variants only
+gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vcf --exclude-filtered
+
 ```
 
 ### Perform VEP annotation of filtered results
-~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.vcf
 
 ```
 
-### Filter VEP annotated VCF further for variant of potential clinical relevance
+#Output VEP VCF
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.vcf
 
-~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vep.interesting.vcf -filter "MAX_AF < 0.01"
+#Output tabular VEP
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --tab --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.tsv
 
+```
+
+### Filter VEP annotated VCF further for variants of potential clinical relevance
+
+```
+
+#Filter VEP VCF
+~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+#Filter tabular VEP
+~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+```
+
+Note - I'm obtaining different results depending on the order of filters supplied if using separate "--filter" options. This should not be the case. Combining into a single expression seems to work though.
+
+Note - there is a difference between the information available for filtering in VEP VCF output vs VEP tabular output. Namely some VCF fields (e.g., FILTER) are not included in the tabular output. Therefore, if you wish to use filter_vep on tabular output (for ease of reading) make sure to complete any vcf-specific filtering first (e.g., using GATK SelectVariants). Alternatively, it may be possible to proceed with filtering on the VCF and then reannotate with VEP specifying tabular output to convert. Yet another option would be to use VCF annotation tools ([vatools.org](http://vatools.org)).
+
+Note - the filter_vep tool immediately and automatically limits to variants with a CSQ entry when filtering VCFs. Keep in this mind if you have annotated your VCF with the coding_only option which only adds CSQ entries for coding region alterations.
 
 Note, for running VQSR on exome data. There will be a smaller number of variants per sample compared to WGS. These are typically insufficient to build a robust recalibration model. If running on only a few samples, GATK recommends that you analyze samples jointly in cohorts of at least 30 samples. If necessary, add exomes from 1000G Project or comparable. These should be processed with similar technical generation (technology, capture, read length, depth). 
 
