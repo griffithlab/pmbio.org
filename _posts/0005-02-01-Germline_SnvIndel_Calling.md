@@ -28,38 +28,28 @@ cd ~/data
 mkdir germline_variants
 cd germline_variants
 
-### Call variants for exome data
+#Call variants for exome data
 gatk --java-options '-Xmx64g' HaplotypeCaller -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.vcf --bam-output /home/ubuntu/data/germline_variants/Exome_Norm_HC_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
-### Call variants for WGS data
+#Call variants for WGS data
 gatk --java-options '-Xmx64g' HaplotypeCaller -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.vcf --bam-output /home/ubuntu/data/germline_variants/WGS_Norm_HC_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM                                      
+
 ```
 
-### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling
+### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling (for exomes)
 
 TO DO: Consider implementing the following options from CCDG workflow: -ERC GVCF --max_alternate_alleles 3 -variant_index_type LINEAR -variant_index_parameter 128000 -L $CHR -o $chr.g.vcf.gz -contamination $freemix --read_filter OverclippedRead
 See: https://confluence.ris.wustl.edu/display/BIO/Proposed+CCDG+Analysis+Workflow+-+2017.7.14
 
 ```bash
+
+#Call variants in GVCF mode for exome data
 gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.g.vcf --bam-output /home/ubuntu/data/germline_variants/Exome_Norm_HC_GVCF_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
+#Call variants in GVCF mode for WGS data
 gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.g.vcf --bam-output /home/ubuntu/data/germline_variants/WGS_Norm_HC_GVCF_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
 ```
-
-### Perform joint genotype calling
-
-TO DO: Note, this is a somewhat artificial (and possibly ill-advised?) example where the two gvcfs that we are joint genotyping are wgs and exome calls from the same individual. This is not the normal use of joint genotyping and is provided just as an illustration of how the command should be formulated. For a more realistic example, we should download a few 1000 genome exomes or something.
-
-gatk --java-options '-Xmx64g' GenotypeGVCFs -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.g.vcf -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.g.vcf -O Exome_WGS_GGVCFs_jointcalls.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
-
-
-
-
-
-
-
-
 
 
 ### Obtain 1000 genomes exome bam files for joint genotyping and VQSR steps
@@ -74,7 +64,7 @@ Recall that the cell line being used in this tutorial ([HCC1395](https://www.atc
 - Filter by population -> GBR
 - Filter by analysis group -> Exome
 - Filter by data collection -> 1000 genomes on GRCh38
-- Download the list to get sample details (igsr_samples.tsv)
+- Download the list to get sample details (igsr_samples_GBR.tsv)
 
 #### Get a list of data files for GBR samples
 
@@ -84,7 +74,7 @@ Recall that the cell line being used in this tutorial ([HCC1395](https://www.atc
 - Choose '1000 Genomes on GRCh38' tab
 - Select 'Data types' -> 'Alignment'
 - Select 'Analysis groups' -> 'Exome'
-- 'Download the list' (igsr_ITU_GRCh38_exome_alignment.tsv). 
+- 'Download the list' (igsr_GBR_GRCh38_exome_alignment.tsv). 
 
 #### Download exome cram and crai files for 30 female GBR cases
 
@@ -106,12 +96,28 @@ Note: These cram files were created in a generally compatible way with the anlys
 - http://www.internationalgenome.org/analysis
 - https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf
 
-### Perform germline variant calling with GATK joint HaplotypeCaller
+#### Perform germline variant calling on 1KG exomes with GATK in GVCF mode
 
-#Create GVCFs for 1000 genome exomes
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /data/1000genomes/exome_crams/HG03714.alt_bwamem_GRCh38DH.20150826.ITU.exome.cram -O /data/germline_variants_gvcf/HG03714_HC_calls.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
+```
 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /data/reference/1000genomes/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00099_HC_calls.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /data/reference/1000genomes/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00102_HC_calls.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /data/reference/1000genomes/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00104_HC_calls.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /data/reference/1000genomes/HG00106.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00106_HC_calls.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /data/reference/1000genomes/HG00118.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00118_HC_calls.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
+
+```
+
+### Perform joint genotype calling
+
+Create joint genotype vcf, combining HCC1395 Exome normal together with a set of 1KG exomes, for use in VQSR filtering.
+
+```
+
+gatk --java-options '-Xmx64g' GenotypeGVCFs -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /data/germline_variants/Exome_Norm_HC_calls.g.vcf -V /data/germline_variants/HG00099_HC_calls.g.vcf -V /data/germline_variants/HG00102_HC_calls.g.vcf -V /data/germline_variants/HG00104_HC_calls.g.vcf -V /data/germline_variants/HG00106_HC_calls.g.vcf -V /data/germline_variants/HG00118_HC_calls.g.vcf -O Exome_GGVCFs_jointcalls.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
+
+```
