@@ -148,13 +148,19 @@ source ~/.bashrc
 apt-get update -y && apt-get install -y \
   openjdk-8-jdk
 
-# install GATK
+# install GATK environment
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
 cd /usr/local/bin/gatk-4.0.2.1
 conda env create -n gatk -f gatkcondaenv.yml
 # to use gatk: source activate gatk
 # for full functionality R and the libraries gsalib, ggplot2, reshape, gplots should be installed
+# note that we told the installer to add conda to the paths
+# added by Miniconda3 installer
+# export PATH="/usr/local/bin/miniconda/bin:$PATH"
+
+# symlink gatk executable
+ln -s /usr/local/bin/gatk-4.0.2.1/gatk /usr/local/bin/gatk
 ```
 
 #### VEP 93.4
@@ -190,16 +196,14 @@ perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:refseq,vep,merge
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
 
 # Install required data for plugins
-mkdir -p /workspace/data/vep_cache/data
-cd /workspace/data/vep_cache/data
-wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
-wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz.tbi
+mkdir -p /opt/vep_cache/data
+cd /opt/vep_cache/data
 wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz
 wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
 
 # unlock permissions for downloaded cache
-find /workspace/instructor/data/vep_cache -type d -exec chmod 777 {} \;
-find /workspace/instructor/data/vep_cache -type f -exec chmod 664 {} \;
+find /opt/vep_cache -type d -exec chmod 777 {} \;
+find /opt/vep_cache -type f -exec chmod 664 {} \;
 ```
 
 #### VarScan 2.4.2
@@ -338,6 +342,13 @@ apt-get update -y && apt-get install -y \
   libxml2-dev
 
 R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+
+# change write permissions so students can install additional packages
+chown -R ubuntu:ubuntu /usr/local/lib/R/library
+find /usr/local/lib/R/library -type d -exec chmod 777 {} \;
+find /usr/local/lib/R/library -type f -exec chmod 664 {} \;
+find /usr/local/lib/R/doc/ -type d -exec chmod 777 {} \;
+find /usr/local/lib/R/doc/ -type f -exec chmod 664 {} \;
 ```
 
 #### copyCat 1.6.12
@@ -390,6 +401,9 @@ cd CNVnator_v0.3.3/src/samtools
 make
 cd ../
 make
+
+# make sylink
+ln -s /usr/local/bin/CNVnator_v0.3.3/src/cnvnator /usr/local/bin/cnvnator
 ```
 
 #### cnvkit
@@ -436,6 +450,15 @@ tar -zxvf pizzly_linux.tar.gz
 ```
 
 #### Manta 1.4.0
+```bash
+# download and extract
+cd /usr/local/bin
+wget https://github.com/Illumina/manta/releases/download/v1.4.0/manta-1.4.0.centos6_x86_64.tar.bz2
+tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
+
+# test installation
+python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
+```
 
 ### apache web serve setup
 Set up apache web server for convenient access to files. This will allow students to easily download generated data from the `/workspace` directory. This directory is served from the IPv4 Public IP, which will be different for each user. This IP address can be viewed from the AWS EC2 instance site.
@@ -462,6 +485,20 @@ sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/workspace/' /etc/apache2/
 service apache2 restart
 ```
 
+### Environment Variables
+We need to set some environment variables so that they are available to the studens when they start up the instance. Importantly we se variables for CNVnator dependencies so students can install the software more easily. these are all added to the '~/.bashrc' file.
+```bash
+# variables for ROOT
+export ROOTSYS=/usr/local/bin/root
+export PATH=$ROOTSYS/bin:$PATH
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+
+# variables for YEPP
+export YEPPPLIBDIR=/usr/local/bin/yeppp-1.0.0/binaries/linux/x86_64
+export YEPPPINCLUDEDIR=/usr/local/bin/yeppp-1.0.0/library/headers
+export LD_LIBRARY_PATH=$YEPPPLIBDIR:$LD_LIBRARY_PATH
+```
+
 ### Results Directory structure
 Here we create the directory structure for holding results as well as downloading some of the larger raw_data files for the students.
 ```bash
@@ -480,14 +517,18 @@ mkdir -p /workspace/data/results/module-08-immune
 mkdir -p /workspace/data/results/module-09-cwl
 mkdir -p /workspace/data/results/module-10-appendix
 
+# change permissions for Students
+find /workspace/data/ -type d -exec chmod 775 {} \;
+chown -R ubuntu:ubuntu /workspace/data
+
 # download the raw data
-wget -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
-wget -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Tumor.tar
-wget -P /workspace/data/raw_data/references http://genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
-wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Norm_sorted_mrkdup.bam
-wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Tumor_sorted_mrkdup.bam
-wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Norm_merged_sorted_mrkdup.bam
-wget -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Tumor_merged_sorted_mrkdup.bam
+wget -c -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
+wget -c -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Tumor.tar
+wget -c -P /workspace/data/raw_data/references http://genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
+wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Norm_sorted_mrkdup.bam
+wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Tumor_sorted_mrkdup.bam
+wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Norm_merged_sorted_mrkdup.bam
+wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Tumor_merged_sorted_mrkdup.bam
 
 # view directory structure
 tree -d /workspace/data

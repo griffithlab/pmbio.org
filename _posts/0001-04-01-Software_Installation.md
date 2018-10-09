@@ -77,13 +77,13 @@ unzip gatk-4.0.2.1.zip
 
 # create conda environment for gatk
 cd gatk-4.0.2.1/
-conda env create -f gatkcondaenv.yml -p ~/workspace/bin/conda/gatk_4021
+conda env create -f gatkcondaenv.yml -p ~/workspace/bin/conda/gatk
 
 # make symlink
 ln -s ~/workspace/bin/gatk-4.0.2.1/gatk ~/workspace/bin/gatk
 
 # test installation
-source activate ~/workspace/bin/conda/gatk_4021
+source activate ~/workspace/bin/conda/gatk
 ~/workspace/bin/gatk
 
 # to exit the virtual environment
@@ -91,7 +91,7 @@ source deactivate
 ```
 
 ### Install VEP 93.4
-[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files as they can take a bit of time to download so to start we'll make a symlink to the directory where the vep_cache containing the HG38 annotation database which already exists. Next we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software, the program will ask a series of questions listed below to get a feel for what it's like installing cache and fasta files we'll tell the program to install these for petromyzon_marinus, a much smaller genome.
+[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files for hg38 in the directory `/opt/vep_cache` as they can take a bit of time to download. To get an idea of what it's like to install these we will install a vep_cache for petromyzon_marinus, a much smaller genome. so to start we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software which will ask a series of questions listed below. We also make a symlink when the installer completes.
 
 1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 2. Do you want to continue installing the API (y/n)? y [ENTER]
@@ -100,10 +100,6 @@ source deactivate
 5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
 
 ```bash
-# symlink the vep_cache directory
-mkdir -p ~/workspace/data
-ln -s ~/workspace/instructor/data/vep_cache/ ~/workspace/data/vep_cache
-
 # download and unzip vep
 cd ~/workspace/bin
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
@@ -111,23 +107,18 @@ unzip 93.5.zip
 
 # run the INSTALL.pl script provided by VEP
 cd ensembl-vep-release-93.5/
-perl INSTALL.pl --CACHEDIR ~/workspace/data/vep_cache
+perl INSTALL.pl --CACHEDIR /opt/vep_cache
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
-#2. Do you want to continue installing the API (y/n)? y [ENTER]
+#2. Do you want to continue installing the API (y/n)? y [ENTER] (if asked)
 #3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
 #4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
-#5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
+#5. Do you want to install any plugins (y/n)? n [ENTER]
 
 # make a symlink
 ln -s ~/workspace/bin/ensembl-vep-release-93.5/vep ~/workspace/bin/vep
 
 # test the Installation
 ~/workspace/bin/vep --help
-
-# download additional required files for plugins
-cd ~/workspace/data/vep_cache/data
-wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/InDels.tsv.gz
-wget -c http://krishna.gs.washington.edu/download/CADD/v1.4/GRCh38/InDels.tsv.gz.tbi
 ```
 
 ### Install Varscan
@@ -228,40 +219,39 @@ ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/g
 ~/workspace/bin/gffcompare
 ```
 ### Install R
-[R](https://www.r-project.org/) is an feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). To install R we first need to download and extract the source code. Next we configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We also specify `--prefix` which is where the R.framework will go, this includes the additional R libraries we'll download later. From there we do make and make install to build the software and copy the files to their proper location and create symlinks for the executables. Finally we install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier.
+[R](https://www.r-project.org/) is an feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a couple minutes to compile so we'll use one which has already been setup if we were to install R we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R.framework will go, this includes the additional R libraries we'll download later. From there we'd do make and make install to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below however it is exactly what was run to set up the R we will be using, except the installation location.
 ```bash
-# download and extract
-cd ~/workspace/bin
-wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
-tar -zxvf R-3.5.1.tar.gz
+## download and extract
+#cd ~/workspace/bin
+#wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
+#tar -zxvf R-3.5.1.tar.gz
 
-# configure the installation, build the code
-cd R-3.5.1
-./configure --prefix=/home/ubuntu/workspace/bin --with-x=no
-make
-make install
+## configure the installation, build the code
+#cd R-3.5.1
+#./configure --prefix=/home/ubuntu/workspace/bin --with-x=no
+#make
+#make install
 
-# make symlinks
-ln -s ~/workspace/bin/R-3.5.1/bin/Rscript ~/workspace/bin/Rscript
-ln -s ~/workspace/bin/R-3.5.1/bin/R ~/workspace/bin/R
+## make symlinks
+#ln -s ~/workspace/bin/R-3.5.1/bin/Rscript ~/workspace/bin/Rscript
+#ln -s ~/workspace/bin/R-3.5.1/bin/R ~/workspace/bin/R
 
-# test installation
-cd ~/workspace/bin
-~/workspace/bin/Rscript --version
+## test installation
+#cd ~/workspace/bin
+#~/workspace/bin/Rscript --version
 
-# install additional packages
-~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+## install additional packages
+#~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
 ```
 
 ### Install copyCat
 [copyCat](https://github.com/chrisamiller/copyCat) is an R library for detecting copy number aberrations in sequencing data. The library is only available on github so we will have to use the [BiocManager](https://cran.r-project.org/web/packages/BiocManager/index.html) library to install a few of the underlying package dependencies. If installing a package from cran or bioconductor these dependencies would be automatically installed. After these dependencies are installed we can use the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package to install copycat directory from its github repository.
 ```bash
 # Install R Library dependencies
-cd ~/workspace/bin
-~/workspace/bin/R --vanilla -e 'BiocManager::install(c("IRanges", "DNAcopy"))'
+R --vanilla -e 'BiocManager::install(c("IRanges", "DNAcopy"))'
 
 # install copyCat
-~/workspace/bin/R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
+R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
 ```
 
 ### Install CNVnator
@@ -288,7 +278,7 @@ ln -s ~/workspace/bin/CNVnator_v0.3.3/src/cnvnator ~/workspace/bin/cnvnator
 ```
 
 ### Install CNVkit
-[CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python based copy number caller designed for use with hybrid capture. To install we can download and extract the package, we then must use [conda](https://conda.io/docs/) to set up the environment to run cnvkit. This process while straight forward takes some time so we've commented out the installation instructions for this tool and will use the conda environment that has already been set up.
+[CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python based copy number caller designed for use with hybrid capture. To install we can download and extract the package. We then must use [conda](https://conda.io/docs/) to set up the environment to run cnvkit. This process, while straight forward, takes some time so we've commented out the installation instructions for this tool and will use the conda environment that has already been set up.
 ```bash
 ## download and unzip
 cd ~/workspace/bin
@@ -305,7 +295,7 @@ unzip v0.9.5.zip
 
 # test installation
 source activate cnvkit
-~/workspace/bin/gatk
+python ~/workspace/bin/cnvkit-0.9.5/cnvkit.py --help
 
 # to exit the virtual environment
 source deactivate
@@ -346,9 +336,6 @@ cd ~/workspace/bin
 wget https://github.com/Illumina/manta/releases/download/v1.4.0/manta-1.4.0.centos6_x86_64.tar.bz2
 tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 
-# create symlink
-ln -s ~/workspace/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py ~/workspace/bin/configManta.py
-
 # test installation
-python2 ~/workspace/bin/configManta.py --help
+python2 ~/workspace/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
 ```
