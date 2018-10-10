@@ -339,3 +339,13 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 # test installation
 python2 ~/workspace/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
 ```
+
+### mosdepth
+[mosdepth](https://github.com/brentp/mosdepth) is a program for determining depth in sequencing data. The easiest way to install mosdepth is through `bioconda` a channel for the `conda` package manager. The AMI already has conda setup to install to `/usr/local/bin/miniconda` and so we've already installed mosdepth for you. However below are the commands used during the installation.
+```bash
+# add the bioconda channel
+conda config --add channels bioconda
+
+# install mosdepth with the conda package manager
+conda install mosdepth
+```

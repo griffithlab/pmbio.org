@@ -450,6 +450,7 @@ tar -zxvf pizzly_linux.tar.gz
 ```
 
 #### Manta 1.4.0
+Describes dependencies and installation of Manta, used in this course for SV datection.
 ```bash
 # download and extract
 cd /usr/local/bin
@@ -458,6 +459,17 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 
 # test installation
 python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
+```
+
+#### mosdepth 0.2.3
+Describes dependencies and installation of mosdepth, used in this course for dpeth caluclations.
+```bash
+# start sudo shell
+sudo bash
+
+# install mosdepth
+cd /usr/local/bin
+conda install mosdepth
 ```
 
 ### apache web serve setup
@@ -506,16 +518,16 @@ Here we create the directory structure for holding results as well as downloadin
 mkdir -p /workspace/data/raw_data/fastqs/all
 mkdir -p /workspace/data/raw_data/fastqs/chr6
 mkdir -p /workspace/data/raw_data/references/
-mkdir -p /workspace/data/results/module-01-setup
-mkdir -p /workspace/data/results/module-02-inputs
-mkdir -p /workspace/data/results/module-03-align
-mkdir -p /workspace/data/results/module-04-somatic
-mkdir -p /workspace/data/results/module-05-germline
-mkdir -p /workspace/data/results/module-06-rnaseq
-mkdir -p /workspace/data/results/module-07-clinical
-mkdir -p /workspace/data/results/module-08-immune
-mkdir -p /workspace/data/results/module-09-cwl
-mkdir -p /workspace/data/results/module-10-appendix
+mkdir -p /workspace/data/results/setup
+mkdir -p /workspace/data/results/inputs
+mkdir -p /workspace/data/results/align
+mkdir -p /workspace/data/results/somatic
+mkdir -p /workspace/data/results/germline
+mkdir -p /workspace/data/results/rnaseq
+mkdir -p /workspace/data/results/clinical
+mkdir -p /workspace/data/results/immune
+mkdir -p /workspace/data/results/cwl
+mkdir -p /workspace/data/results/appendix
 
 # change permissions for Students
 find /workspace/data/ -type d -exec chmod 775 {} \;
