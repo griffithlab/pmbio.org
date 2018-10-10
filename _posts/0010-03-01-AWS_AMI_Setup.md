@@ -472,6 +472,16 @@ cd /usr/local/bin
 conda install mosdepth
 ```
 
+#### extra utilities
+Describes installation of extra software helpfull to instructors but not necessarily used by Students
+```bash
+# start sudo shell
+sudo bash
+
+# install faSplit
+conda install ucsc-fasplit
+```
+
 ### apache web serve setup
 Set up apache web server for convenient access to files. This will allow students to easily download generated data from the `/workspace` directory. This directory is served from the IPv4 Public IP, which will be different for each user. This IP address can be viewed from the AWS EC2 instance site.
 ```bash
