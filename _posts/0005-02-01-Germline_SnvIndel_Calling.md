@@ -8,6 +8,10 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-02-01
 ---
 
+### Acknowledgements and citations
+
+- GATK
+
 ### Module objectives
 
 - Perform single sample germline variant calling with GATK on WGS and Exome data
@@ -117,7 +121,10 @@ gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh3
 Create joint genotype vcf, combining HCC1395 Exome normal together with a set of 1KG exomes, for use in VQSR filtering.
 
 ```
+#Combine gvcfs into a single vcf for use with GenotypeGVCFs
+gatk --java-options '-Xmx64g' CombineGVCFs -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /data/germline_variants/Exome_Norm_HC_calls.g.vcf -V /data/germline_variants/HG00099_HC_calls.g.vcf -V /data/germline_variants/HG00102_HC_calls.g.vcf -V /data/germline_variants/HG00104_HC_calls.g.vcf -V /data/germline_variants/HG00106_HC_calls.g.vcf -V /data/germline_variants/HG00118_HC_calls.g.vcf -O /data/germline_variants/Exome_Norm_1KG_HC_calls_combined.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
-gatk --java-options '-Xmx64g' GenotypeGVCFs -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /data/germline_variants/Exome_Norm_HC_calls.g.vcf -V /data/germline_variants/HG00099_HC_calls.g.vcf -V /data/germline_variants/HG00102_HC_calls.g.vcf -V /data/germline_variants/HG00104_HC_calls.g.vcf -V /data/germline_variants/HG00106_HC_calls.g.vcf -V /data/germline_variants/HG00118_HC_calls.g.vcf -O Exome_GGVCFs_jointcalls.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
+#Perform joint genotyping
+gatk --java-options '-Xmx64g' GenotypeGVCFs -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /data/germline_variants/Exome_Norm_1KG_HC_calls_combined.g.vcf -O /data/germline_variants/Exome_GGVCFs_jointcalls.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
 ```
