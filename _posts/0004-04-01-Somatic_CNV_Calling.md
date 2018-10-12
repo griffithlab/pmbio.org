@@ -21,14 +21,13 @@ To begin with [copyCat](https://github.com/chrisamiller/copyCat) we will first n
 
 ```bash
 cd /workspace/bin
-wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/readDepth/createCustomAnnotations.v1.tar.gz
-tar -xzvf createCustomAnnotations.v1.tar.gz
-bash runEachChr.sh chr6 100 /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split /workspace/data/results/somatic/
+wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/createCustomAnnotations.v1.zip
+unzip createCustomAnnotations.v1.tar.gz
 ```
 
-Next the script expects our fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
+The script expects our fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
 
-1. byname: tells the program to split the fasta by each record name
+1. byname: tells the program to split the fasta by each record name (i.e. chromosome)
 2. GRCh38_full_analysis_set_plus_decoy_hla.fa: location of the multi-record fasta
 3. GRCh38_full_analysis_set_plus_decoy_hla_split/: directory to output the results
 
@@ -45,12 +44,81 @@ faSplit byname GRCh38_full_analysis_set_plus_decoy_hla.fa GRCh38_full_analysis_s
 samtools faidx /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa
 ```
 
+Now that we've got everything set up we can run the script `runEachChr.sh` to create these mapability and gc content annotations, but first lets talk about what the script is actually doing. To create the mapability annotations it first takes the a single record fasta (i.e. for a single chromosome) and generates all possible combination of reads for a given read length (in our case the read length is 100 bp). It then takes these reads and aligns them to the multi record fasta (i.e. the whole genome) to determine which of these reads map uniquely to where they belong. If a read were to be mapped anywhere else from where it originally came from in the single record fasta that would be indicitive of a lower mapability at the region where that read was originally derived. The gc content annotation is the proportion of bases which are either a guanine or cytosine for a given region. The instructions for running this script can be found in the README however to sumarize the script will take the following positional arguments:
 
+1. single record fasta (i.e. chr6)
+2. multi record fasta (i.e. full genome)
+3. average length of reads (for us this is 100)
+4. entrypoint file (chromosome boundaries)
+5. output directory
+
+The script will create a directory called `copyCat_annotation` with annotations formatted and structured in the appropriate way. One thing to note is that while the script copied our entrypoints file over we only want to run copyCat on chromosome 6 and so we will need to edit our entrypoint file to reflect this. This script takes a couple hours to run so we provide the results which you can download from [genomedata.org](http://genomedata.org/). We also will need to add a `gaps.bed` file specifying the coordinates for regions to ignore (i.e. telomeres, etc.). A version of this is also made available by the author of copyCat and so will download this file and modify it slightly to correspond to only chromosme 6 and to say chr6 instead of 6. This file should be place at the top level of the copycat annotation directory.
+
+```bash
+# run the script to create the annotation dir
+#bash runEachChr.sh /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa 100 hg38entrypoints.male /workspace/data/results/somatic/
+
+# download the gaps.bed file
+cd /workspace/data/results/somatic/copyCat_annotation
+wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
+cat gaps.bed | grep "^6" | awk '{print "chr"$0}' > tmp && mv tmp gaps.bed
+
+# edit entrypoint file to contain only chromosome 6
+grep "chr6" entrypoints.male > tmp && mv tmp entrypoints.male
+```
+
+The final step of the puzzle before we run [copyCat](https://github.com/chrisamiller/copyCat) is to obtain depth calculations corresponding to a specific window size for our sequencing data. We can use [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630) for this task. The paramters we give to mosdepth are described below, we also need to decompress the output from mosdepth and manipulate the output such that it has three columns with header names "Chr", "Start", "Counts.$average_read_size" (i.e. Counts.100).
+
+1. --no-per-base: omit the per base depth calculation and only calculate depth per region (makes mosdepth run much faster)
+2. -t: number of threads to use
+3. -b: window size for calculating depth
+4. output directory
+5. bam file
 
 ```bash
 # run mosdepth for tumor/normal
-mosdepth -t 10 -b 100 /workspace/data/results/somatic/WGS_Norm.mosdepth /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
-mosdepth -t 10 -b 100 /workspace/data/results/somatic/WGS_Tumor.mosdepth /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
+mosdepth --no-per-base -t 10 -b 1000 /workspace/data/results/somatic/WGS_Norm.mosdepth /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
+bgzip -d WGS_Norm.mosdepth.regions.bed.gz
+cat /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed
+
+mosdepth --no-per-base -t 10 -b 1000 /workspace/data/results/somatic/WGS_Tumor.mosdepth /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
+bgzip -d WGS_Tumor.mosdepth.regions.bed.gz
+cat /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed
+```
+With Everything now set up we can start `R` and load the copyCat library. From there we can run the `runPairedSampleAnalysis()` function to perform the analysis. Most of the parameters in the function are the defaults and are only provided for the sake of completeness, the parameters changed are as follows:
+
+1. annotationDirectory: the path to the mapability and gc annotations we created from the bash script
+2. outputDir: whre to write our output
+3. normal: path to the normal mosdepth based depth calculations
+4. tumor: path to the tumor mosdepth based depth calculations
+5. maxCores: number of cores to use
+
+```R
+# Start R
+R
+
+# load the copyCat library
+library(copyCat)
+
+# run copyCat in paired mode
+runPairedSampleAnalysis(annotationDirectory="/workspace/data/results/somatic/copyCat_annotation",
+                        outputDirectory="/workspace/data/results/somatic/",
+                        normal="/workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed",
+                        tumor="/workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed",
+                        inputType="bins",
+                        maxCores=4,
+                        binSize=0,
+                        perLibrary=1,
+                        perReadLength=1,
+                        verbose=TRUE,
+                        minWidth=3,
+                        minMapability=0.6,
+                        dumpBins=TRUE,
+                        doGcCorrection=TRUE,
+                        samtoolsFileFormat="unknown",
+                        purity=1,
+                        normalSamtoolsFile=NULL,
+                        tumorSamtoolsFile=NULL)
 ```
 
 ### cnvnator germline
