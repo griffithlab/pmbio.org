@@ -10,9 +10,9 @@ date: 0006-05-01
 
 # Introduction
 
-In addition to providing information about gene expression, RNA-seq data can be used to discover transcripts which result from chromosomal translocations. Translocations and their resultant chimeric (AKA fusion) transcripts are important driver mutations in many cancers. A variety of specialized RNA alignment and filtering strategies have been developed to identify fusion transcripts, but these programs suffer from low specificity (many false-positives) and poor correlation across programs. 
+In addition to providing information about gene expression, RNA-seq data can be used to discover transcripts which result from chromosomal translocations. Translocations and their resultant chimeric (AKA fusion) transcripts are important driver mutations in many cancers. A variety of specialized RNA alignment and filtering strategies have been developed to identify fusion transcripts, but these programs suffer from low specificity (many false-positives) and poor correlation across programs.
 
-This tutorial uses the [kallisto](https://pachterlab.github.io/kallisto/about) and [pizzly](https://github.com/pmelsted/pizzly) tools for fusion detection. kallisto quantifies transcript abundance through pseudoalignment. pizzly aligns reads which kallisto has flagged as potentially spanning fusion junctions. In addition to RNA fastq files, fusion calling requires a reference transcriptome and gene annotation file- see below. 
+This tutorial uses the [kallisto](https://pachterlab.github.io/kallisto/about) and [pizzly](https://github.com/pmelsted/pizzly) tools for fusion detection. kallisto quantifies transcript abundance through pseudoalignment. pizzly aligns reads which kallisto has flagged as potentially spanning fusion junctions. In addition to RNA fastq files, fusion calling requires a reference transcriptome and gene annotation file- see below.
 
 # Setup
 
@@ -43,6 +43,7 @@ cat RNAseq_Norm_Lane1_R2.fastq.gz RNAseq_Norm_Lane2_R2.fastq.gz > RNAseq_NormalR
 
 # Run Fusion Alignment and Filtering
 - Create kallisto index:
+
 ```bash
 cd /data
 mkdir rna-fusion
@@ -51,6 +52,7 @@ kallisto index -i index.idx -k 31 ~/data/reference/Homo_sapiens.GRCh38.cdna.all.
 ```
 
 - Quantify potential fusions:
+
 ```bash
 cd /data/rna-fusion
 kallisto quant -i index.idx --fusion -o output-tumor ~/data/fastqs/RNAseq_Tumor/RNAseq_TumorR1.fastq.gz ~/data/fastqs/RNAseq_Tumor/RNAseq_TumorR2.fastq.gz
@@ -58,6 +60,7 @@ kallisto quant -i index.idx --fusion -o output-normal ~/data/fastqs/RNAseq_Norm/
 ```
 
 - Filter fusions with pizzly:
+
 ```bash
 cd /data/rna-fusion
 pizzly -k 31 --gtf /data/annotation/Homo_sapiens.GRCh38.93.gtf --cache index.cache.txt --align-score 2 -ignore-protein --insert-size 400 --fasta /data/annotation/Homo_sapiens.GRCh38.cdna.all.fa.gz --output fusTumor output-tumor/fusion.txt
