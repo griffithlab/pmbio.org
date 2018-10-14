@@ -32,9 +32,15 @@ wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_refe
 
 ```bash
 cd ~/data/reference/
+
+#SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf /home/ubuntu/data/reference
 bgzip /home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz /home/ubuntu/data/reference
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz /home/ubuntu/data/reference
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz /home/ubuntu/data/reference
 
+#Indel calibration call sets - dbsnp, Mills
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz /home/ubuntu/data/reference
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz /home/ubuntu/data/reference
 
