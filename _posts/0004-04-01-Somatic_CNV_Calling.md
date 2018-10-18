@@ -15,9 +15,66 @@ date: 0004-04-01
 To begin, the concept of a CNA is fairly straight forward, in the figure to the left we show a standard pair of chromosomes divided into 8 segments. In a copy number amplification a region of the genome is duplicated, in our figure region J has 2 extra segments right after each other. When looking at this region in the reference genome we would expect to see a sharp and dramatic increase in coverage at this region. Further with paired end data the insert size for reads spanning the amplification would be larger. In contrast a deletion is how it sounds and is simply a segment of the chromosome which is gone. In our figure we show a single copy deletion of segment C which would result in a sharp drop in coverage at that region in the sequencing data and a shorter average insert size at the breakpoints of the event.
 
 ### Somatic CNA for WGS
-[copyCat](https://github.com/chrisamiller/copyCat) is an R package used for detecting somatic (experiment/control) copy number aberrations. It works by measuring the depth of coverage from a sequencing experiment. For example in a diploid organism such as human, a single copy number deletion should result in aproximately half the depth (number of reads) compared to the control. There are two obvious biases when using depth to determine copy nubmer. The first GC-content is well known to have an effect on coverage in illumina sequencing data. This goes all the way down to the PCR amplification of the library. The second thing which can introduce bias is the overall mapability of a region of the genome. A low complexity region in the genome for example will have coverage differences just because it is hard for alignment algorithms to align there. These biases are fairly straight forward to address in WGS data however in exome/targeted data it is much harder.
 
-To begin with [copyCat](https://github.com/chrisamiller/copyCat) we will first need to obtain GC and mapability scores for our data to allow copyCat to adujust for these biases. Fortunately the author of copyCat has a script to create these annotation files. As our first step let's go ahead and download the script into the `workspace/bin` directory and extract the contents.
+[copyCat](https://github.com/chrisamiller/copyCat) is an R package used for detecting somatic (experiment/control) copy number aberrations. It works by measuring the depth of coverage from a sequencing experiment. For example in a diploid organism such as human, a single copy number deletion should result in aproximately half the depth (number of reads) compared to the control. Before we run [copyCat](https://github.com/chrisamiller/copyCat) we need to obtain depth calculations corresponding to a specific window size for our sequencing data. We can use [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630) for this task. The paramters we give to mosdepth are described below, to run with [copyCat](https://github.com/chrisamiller/copyCat) we also need to decompress the output from mosdepth and manipulate the output such that it has three columns with header names "Chr", "Start", "Counts.$average_read_size" (i.e. Counts.100).
+
+**mosdepth paramters**:
+1. --no-per-base: omit the per base depth calculation and only calculate depth per region (makes mosdepth run much faster)
+2. -t: number of threads to use
+3. -b: window size for calculating depth
+4. output directory
+5. bam file
+
+```bash
+# run mosdepth for tumor/normal
+mosdepth --no-per-base -t 4 -b 10000 /workspace/data/results/somatic/WGS_Norm.mosdepth /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
+bgzip -d WGS_Norm.mosdepth.regions.bed.gz
+cat /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed
+
+mosdepth --no-per-base -t 4 -b 10000 /workspace/data/results/somatic/WGS_Tumor.mosdepth /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
+bgzip -d WGS_Tumor.mosdepth.regions.bed.gz
+cat /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed
+```
+
+Having run [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630) we have the core data we need to determine copy number. Let's go ahead and quickly examine a chromosome to get an idea of what we're looking at. The below code will make a crude adjustment to normalize the data based on the number of reads present in the samples and plot the result for chromosome 6.
+
+```R
+# set working directory
+/workspace/data/results/somatic/
+
+# load libraries
+library(ggplot2)
+library(data.table)
+library(viridis)
+
+# read in the depth depth data
+tumor_depth <- fread("WGS_Tumor.mosdepth.regions.2.bed")
+normal_depth <- fread("WGS_Norm.mosdepth.regions.2.bed")
+
+# merge the two
+all_depth <- merge(tumor_depth, normal_depth, by=c("Chr", "Start"), suffixes=c("Tumor", "Normal"))
+
+# normalize the data based on number of reads
+total_tumor_reads <- sum(all_depth$Counts.100Tumor)
+total_normal_reads <- sum(all_depth$Counts.100Normal)
+all_depth$Counts.100Normal <- all_depth$Counts.100Normal * (total_tumor_reads/total_normal_reads)
+
+# calculate the difference in depth between tumor and normal
+all_depth$diff <- all_depth$Counts.100Tumor - all_depth$Counts.100Normal
+
+# plot the result for chromosome 6
+ggplot(all_depth[all_depth$Chr == "chr6",], aes(x=Start, y=diff, color=diff)) + geom_point() + scale_color_viridis("Depth", option = "plasma") + theme_bw() +
+    ylab("Relative Depth Difference") + xlab("Position")
+```
+
+you should see something like the plot below where there is a fairly clear indication of a copy number amplification on the p arm of the chromosome, and a copy deletion twoards the center of the chromosome. Keep in mind that what's plotted is the Tumor depth relative to the normal and not the actual copy number.
+
+{% include figure.html image="/assets//module_4/mosdepth_CNA.png" %}
+
+
+Nice job, that was pretty easy! But not so fast, there are two obvious biases when using depth to determine copy number. The first, GC-content is well known to have an effect on coverage in illumina sequencing data. This goes all the way back to the PCR amplification of the library affecting the number of reads generated. The second thing which can introduce bias is the overall mapability of a region of the genome. A low complexity region in the genome for example will have coverage differences just because it is hard for alignment algorithms to map reads there. These biases are fairly straight forward to address in WGS data however in exome/targeted data it is much more complicated.
+
+The [copyCat](https://github.com/chrisamiller/copyCat) package is able to adjust for these biases in WGS data and is what we'll start with. To start with [copyCat](https://github.com/chrisamiller/copyCat) we need to obtain GC content and mapability scores for our data. Fortunately the author of copyCat has a script to create these annotation files. As our first step let's go ahead and download the script into the `workspace/bin` directory and extract the contents.
 
 ```bash
 cd /workspace/bin
@@ -25,13 +82,14 @@ wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/create
 unzip createCustomAnnotations.v1.tar.gz
 ```
 
-The script expects our fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
+The script expects our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
 
-1. byname: tells the program to split the fasta by each record name (i.e. chromosome)
-2. GRCh38_full_analysis_set_plus_decoy_hla.fa: location of the multi-record fasta
-3. GRCh38_full_analysis_set_plus_decoy_hla_split/: directory to output the results
+- byname: tells the program to split the fasta by each record name (i.e. chromosome)
+- GRCh38_full_analysis_set_plus_decoy_hla.fa: location of the multi-record fasta
+- GRCh38_full_analysis_set_plus_decoy_hla_split/: directory to output the results
 
 We also need to make sure we create an index for our new fasta with `samtools faidx`.
+
 ```bash
 # make new directory and change directories
 mkdir -p /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split
@@ -52,46 +110,43 @@ Now that we've got everything set up we can run the script `runEachChr.sh` to cr
 4. entrypoint file (chromosome boundaries)
 5. output directory
 
-The script will create a directory called `copyCat_annotation` with annotations formatted and structured in the appropriate way. One thing to note is that while the script copied our entrypoints file over we only want to run copyCat on chromosome 6 and so we will need to edit our entrypoint file to reflect this. This script takes a couple hours to run so we provide the results which you can download from [genomedata.org](http://genomedata.org/). We also will need to add a `gaps.bed` file specifying the coordinates for regions to ignore (i.e. telomeres, etc.). A version of this is also made available by the author of copyCat and so will download this file and modify it slightly to correspond to only chromosme 6 and to say chr6 instead of 6. This file should be place at the top level of the copycat annotation directory.
+The script will create a directory called `copyCat_annotation` with annotations formatted and structured in the appropriate way. This script takes a couple hours to run so we provide the results which you can download from genomedata.org. We also will need to add a `gaps.bed` file specifying the coordinates for regions to ignore (i.e. telomeres, etc.). A version of this is also made available by the author of copyCat and so we will download this file as well and modify it slightly such that our chromosome names begin with **chr**. This file should be place at the top level of the copycat annotation directory.
 
 ```bash
-# run the script to create the annotation dir
-#bash runEachChr.sh /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa 100 hg38entrypoints.male /workspace/data/results/somatic/
+## run the script to create the annotation dir
+# cd /workspace/bin/createCustomAnnotations.v1
+# bash runEachChr.sh /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa 100 hg38entrypoints.male /workspace/data/results/somatic/
 
-# download the gaps.bed file
-cd /workspace/data/results/somatic/copyCat_annotation
-wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
-cat gaps.bed | grep "^6" | awk '{print "chr"$0}' > tmp && mv tmp gaps.bed
+## download the gaps.bed file
+# cd /workspace/data/results/somatic/copyCat_annotation
+# wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
+# cat gaps.bed | awk '{print "chr"$0}' > tmp && mv tmp gaps.bed
 
-# edit entrypoint file to contain only chromosome 6
-grep "chr6" entrypoints.male > tmp && mv tmp entrypoints.male
+# as mentioned the above takes some time so we'll just download the result for HG38
+wget
 ```
 
-The final step of the puzzle before we run [copyCat](https://github.com/chrisamiller/copyCat) is to obtain depth calculations corresponding to a specific window size for our sequencing data. We can use [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630) for this task. The paramters we give to mosdepth are described below, we also need to decompress the output from mosdepth and manipulate the output such that it has three columns with header names "Chr", "Start", "Counts.$average_read_size" (i.e. Counts.100).
-
-1. --no-per-base: omit the per base depth calculation and only calculate depth per region (makes mosdepth run much faster)
-2. -t: number of threads to use
-3. -b: window size for calculating depth
-4. output directory
-5. bam file
+At the end your directory structure should look something like this but with more chromosomes:
 
 ```bash
-# run mosdepth for tumor/normal
-mosdepth --no-per-base -t 10 -b 1000 /workspace/data/results/somatic/WGS_Norm.mosdepth /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
-bgzip -d WGS_Norm.mosdepth.regions.bed.gz
-cat /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed
-
-mosdepth --no-per-base -t 10 -b 1000 /workspace/data/results/somatic/WGS_Tumor.mosdepth /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
-bgzip -d WGS_Tumor.mosdepth.regions.bed.gz
-cat /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed
+├── entrypoints.male
+├── gaps.bed
+└── readlength.100
+    ├── gcWinds
+    │   ├── chr10.gc.gz
+    │   ├── chr11.gc.gz
+    └── mapability
+        ├── chr10.dat.gz
+        ├── chr11.dat.gz
 ```
+
 With Everything now set up we can start `R` and load the copyCat library. From there we can run the `runPairedSampleAnalysis()` function to perform the analysis. Most of the parameters in the function are the defaults and are only provided for the sake of completeness, the parameters changed are as follows:
 
 1. annotationDirectory: the path to the mapability and gc annotations we created from the bash script
 2. outputDir: whre to write our output
 3. normal: path to the normal mosdepth based depth calculations
 4. tumor: path to the tumor mosdepth based depth calculations
-5. maxCores: number of cores to use
+5. maxCores: number of cores to use, 0 means all available cores
 
 ```R
 # Start R
@@ -106,7 +161,7 @@ runPairedSampleAnalysis(annotationDirectory="/workspace/data/results/somatic/cop
                         normal="/workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed",
                         tumor="/workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed",
                         inputType="bins",
-                        maxCores=4,
+                        maxCores=0,
                         binSize=0,
                         perLibrary=1,
                         perReadLength=1,
@@ -120,6 +175,45 @@ runPairedSampleAnalysis(annotationDirectory="/workspace/data/results/somatic/cop
                         normalSamtoolsFile=NULL,
                         tumorSamtoolsFile=NULL)
 ```
+
+The analysis will take a few minutes to complete however once it's done there are a few files that we care about. First you'll notice there is now a plots directory at `/workspace/data/results/somatic/plots`, inside we can view the graphs [copyCat](https://github.com/chrisamiller/copyCat) created to visualize the gc bias correction, they should look something like this:
+
+{% include figure.html image="/assets/module_4/normal.gccontent.lib1.readLength100.png" %}
+
+As we can see there was quite an extreme bias between the number of reads mapped and the GC content of the reads particulary when the GC content falls below 30% or above 50% however the LOESS correction dealt with this quite nicely.
+
+Next let's look at the actual copy number calls from [copyCat](https://github.com/chrisamiller/copyCat). There are three files output files that we care about here:
+
+- **rd.bins.dat**: contains the chromsome, position and the inferred tumor CN where 2 represents a normal diploid state
+- **segs.paired.dat**: contains the result of the segmentation algorithm with columns "chromosome", "start", "stop", "windows", "inferred tumor CN"
+- **alts.paired.dat**: is identical to segs.paired.dat however those segments which are copy neutral are removed.
+
+As a final step lets load R and plot the results for chromosome 6.
+
+```R
+# start R
+R
+
+# load libraries
+library(ggplot2)
+library(data.table)
+library(viridis)
+library(scales)
+
+# read in the data
+copy_segment_alteration <- fread("alts.paired.dat")
+colnames(copy_segment_alteration) <- c("Chr", "Start", "Stop", "Windows", "Tumor_CN")
+cna_bin <- fread("rd.bins.dat")
+colnames(cna_bin) <- c("Chr", "Pos", "CNA")
+
+# create the plot
+ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr6",], aes(x=Pos, y=CNA, color=CNA)) +
+    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr6",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
+    scale_y_continuous(limits=c(0, 15), oob=squish) + scale_color_viridis(limits=c(0, 4), option="plasma", oob=squish) + theme_bw() +
+    geom_hline(yintercept = c(1, 2, 3), linetype="longdash")
+```
+
+{% include figure.html image="/assets/module_4/copyCat_final.png" %}
 
 ### cnvnator germline
 ### cnvkit exome
