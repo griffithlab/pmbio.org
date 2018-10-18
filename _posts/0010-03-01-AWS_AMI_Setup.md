@@ -50,6 +50,10 @@ echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace
 # make symlink for convenience
 cd ~
 ln -s /workspace workspace
+
+# exit sudo shell
+exit
+
 ```
 
 ### Software Dependencies
@@ -70,6 +74,54 @@ apt-get update -y && apt-get install -y \
   git \
   curl \
   tree
+
+# exit sudo shell
+exit
+```
+
+#### R 3.5.1
+Describes dependencies and installation for R 3.5.1, used in this course for general file manipulation/analysis.
+```bash
+# start sudo shell
+sudo bash
+
+# Install R Dependencies
+cd /usr/local/bin
+apt-get update -y && apt-get install -y \
+  gfortran \
+  libreadline-dev \
+  libpcre3-dev \
+  libcurl4-openssl-dev \
+  build-essential \
+  zlib1g-dev \
+  libbz2-dev \
+  liblzma-dev \
+  openjdk-8-jdk
+
+# Install R
+wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
+tar -zxvf R-3.5.1.tar.gz
+cd R-3.5.1
+./configure --prefix=/usr/local/ --with-x=no
+make
+make install
+
+# devtools and BiocManager dependencies
+apt-get update -y && apt-get install -y \
+  libssl-dev \
+  libxml2-dev
+
+R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+
+# change write permissions so students can install additional packages
+chown -R ubuntu:ubuntu /usr/local/lib/R/library
+find /usr/local/lib/R/library -type d -exec chmod 777 {} \;
+find /usr/local/lib/R/library -type f -exec chmod 664 {} \;
+find /usr/local/lib/R/doc/ -type d -exec chmod 777 {} \;
+find /usr/local/lib/R/doc/ -type f -exec chmod 664 {} \;
+
+# exit sudo shell
+exit
 ```
 
 #### Samtools 1.7
@@ -94,6 +146,9 @@ cd samtools-1.7
 ./configure --prefix=/usr/local/
 make
 make install
+
+# exit sudo shell
+exit
 ```
 
 #### PICARD 2.18.14
@@ -110,6 +165,9 @@ apt-get update -y && apt-get install -y \
 # picard installation
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 export PICARD='/usr/local/bin/picard.jar'
+
+# exit sudo shell
+exit
 ```
 
 #### BWA 0.7.17
@@ -130,6 +188,9 @@ tar --bzip2 -xvf bwa-0.7.17.tar.bz2
 cd  bwa-0.7.17
 make
 ln -s /usr/local/bin/bwa-0.7.17/bwa /usr/local/bin/bwa
+
+# exit sudo shell
+exit
 ```
 
 #### GATK 4.0.2.1
@@ -148,19 +209,24 @@ source ~/.bashrc
 apt-get update -y && apt-get install -y \
   openjdk-8-jdk
 
+# install R dependencies
+R --vanilla -e 'install.packages(c("gsalib", "ggplot2","reshape", "gplots"), repos="http://cran.us.r-project.org")'
+
 # install GATK environment
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
 cd /usr/local/bin/gatk-4.0.2.1
 conda env create -n gatk -f gatkcondaenv.yml
 # to use gatk: source activate gatk
-# for full functionality R and the libraries gsalib, ggplot2, reshape, gplots should be installed
 # note that we told the installer to add conda to the paths
 # added by Miniconda3 installer
 # export PATH="/usr/local/bin/miniconda/bin:$PATH"
 
 # symlink gatk executable
 ln -s /usr/local/bin/gatk-4.0.2.1/gatk /usr/local/bin/gatk
+
+# exit sudo shell
+exit
 ```
 
 #### VEP 93.4
@@ -204,6 +270,9 @@ wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genot
 # unlock permissions for downloaded cache
 find /opt/vep_cache -type d -exec chmod 777 {} \;
 find /opt/vep_cache -type f -exec chmod 664 {} \;
+
+# exit sudo shell
+exit
 ```
 
 #### VarScan 2.4.2
@@ -219,6 +288,9 @@ apt-get update -y && apt-get install -y \
 
 # install varscan
 curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar
+
+# exit sudo shell
+exit
 ```
 
 #### BCFtools 1.3.1
@@ -239,6 +311,9 @@ tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
 cd bcftools-1.3.1
 make -j
 make prefix=/usr/local/ install
+
+# exit sudo shell
+exit
 ```
 
 #### Strelka 2.7.1
@@ -255,6 +330,9 @@ apt-get update -y && apt-get install -y \
 # install strelka
 curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
 tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2 # note uses python2
+
+# exit sudo shell
+exit
 ```
 
 #### Sambamba 0.6.4
@@ -268,6 +346,9 @@ cd /usr/local/bin
 curl -L -k -o sambamba_v0.6.4_linux.tar.bz2 https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2
 tar --bzip2 -xvf sambamba_v0.6.4_linux.tar.bz2
 ln -s /usr/local/bin/sambamba_v0.6.4 /usr/local/bin/sambamba
+
+# exit sudo shell
+exit
 ```
 
 #### HISAT 2.0.4
@@ -281,6 +362,9 @@ cd /usr/local/bin
 wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_64.zip
 unzip hisat2-2.0.4-Linux_x86_64.zip
 ln -s /usr/local/bin/hisat2-2.0.4/hisat2 /usr/local/bin/hisat2
+
+# exit sudo shell
+exit
 ```
 
 #### StringTie 1.3.0
@@ -294,6 +378,9 @@ cd /usr/local/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.0.Linux_x86_64.tar.gz
 tar -xzvf stringtie-1.3.0.Linux_x86_64.tar.gz
 ln -s /usr/local/bin/stringtie-1.3.0.Linux_x86_64/stringtie /usr/local/bin/stringtie
+
+# exit sudo shell
+exit
 ```
 
 #### Gffcompare 0.9.8
@@ -307,48 +394,9 @@ cd /usr/local/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/gffcompare-0.9.8.Linux_x86_64.tar.gz
 tar -xzvf gffcompare-0.9.8.Linux_x86_64.tar.gz
 ln -s /usr/local/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare /usr/local/bin/gffcompare
-```
 
-#### R 3.5.1
-Describes dependencies and installation for R 3.5.1, used in this course for general file manipulation/analysis.
-```bash
-# start sudo shell
-sudo bash
-
-# Install R Dependencies
-cd /usr/local/bin
-apt-get update -y && apt-get install -y \
-  gfortran \
-  libreadline-dev \
-  libpcre3-dev \
-  libcurl4-openssl-dev \
-  build-essential \
-  zlib1g-dev \
-  libbz2-dev \
-  liblzma-dev \
-  openjdk-8-jdk
-
-# Install R
-wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
-tar -zxvf R-3.5.1.tar.gz
-cd R-3.5.1
-./configure --prefix=/usr/local/ --with-x=no
-make
-make install
-
-# devtools and BiocManager dependencies
-apt-get update -y && apt-get install -y \
-  libssl-dev \
-  libxml2-dev
-
-R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
-
-# change write permissions so students can install additional packages
-chown -R ubuntu:ubuntu /usr/local/lib/R/library
-find /usr/local/lib/R/library -type d -exec chmod 777 {} \;
-find /usr/local/lib/R/library -type f -exec chmod 664 {} \;
-find /usr/local/lib/R/doc/ -type d -exec chmod 777 {} \;
-find /usr/local/lib/R/doc/ -type f -exec chmod 664 {} \;
+# exit sudo shell
+exit
 ```
 
 #### copyCat 1.6.12
@@ -363,6 +411,9 @@ R --vanilla -e 'BiocManager::install(c("IRanges", "DNAcopy"))'
 
 # Install copyCat
 R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
+
+# exit sudo shell
+exit
 ```
 
 #### CNVnator
@@ -404,6 +455,9 @@ make
 
 # make sylink
 ln -s /usr/local/bin/CNVnator_v0.3.3/src/cnvnator /usr/local/bin/cnvnator
+
+# exit sudo shell
+exit
 ```
 
 #### cnvkit
@@ -422,6 +476,9 @@ conda config --add channels conda-forge
 conda config --add channels bioconda
 conda create -n cnvkit cnvkit
 # source activate cnvkit
+
+# exit sudo shell
+exit
 ```
 
 #### Kallisto 0.44.0
@@ -435,6 +492,9 @@ cd /usr/local/bin
 wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_linux-v0.44.0.tar.gz
 tar -zxvf kallisto_linux-v0.44.0.tar.gz
 ln -s /usr/local/bin/kallisto_linux-v0.44.0/kallisto /usr/local/bin/kallisto
+
+# exit sudo shell
+exit
 ```
 
 #### Pizzly 0.37.3
@@ -447,6 +507,9 @@ sudo bash
 cd /usr/local/bin
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
+
+# exit sudo shell
+exit
 ```
 
 #### Manta 1.4.0
@@ -459,6 +522,9 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 
 # test installation
 python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
+
+# exit sudo shell
+exit
 ```
 
 #### mosdepth 0.2.3
@@ -470,6 +536,9 @@ sudo bash
 # install mosdepth
 cd /usr/local/bin
 conda install mosdepth
+
+# exit sudo shell
+exit
 ```
 
 #### extra utilities
@@ -480,6 +549,9 @@ sudo bash
 
 # install faSplit
 conda install ucsc-fasplit
+
+# exit sudo shell
+exit
 ```
 
 ### apache web serve setup
@@ -500,11 +572,14 @@ apt-get update -y && apt-get install -y \
 #</Directory>
 sed -ie '/#<\/Directory>/a <Directory /workspace/>\n        Options Indexes FollowSymLinks\n        AllowOverride None\n        Require all granted\n</Directory>' /etc/apache2/apache2.conf
 
-# chenge the document root in vhost file (000-default.conf)
+# change the document root in vhost file (000-default.conf)
 sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/workspace/' /etc/apache2/sites-available/000-default.conf
 
 # restart apache
 service apache2 restart
+
+# exit sudo shell
+exit
 ```
 
 ### Environment Variables
@@ -567,4 +642,7 @@ cd /usr/local/bin
 rm -f *.tar.gz
 rm -f *.zip
 rm -f *.bz2
+
+# exit sudo shell
+exit
 ```
