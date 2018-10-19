@@ -10,7 +10,7 @@ date: 0010-02-01
 
 This module is used to document background details that are generally considered too obscure for use in the main workshop but are helpful for the course developers to keep track of certain details.
 
-### Prepare data
+### Prepare original starting data
 
 The plan is to provide students with raw down-sampled fastq files as starting point. These notes document our original source of data files and any transformations needed.
 
@@ -121,3 +121,10 @@ Create tarball of all fastq files to host for later use
 cd /data/
 tar -cvf fastqs.tar fastqs/
 ```
+
+### Create downsampled data sets to allow faster analysis a teaching setting
+Starting with aligned data, the following steps were used to create down-sampled data files
+
+HUIMING TO ADD INSTRUCTIONS HERE
+
+
