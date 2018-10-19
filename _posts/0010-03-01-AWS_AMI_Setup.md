@@ -17,11 +17,11 @@ This module is primarily for the course developers to document how the AWS AMI w
 For development purposes we started with a very large instance (overkill). Future experimentation is needed to determine the appropriate size for actual student instances.
 
 - Launch an EC2 instance:
-- Select Ubuntu Server 16.04 LTS (HVM), SSD Volume Type - ami-2581aa40
+- Select Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
 - Choose r4.16xlarge (64 vCPUs, 488 GiB Memory, 25 Gigabit Network Performance)
 - Increase root storage to 10GB
 - Add storage: 10,000 GiB (~10TB) EBS volume, not encrypted
-- Configure security: Allow SSH access
+- Configure security: Allow SSH and HTTP access
 - Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
 
 ### Formatting and mounting storage volumes
@@ -46,6 +46,13 @@ chown -R ubuntu:ubuntu /workspace
 
 # Make ephemeral storage mounts persistent
 echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
+
+#Note that setting up a volume like this can occasionaly result in an unbootable state. Using the device volume is safer
+#sudo file -s /dev/xvdb
+#sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /data ext4 defaults,nofail 0 2\n"}'
+#Add a line like the following to fstab using vim editor. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
+#sudo vim /etc/fstab
+#UUID=UUID-goes-here       /data   ext4    defaults,nofail        0       2
 
 # make symlink for convenience
 cd ~
