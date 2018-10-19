@@ -626,41 +626,6 @@ export YEPPPINCLUDEDIR=/usr/local/bin/yeppp-1.0.0/library/headers
 export LD_LIBRARY_PATH=$YEPPPLIBDIR:$LD_LIBRARY_PATH
 ```
 
-### Results Directory structure
-Here we create the directory structure for holding results as well as downloading some of the larger raw_data files for the students.
-```bash
-# make directory structure
-mkdir -p /workspace/data/raw_data/fastqs/all
-mkdir -p /workspace/data/raw_data/fastqs/chr6
-mkdir -p /workspace/data/raw_data/references/
-mkdir -p /workspace/data/results/setup
-mkdir -p /workspace/data/results/inputs
-mkdir -p /workspace/data/results/align
-mkdir -p /workspace/data/results/somatic
-mkdir -p /workspace/data/results/germline
-mkdir -p /workspace/data/results/rnaseq
-mkdir -p /workspace/data/results/clinical
-mkdir -p /workspace/data/results/immune
-mkdir -p /workspace/data/results/cwl
-mkdir -p /workspace/data/results/appendix
-
-# change permissions for Students
-find /workspace/data/ -type d -exec chmod 775 {} \;
-chown -R ubuntu:ubuntu /workspace/data
-
-# download the raw data
-wget -c -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
-wget -c -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Tumor.tar
-wget -c -P /workspace/data/raw_data/references http://genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Norm_sorted_mrkdup.bam
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Tumor_sorted_mrkdup.bam
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Norm_merged_sorted_mrkdup.bam
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Tumor_merged_sorted_mrkdup.bam
-
-# view directory structure
-tree -d /workspace/data
-```
-
 ### Final Cleanup
 To finnish up clean out the downloaded compressed binary files
 ```bash
