@@ -552,7 +552,7 @@ Describes installation of extra software helpfull to instructors but not necessa
 sudo bash
 
 # install faSplit
-conda install ucsc-fasplit
+conda install -y ucsc-fasplit
 
 # exit sudo shell
 exit
