@@ -532,7 +532,7 @@ exit
 ```
 
 #### mosdepth 0.2.3
-Describes dependencies and installation of mosdepth, used in this course for dpeth caluclations.
+Describes dependencies and installation of mosdepth, used in this course for depth caluclations.
 ```bash
 # start sudo shell
 sudo bash
@@ -546,6 +546,7 @@ exit
 ```
 
 #### bam-readcount
+Describes dependencies and installation of bam-readcount, used in this course for variant counting, VAFs, etc.
 ```bash
 # start sudo shell
 sudo bash
