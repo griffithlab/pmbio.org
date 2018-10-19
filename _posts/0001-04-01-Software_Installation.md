@@ -321,6 +321,8 @@ ln -s ~/workspace/bin/kallisto_linux-v0.44.0/kallisto ~/workspace/bin/kallisto
 ```bash
 # download and extract
 cd ~/workspace/bin
+mkdir pizzly-v0.37.3
+cd pizzly-v0.37.3
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
 
