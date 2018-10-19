@@ -539,7 +539,7 @@ sudo bash
 
 # install mosdepth
 cd /usr/local/bin
-conda install mosdepth
+conda install -y mosdepth
 
 # exit sudo shell
 exit
