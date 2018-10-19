@@ -7,6 +7,7 @@ categories:
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0004-02-01
 ---
+
 TODO: Change directory names as needed for consistency across modules, also we will need a version for subset samples.
 #### **Downloading Reference Files**
 __________________________  
@@ -82,5 +83,15 @@ __________________________
 With outputs from all three algorithms, we can now merge the variants to generate a comprehensive list of detected variants:
 * `java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions UNIQUIFY --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka /data/strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.unique.vcf.gz`
 * `java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.merged.vcf`
+
+### **Left Align and Trim**
+__________________________
+`java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T LeftAlignAndTrimVariants --variant /data/exome_chr6.merged.vcf.gz -o exome_chr6.merged.leftalignandtrim.vcf -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa`
+
+Note that when running on chromosome 6 merged variants file, this gave 0 variants aligned. 
+
+### **Splitting Multi-allelic Variant**
+__________________________
+`docker run quay.io/biocontainers/vt:0.57721--hf74b74d_1 vt decompose -s file_to_be_decomposed.vcf -o decomposed.vcf`
 
 **Please continue to the next section for instructions on how to filter, annotation and review variants**
