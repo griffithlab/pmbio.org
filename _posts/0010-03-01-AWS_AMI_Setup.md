@@ -644,3 +644,6 @@ rm -f *.bz2
 # exit sudo shell
 exit
 ```
+
+### TO ADD
+[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)
