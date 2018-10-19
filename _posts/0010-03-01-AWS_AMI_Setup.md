@@ -509,8 +509,11 @@ sudo bash
 
 # install Pizzly
 cd /usr/local/bin
+mkdir pizzly-v0.37.3
+cd pizzly-v0.37.3
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
+ln -s /usr/local/bin/pizzly-v0.37.3/pizzly /usr/local/bin/pizzly
 
 # exit sudo shell
 exit
