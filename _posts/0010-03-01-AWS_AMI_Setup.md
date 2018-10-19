@@ -82,6 +82,12 @@ apt-get update -y && apt-get install -y \
   curl \
   tree
 
+# install miniconda dependency
+cd /usr/local/bin
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh # accept license, choose /usr/local/bin/miniconda as install location, and yes add conda to path when asked
+source ~/.bashrc
+
 # exit sudo shell
 exit
 ```
@@ -205,12 +211,6 @@ Describes dependencies and installation for GATK 4.0.2.1, used in this course fo
 ```bash
 # start sudo shell
 sudo bash
-
-# install miniconda dependency
-cd /usr/local/bin
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh # choose /usr/local/bin/miniconda as install location
-source ~/.bashrc
 
 # install additional dependencies
 apt-get update -y && apt-get install -y \
@@ -475,9 +475,6 @@ sudo bash
 
 # install cnvkit
 cd /usr/local/bin
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-source ~/.bashrc
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
