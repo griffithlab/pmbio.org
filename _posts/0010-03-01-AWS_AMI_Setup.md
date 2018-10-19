@@ -545,6 +545,31 @@ conda install -y mosdepth
 exit
 ```
 
+#### bam-readcount
+```bash
+# start sudo shell
+sudo bash
+
+# install cmake dependency
+apt-get update -y && apt-get install -y cmake
+
+# install bam-readcount
+cd /usr/local/bin
+git clone https://github.com/genome/bam-readcount.git
+mv bam-readcount bam-readcount-latest
+cd bam-readcount-latest
+cmake -Wno-dev /usr/local/bin/bam-readcount-latest
+make
+ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-readcount
+
+# test installation
+/usr/local/bin/bam-readcount
+
+# exit sudo shell
+exit
+
+```
+
 #### extra utilities
 Describes installation of extra software helpfull to instructors but not necessarily used by Students
 ```bash
