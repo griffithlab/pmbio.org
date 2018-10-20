@@ -103,8 +103,8 @@ cd /data/RNA_seq/fusion
 
 ```bash
 cd /data/RNA_seq/fusion
-~/workspace/bin/pizzly -k 31 --gtf /data/annotation/Homo_sapiens.GRCh38.93.gtf --cache index.cache.txt --align-score 2 --insert-size 400 --fasta /data/annotation/Homo_sapiens.GRCh38.cdna.all.fa.gz --output normal output-normal/fusion.txt
-~/workspace/bin/pizzly -k 31 --gtf /data/annotation/Homo_sapiens.GRCh38.93.gtf --cache index.cache.txt --align-score 2 --insert-size 400 --fasta /data/annotation/Homo_sapiens.GRCh38.cdna.all.fa.gz --output tumor output-tumor/fusion.txt
+~/workspace/bin/pizzly -k 31 --gtf /data/annotation/Homo_sapiens.GRCh38.87.gtf.gz --cache index.cache.txt --align-score 2 --insert-size 400 --fasta /data/annotation/Homo_sapiens.GRCh38.cdna.all.fa.gz --output normal output-normal/fusion.txt
+~/workspace/bin/pizzly -k 31 --gtf /data/annotation/Homo_sapiens.GRCh38.87.gtf.gz --cache index.cache.txt --align-score 2 --insert-size 400 --fasta /data/annotation/Homo_sapiens.GRCh38.cdna.all.fa.gz --output tumor output-tumor/fusion.txt
 ```
 
 
