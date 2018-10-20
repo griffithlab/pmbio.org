@@ -17,11 +17,11 @@ This module is primarily for the course developers to document how the AWS AMI w
 For development purposes we started with a very large instance (overkill). Future experimentation is needed to determine the appropriate size for actual student instances.
 
 - Launch an EC2 instance:
-- Select Ubuntu Server 16.04 LTS (HVM), SSD Volume Type - ami-2581aa40
+- Select Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
 - Choose r4.16xlarge (64 vCPUs, 488 GiB Memory, 25 Gigabit Network Performance)
 - Increase root storage to 10GB
 - Add storage: 10,000 GiB (~10TB) EBS volume, not encrypted
-- Configure security: Allow SSH access
+- Configure security: Allow SSH and HTTP access
 - Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
 
 ### Formatting and mounting storage volumes
@@ -46,6 +46,13 @@ chown -R ubuntu:ubuntu /workspace
 
 # Make ephemeral storage mounts persistent
 echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
+
+#Note that setting up a volume like this can occasionaly result in an unbootable state. Using the device volume is safer
+#sudo file -s /dev/xvdb
+#sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /data ext4 defaults,nofail 0 2\n"}'
+#Add a line like the following to fstab using vim editor. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
+#sudo vim /etc/fstab
+#UUID=UUID-goes-here       /data   ext4    defaults,nofail        0       2
 
 # make symlink for convenience
 cd ~
@@ -74,6 +81,12 @@ apt-get update -y && apt-get install -y \
   git \
   curl \
   tree
+
+# install miniconda dependency
+cd /usr/local/bin
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh # accept license, choose /usr/local/bin/miniconda as install location, and yes add conda to path when asked
+source ~/.bashrc
 
 # exit sudo shell
 exit
@@ -198,12 +211,6 @@ Describes dependencies and installation for GATK 4.0.2.1, used in this course fo
 ```bash
 # start sudo shell
 sudo bash
-
-# install miniconda dependency
-cd /usr/local/bin
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh # choose /usr/local/bin/miniconda as install location
-source ~/.bashrc
 
 # install additional dependencies
 apt-get update -y && apt-get install -y \
@@ -468,9 +475,6 @@ sudo bash
 
 # install cnvkit
 cd /usr/local/bin
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-source ~/.bashrc
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
@@ -505,8 +509,11 @@ sudo bash
 
 # install Pizzly
 cd /usr/local/bin
+mkdir pizzly-v0.37.3
+cd pizzly-v0.37.3
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
+ln -s /usr/local/bin/pizzly-v0.37.3/pizzly /usr/local/bin/pizzly
 
 # exit sudo shell
 exit
@@ -528,17 +535,43 @@ exit
 ```
 
 #### mosdepth 0.2.3
-Describes dependencies and installation of mosdepth, used in this course for dpeth caluclations.
+Describes dependencies and installation of mosdepth, used in this course for depth caluclations.
 ```bash
 # start sudo shell
 sudo bash
 
 # install mosdepth
 cd /usr/local/bin
-conda install mosdepth
+conda install -y mosdepth
 
 # exit sudo shell
 exit
+```
+
+#### bam-readcount
+Describes dependencies and installation of bam-readcount, used in this course for variant counting, VAFs, etc.
+```bash
+# start sudo shell
+sudo bash
+
+# install cmake dependency
+apt-get update -y && apt-get install -y cmake
+
+# install bam-readcount
+cd /usr/local/bin
+git clone https://github.com/genome/bam-readcount.git
+mv bam-readcount bam-readcount-latest
+cd bam-readcount-latest
+cmake -Wno-dev /usr/local/bin/bam-readcount-latest
+make
+ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-readcount
+
+# test installation
+/usr/local/bin/bam-readcount
+
+# exit sudo shell
+exit
+
 ```
 
 #### extra utilities
@@ -548,7 +581,7 @@ Describes installation of extra software helpfull to instructors but not necessa
 sudo bash
 
 # install faSplit
-conda install ucsc-fasplit
+conda install -y ucsc-fasplit
 
 # exit sudo shell
 exit
@@ -596,41 +629,6 @@ export YEPPPINCLUDEDIR=/usr/local/bin/yeppp-1.0.0/library/headers
 export LD_LIBRARY_PATH=$YEPPPLIBDIR:$LD_LIBRARY_PATH
 ```
 
-### Results Directory structure
-Here we create the directory structure for holding results as well as downloading some of the larger raw_data files for the students.
-```bash
-# make directory structure
-mkdir -p /workspace/data/raw_data/fastqs/all
-mkdir -p /workspace/data/raw_data/fastqs/chr6
-mkdir -p /workspace/data/raw_data/references/
-mkdir -p /workspace/data/results/setup
-mkdir -p /workspace/data/results/inputs
-mkdir -p /workspace/data/results/align
-mkdir -p /workspace/data/results/somatic
-mkdir -p /workspace/data/results/germline
-mkdir -p /workspace/data/results/rnaseq
-mkdir -p /workspace/data/results/clinical
-mkdir -p /workspace/data/results/immune
-mkdir -p /workspace/data/results/cwl
-mkdir -p /workspace/data/results/appendix
-
-# change permissions for Students
-find /workspace/data/ -type d -exec chmod 775 {} \;
-chown -R ubuntu:ubuntu /workspace/data
-
-# download the raw data
-wget -c -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
-wget -c -P /workspace/data/raw_data/fastqs/chr6 http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Tumor.tar
-wget -c -P /workspace/data/raw_data/references http://genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Norm_sorted_mrkdup.bam
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/Exome_Tumor_sorted_mrkdup.bam
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Norm_merged_sorted_mrkdup.bam
-wget -c -P /workspace/data/results/align http://genomedata.org/pmbio-workshop/results/all/alignments/WGS_Tumor_merged_sorted_mrkdup.bam
-
-# view directory structure
-tree -d /workspace/data
-```
-
 ### Final Cleanup
 To finnish up clean out the downloaded compressed binary files
 ```bash
@@ -646,3 +644,6 @@ rm -f *.bz2
 # exit sudo shell
 exit
 ```
+
+### TO ADD
+[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)

@@ -39,8 +39,11 @@ cat /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,
 Having run [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630) we have the core data we need to determine copy number. Let's go ahead and quickly examine a chromosome to get an idea of what we're looking at. The below code will make a crude adjustment to normalize the data based on the number of reads present in the samples and plot the result for chromosome 6.
 
 ```R
+# start R
+R
+
 # set working directory
-/workspace/data/results/somatic/
+setwd("/workspace/data/results/somatic/")
 
 # load libraries
 library(ggplot2)
@@ -63,8 +66,10 @@ all_depth$Counts.100Normal <- all_depth$Counts.100Normal * (total_tumor_reads/to
 all_depth$diff <- all_depth$Counts.100Tumor - all_depth$Counts.100Normal
 
 # plot the result for chromosome 6
+pdf(file="tumor_depth_cn.chr1.pdf", height=5, width=10)
 ggplot(all_depth[all_depth$Chr == "chr6",], aes(x=Start, y=diff, color=diff)) + geom_point() + scale_color_viridis("Depth", option = "plasma") + theme_bw() +
     ylab("Relative Depth Difference") + xlab("Position")
+dev.off()
 ```
 
 you should see something like the plot below where there is a fairly clear indication of a copy number amplification on the p arm of the chromosome, and a copy deletion twoards the center of the chromosome. Keep in mind that what's plotted is the Tumor depth relative to the normal and not the actual copy number.
@@ -78,7 +83,7 @@ The [copyCat](https://github.com/chrisamiller/copyCat) package is able to adjust
 
 ```bash
 cd /workspace/bin
-wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/createCustomAnnotations.v1.zip
+wget http://genomedata.org/pmbio-workshop/misc/createCustomAnnotations.v1.zip
 unzip createCustomAnnotations.v1.tar.gz
 ```
 
@@ -115,21 +120,23 @@ The script will create a directory called `copyCat_annotation` with annotations 
 ```bash
 ## run the script to create the annotation dir
 # cd /workspace/bin/createCustomAnnotations.v1
-# bash runEachChr.sh /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa 100 hg38entrypoints.male /workspace/data/results/somatic/
+# bash runEachChr.sh /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa 100 hg38entrypoints.female /workspace/data/results/somatic/
+
+# as mentioned the above takes some time so we'll just download the result for HG38
+cd /workspace/data/results/somatic/
+wget http://genomedata.org/pmbio-workshop/misc/copyCat_annotation.zip
+unzip copyCat_annotation.zip
 
 ## download the gaps.bed file
 # cd /workspace/data/results/somatic/copyCat_annotation
-# wget https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
+# https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
 # cat gaps.bed | awk '{print "chr"$0}' > tmp && mv tmp gaps.bed
-
-# as mentioned the above takes some time so we'll just download the result for HG38
-wget
 ```
 
 At the end your directory structure should look something like this but with more chromosomes:
 
 ```bash
-├── entrypoints.male
+├── entrypoints.female
 ├── gaps.bed
 └── readlength.100
     ├── gcWinds
@@ -194,6 +201,9 @@ As a final step lets load R and plot the results for chromosome 6.
 # start R
 R
 
+# set working directory
+setwd("/workspace/data/results/somatic/")
+
 # load libraries
 library(ggplot2)
 library(data.table)
@@ -207,10 +217,12 @@ cna_bin <- fread("rd.bins.dat")
 colnames(cna_bin) <- c("Chr", "Pos", "CNA")
 
 # create the plot
-ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr6",], aes(x=Pos, y=CNA, color=CNA)) +
-    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr6",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
+pdf(file="copycat_final.chr2.pdf", height=5, width=10)
+ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr2",], aes(x=Pos, y=CNA, color=CNA)) +
+    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr2",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
     scale_y_continuous(limits=c(0, 15), oob=squish) + scale_color_viridis(limits=c(0, 4), option="plasma", oob=squish) + theme_bw() +
     geom_hline(yintercept = c(1, 2, 3), linetype="longdash")
+dev.off()
 ```
 
 {% include figure.html image="/assets/module_4/copyCat_final.png" %}

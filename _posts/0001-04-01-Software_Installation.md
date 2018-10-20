@@ -321,6 +321,8 @@ ln -s ~/workspace/bin/kallisto_linux-v0.44.0/kallisto ~/workspace/bin/kallisto
 ```bash
 # download and extract
 cd ~/workspace/bin
+mkdir pizzly-v0.37.3
+cd pizzly-v0.37.3
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
 
@@ -349,3 +351,22 @@ conda config --add channels bioconda
 # install mosdepth with the conda package manager
 conda install mosdepth
 ```
+
+### bam-readcount
+[bam-readcount](https://github.com/genome/bam-readcount) is a program for determing read support for individual variants (SNVs and Indels only). We are going to point this local install of bam-readcount to use the samtools installation we completed above. Samtools is a dependency of bam-readcount. This tool uses Cmake to create its makefile, so compiling from source has an extra step here. Instead of using an official release from github we are cloning the latest code from the master branch. In general this practice should be avoided and you should use an official release instead.
+```bash
+# install bam-readcount
+cd ~/workspace/bin
+git clone https://github.com/genome/bam-readcount.git
+mv bam-readcount bam-readcount-latest
+cd bam-readcount-latest
+export SAMTOOLS_ROOT=/home/ubuntu//workspace/bin/samtools-1.7
+cmake -Wno-dev /home/ubuntu/workspace/bin/bam-readcount-latest
+make
+
+# test installation
+~/workspace/bin/bam-readcount/bin/bam-readcount
+
+```
+
+
