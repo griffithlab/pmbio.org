@@ -69,7 +69,7 @@ It's important to note that you will always be *inside* a single directory when 
 
     ubuntu@:~$ ls
 
-R  bin  tools  workspace
+workspace
 
     ubuntu@:~$
 
@@ -83,7 +83,7 @@ There are four things that you should note here:
 The `ls` command is used to list the contents of *any* directory, not necessarily the one that you are currently in. Try the following:
 
     ubuntu@:~$ ls workspace/
-    data  lib  lost+found
+    lost+found
 
     ubuntu@:~$ ls /etc/perl
     CPAN  Net
