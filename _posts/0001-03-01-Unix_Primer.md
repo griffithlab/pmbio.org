@@ -678,9 +678,10 @@ The second example first sends the output of `grep` to the Unix `sort` command. 
 ***
 
 ### Advanced File Editing With Vim
-[Interactive Tutorial](http://www.openvim.com/)
-[Cheat Sheet](https://vim.rtorr.com/)
-[Another Cheat Sheet](http://vimsheet.com/)
+
+- [Interactive Tutorial](http://www.openvim.com/)
+- [Cheat Sheet](https://vim.rtorr.com/)
+- [Another Cheat Sheet](http://vimsheet.com/)
 
 ***
 
