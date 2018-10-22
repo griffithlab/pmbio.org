@@ -118,12 +118,12 @@ If we want to make a new directory (e.g. to store some work related data), we ca
 
     ubuntu@:~$ mkdir workspace/Learning_unix
     ubuntu@:~$ ls workspace
-    data  Learning_unix  lib  lost+found
+    Learning_unix lost+found
 
 ***
 
 ### 6. Changing Directories and Command Options
-We are in the home directory on the computer but we want to to work in the new `Learning_unix` directory. To change directories in Unix, we use the [cd](https://en.wikipedia.org/wiki/Cd_(command)) command:
+We are in the home directory on the computer but we want to to work in the new `Learning_unix` directory. To change directories in Unix, we use the [cd](https://en.wikipedia.org/wiki/Cd_(command)) command ("cd" for "change directory"):
 
     cd workspace/Learning_unix
     ubuntu@:~/workspace/Learning_unix$
@@ -140,10 +140,11 @@ Let's make two new subdirectories and navigate into them:
     ubuntu@:~/workspace/Learning_unix/Outer_directory$ cd Inner_directory/
     ubuntu@:~/workspace/Learning_unix/Outer_directory/Inner_directory$
 
-Now our command prompt is getting quite long, but it reveals that we are four levels beneath the home directory. We created the two directories in separate steps, but it is possible to use the `mkdir` command in way to do this all in one step.
+Now our command prompt is getting quite long, but it reveals that we are four levels beneath the home directory. We created the two directories in separate steps, but it is possible to use the `mkdir` command to do this all in one step.
 
 Like most Unix commands, `mkdir` supports *command-line* options which let you alter its behavior and functionality. Command-line options are — as the name suggests — optional arguments that are placed after the command name. They often take the form of single letters (following a dash). If we had used the `-p` option of the `mkdir` command we could have done this in one step. E.g.
 
+    cd ~/workspace/Learning_unix/
     mkdir -p Outer_directory/Inner_directory
 
 >***Note the spaces on either side of the `-p` !***
@@ -154,12 +155,18 @@ Sometimes options are entire words, usually preceded by a double-dash. For examp
 
 is identical to using the `-p` option.
 
+Use the `tree` command to see the directories we just created:
+
+    cd ~/workspace/Learning_unix/
+    tree
+
 ***
 
 ### 7. Getting Help
 Many programs will provide information about the command being called by passing a `-h` or `--help` option.
 
-    ubuntu@:~$mkdir --help
+    mkdir --help
+    
     Usage: mkdir [OPTION]... DIRECTORY...
     Create the DIRECTORY(ies), if they do not already exist.
 
@@ -181,7 +188,6 @@ Many programs will provide information about the command being called by passing
 In addition, many commands will have `man` (manual) pages, which are often more detailed descriptions of the program and its usage.
 
     man ls
-    man cd
     man man # yes even the man command has a manual page
 
 When you are using the man command, press `space` to scroll down a page, `b` to go back a page, or `q` to quit. You can also use the up and down arrows to scroll a line at a time. The man command is actually using another Unix program, a text viewer called `less`, which we'll come to later on.
@@ -192,10 +198,9 @@ When you are using the man command, press `space` to scroll down a page, `b` to 
 
 Let's change directory to the root directory, and then, into our home directory
 
-    ubuntu@:~/workspace/Learning_unix/Outer_directory/Inner_directory$ cd /
-    ubuntu@:/$ cd home
-    ubuntu@:/home$ cd ubuntu
-    ubuntu@:~$
+    cd /
+    cd home
+    cd ubuntu
 
 In this case, we may as well have just changed directory in one go:
 
@@ -206,9 +211,9 @@ The leading `/` is incredibly important. The following two commands are very dif
     cd /home/ubuntu/
     cd home/ubuntu/
 
-The first command says go the `unbuntu` directory that is beneath the `home` directory that is at the top level (the root) of the file system. There can only be one `/home/ubuntu` directory on any Unix system.
+The first command says go the `ubuntu` directory that is beneath the `home` directory that is at the top level (the root) of the file system. There can only be one `/home/ubuntu` directory on any Unix system.
 
-The second command says go to the `unbuntu` directory that is beneath the `home` directory that is located wherever I am right now. There can potentially be many `home/ubuntu` directories on a Unix system (though this is unlikely).
+The second command says go to the `ubuntu` directory that is beneath the `home` directory that is located wherever I am right now. There can potentially be many `home/ubuntu` directories on a Unix system (though this is unlikely).
 
 Learn and understand the difference between these two commands.
 
@@ -217,22 +222,27 @@ Learn and understand the difference between these two commands.
 ### 9. Climbing The Tree
 Frequently, you will find that you want to go 'upwards' one level in the directory tree. Two dots `..` are used in Unix to refer to the *parent* directory of wherever you are. Every directory has a parent except the root level of the computer. Let's go into the `Learning_unix` directory and then navigate up three levels:
 
-    ubuntu@:~$ cd workspace/Learning_unix/
-    ubuntu@:~/workspace/Learning_unix$ cd ..
-    ubuntu@:~/workspace$ cd ..
-    ubuntu@:~$ cd ..
-    ubuntu@:/home$
+    cd /workspace/Learning_unix/
+    pwd
+    cd ..
+    pwd
+    cd ..
+    pwd
 
 What if you wanted to navigate up *two* levels in the file system in one go? It's very simple, just use two sets of the `..` operator, separated by a forward slash:
 
+    cd /workspace/Learning_unix/
+    pwd
     cd ../..
+    pwd
 
 ***
 
 ### 10. Absolute and Relative Paths
 Using `cd ..` allows us to change directory *relative* to where we are now. You can also always change to a directory based on its *absolute* location. E.g. if you are working in the `/home/ubuntu/workspace/Learning_unix` directory and you then want to change to the */tmp* directory, then you could do either of the following:
 
-    $ cd ../../../../tmp
+    cd /workspace/Learning_unix/Outer_directory/Inner_directory/
+    cd ../../../../tmp
 
 or...
 
@@ -249,37 +259,39 @@ See what happens when you try the following commands (use the `pwd` command afte
 
     cd /
     cd ~
-    cd
     cd -
+    cd
 
-Hopefully, you should find that `cd` and `cd ~` do the same thing, i.e. they take you back to your home directory (from wherever you were). You will frequently want to jump straight back to your home directory, and typing `cd` is a very quick way to get there.
+Hopefully, you should find that `cd` and `cd ~` do the same thing, i.e. they take you back to your home directory (from wherever you were). You will frequently want to jump straight back to your home directory, and typing `cd` is a very quick way to get there. You can also use the `~` as a quick way of navigating into subdirectories of your home directory when your current directory is somewhere else. `cd -` takes you to whatever your last directory was (like an "undo" on `cd`).
 
-You can also use the `~` as a quick way of navigating into subdirectories of your home directory when your current directory is somewhere else. I.e. the quickest way of navigating from the root directory to your `Learning_unix` directory is as follows:
+The quickest way of navigating from the root directory to your `Learning_unix` directory is as follows:
 
-    ubuntu@:~$ cd /
-    ubuntu@:/$ cd ~/workspace/Learning_unix
+    cd /workspace/Learning_unix
 
 ***
 
 ### 12. Making The `ls` Command More Useful
 The `..` operator that we saw earlier can also be used with the `ls` command, e.g. you can list directories that are 'above' you:
 
-    ubuntu@:~/workspace/Learning_unix$ cd ~/Learning_unix/Outer_directory/
-    ubuntu@:~/workspace/Learning_unix/Outer_directory$ ls ../../
-    command_line_course  Learning_unix  linux_bootcamp
+    cd /workspace/Learning_unix/Outer_directory/
+    ls ../../
+    Learning_unix  lost+found
 
 Time to learn another useful command-line option. If you add the letter 'l' to the `ls` command it will give you a longer output compared to the default:
 
-    ubuntu@:~/workspace/Learning_unix$ ls -l /home
+    ls -l /workspace/Learning_unix
+
     total 4
-    drwxr-xr-x 12 ubuntu ubuntu 4096 Nov 12 01:45 ubuntu
+    drwxrwxr-x 3 ubuntu ubuntu 4096 Oct 22 22:51 Outer_directory
 
 For each file or directory we now see more information (including file ownership and modification times). The 'd' at the start of each line indicates that these are directories. There are many, many different options for the `ls` command. Try out the following (against any directory of your choice) to see how the output changes.
 
+    cd /usr/local/bin/kallisto_linux-v0.44.0
     ls -l
     ls -R
     ls -l -t -r
     ls -lh
+
 Note that the last example combine multiple options but only use one dash. This is a very common way of specifying multiple command-line options.
 
 ***
@@ -287,12 +299,13 @@ Note that the last example combine multiple options but only use one dash. This 
 ### 13. Removing Directories
 We now have a few (empty) directories that we should remove. To do this use the [rmdir](https://en.wikipedia.org/wiki/Rmdir) command, this will only remove empty directories so it is quite safe to use. If you want to know more about this command (or any Unix command), then remember that you can just look at its man page.
 
-    ubuntu@:~$ cd ~/workspace/Learning_unix/Outer_directory/
-    ubuntu@:~/workspace/Learning_unix/Outer_directory$ rmdir Inner_directory/
-    ubuntu@:~/workspace/Learning_unix/Outer_directory$ cd ..
-    ubuntu@:~/workspace/Learning_unix$ rmdir Outer_directory/
-    ubuntu@:~/workspace/Learning_unix$ ls
-    ubuntu@:~/workspace/Learning_unix$
+    cd /workspace/Learning_unix/Outer_directory/
+    ls
+    rmdir Inner_directory/
+    ls
+    cd ..
+    rmdir Outer_directory/
+    ls
 
 >EXERCISE:
 Recreate the directories you just removed with a single command. Use the `--help` option if you need to!
@@ -307,6 +320,9 @@ Saving keystrokes may not seem important, but the longer that you spend typing i
 
 Navigate to your home directory, and then use the `cd` command to change to the `Learning_unix` directory. Use tab completion to complete directory name. If there are no other directories starting with 'L' in your home directory, then you should only need to type 'cd' + 'L' + 'tab'.
 
+    cd /workspace
+    cd L <tab>
+
 >***Tab completion will make your life easier and make you more productive!***
 
 Another great time-saver is that Unix stores a list of all the commands that you have typed in each login session. You can access this list by using the [history](https://en.wikipedia.org/wiki/History_(Unix)) command or more simply by using the up and down arrows to access anything from your history. So if you type a long command but make a mistake, press the up arrow and then you can use the left and right arrows to move the cursor in order to make a change.
@@ -316,16 +332,18 @@ Another great time-saver is that Unix stores a list of all the commands that you
 ### 15. Creating Empty Files With The Touch Command
 The following sections will deal with Unix commands that help us to work with files, i.e. copy files to/from places, move files, rename files, remove files, and most importantly, look at files. First, we need to have some files to play with. The Unix command [touch](https://en.wikipedia.org/wiki/Command-line_completion) will let us create a new, empty file. The touch command does other things too, but for now we just want a couple of files to work with.
 
-    ubuntu@:~$ cd workspace/Learning_unix/
-    ubuntu@:~/workspace/Learning_unix$ touch red_fish.txt
-    ubuntu@:~/workspace/Learning_unix$ touch blue_fish.txt
-    ubuntu@:~/workspace/Learning_unix$ ls
+    cd /workspace/Learning_unix/
+    touch red_fish.txt
+    touch blue_fish.txt
+    ls
+
     red_fish.txt  blue_fish.txt
 
 `touch` also accepts multiple files as arguments.
 
-    ubuntu@:~/workspace/Learning_unix$ touch one_fish.txt two_fish.txt
-    ubuntu@:~/workspace/Learning_unix$ ls
+    touch one_fish.txt two_fish.txt
+    ls
+
     blue_fish.txt  one_fish.txt  red_fish.txt  two_fish.txt
 
 ***
@@ -333,12 +351,16 @@ The following sections will deal with Unix commands that help us to work with fi
 ### 16. Moving files
 Now, let's assume that we want to move these files to a new directory ('colors'). We will do this using the Unix [mv](https://en.wikipedia.org/wiki/Mv) (move) command. Remember to use tab completion:
 
-    ubuntu@:~/workspace/Learning_unix$ mkdir colors
-    ubuntu@:~/workspace/Learning_unix$ mv red_fish.txt colors/
-    ubuntu@:~/workspace/Learning_unix$ mv blue_fish.txt colors/
-    ubuntu@:~/workspace/Learning_unix$ ls
+    cd /workspace/Learning_unix/
+    mkdir colors
+    mv red_fish.txt colors/
+    mv blue_fish.txt colors/
+    ls
+
     colors  one_fish.txt  two_fish.txt
-    ubuntu@:~/workspace/Learning_unix$ ls colors/
+
+    ls colors/
+
     blue_fish.txt  red_fish.txt
 
 >EXERCISE:
@@ -359,16 +381,21 @@ The '?' character is also a wild-card but for only a single character.
 ### 17. Renaming Files
 In the earlier example, the destination for the `mv` command was a directory name (colors). So we moved a file from its source location to a target location, but note that the target could have also been a (different) file name, rather than a directory. E.g. let's make a new file and move it whilst renaming it at the same time:
 
-    ubuntu@:~/workspace/Learning_unix$ touch rags
-    ubuntu@:~/workspace/Learning_unix$ ls
+    cd /workspace/Learning_unix
+    touch rags
+    ls
+
     colors  counts  rags
-    ubuntu@:~/workspace/Learning_unix$ mv rags counts/riches
-    ubuntu@:~/workspace/Learning_unix$ ls counts/
-    earth.txt  heaven.txt  riches
+    
+    mv rags counts/riches
+    ls counts/
+    
+    one_fish.txt    riches  two_fish.txt
 
 In this example we create a new file ('rags') and move it to a new location and in the process change the name (to 'riches'). So `mv` can rename a file as well as move it. The logical extension of this is using `mv` to rename a file without moving it (you have to use `mv` to do this as Unix does not have a separate 'rename' command):
 
-    ubuntu@:~/workspace/Learning_unix$ mv counts/riches counts/rags
+    cd /workspace/Learning_unix
+    mv counts/riches counts/rags
 
 ***
 
