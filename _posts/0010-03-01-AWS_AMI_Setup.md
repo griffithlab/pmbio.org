@@ -18,11 +18,11 @@ For development purposes we started with a very large instance (overkill). Futur
 
 - Launch an EC2 instance:
 - Select Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
-- Choose r4.16xlarge (64 vCPUs, 488 GiB Memory, 25 Gigabit Network Performance)
-- Increase root storage to 10GB
-- Add storage: 10,000 GiB (~10TB) EBS volume, not encrypted
+- Choose r5.2xlarge (8 vCPUs, 64 GiB Memory, up to 10 Gigabit Network Performance)
+- Increase root storage to 500GB
+- Add storage: 2,000 GiB (~2TB) EBS volume, not encrypted
 - Configure security: Allow SSH and HTTP access
-- Login with key the usual way (e.g., ssh -i PMB.pem ubuntu@18.217.114.211)
+- Login with key the usual way (e.g., ssh -i pmbio.pem ubuntu@18.217.114.211)
 
 ### Formatting and mounting storage volumes
 After initializing the EC2 instance we will need to mount and format the storage volume we allocated. Students will use this volume to install their own copies of tools used as well as input data and results. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
@@ -44,12 +44,13 @@ mkfs /dev/xvdb
 mount /dev/xvdb /workspace
 chown -R ubuntu:ubuntu /workspace
 
-# Make ephemeral storage mounts persistent
-echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
+# Make ephemeral storage mounts persistent simple approach
+#echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
 
-#Note that setting up a volume like this can occasionaly result in an unbootable state. Using the device volume is safer
-#sudo file -s /dev/xvdb
-#sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /data ext4 defaults,nofail 0 2\n"}'
+#Note that setting up a volume like that can occasionaly result in an unbootable state. Using the following device volume is safer
+sudo file -s /dev/xvdb
+sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /data ext4 defaults,nofail 0 2\n"}'
+
 #Add a line like the following to fstab using vim editor. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
 #sudo vim /etc/fstab
 #UUID=UUID-goes-here       /data   ext4    defaults,nofail        0       2
