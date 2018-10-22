@@ -228,4 +228,36 @@ dev.off()
 {% include figure.html image="/assets/module_4/copyCat_final.png" %}
 
 ### cnvnator germline
+
+```bash
+# make directory
+mkdir -p /workspace/data/results/somatic/cnvnator_wgs
+cd /workspace/data/results/somatic/cnvnator_wgs
+
+# run cnvnator
+
+# prepare data
+cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
+
+# make histogram
+cnvnator -root WGS_NORM.root chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -his 150 -genome /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -d /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/
+
+# calculate statistical significance
+./cnvnator -root file.root [-chrom name1 ...] -stat bin_size
+
+# partition into similar regions
+./cnvnator -root file.root [-chrom name1 ...] -partition bin_size [-ngc]
+
+# identify CNVs
+./cnvnator -root file.root [-chrom name1 ...] -call bin_size [-ngc]
+
+# visualzie CNV
+./cnvnator -root file.root [-chrom chr_name1 ...] -view bin_size [-ngc]
+
+# genomtype
+./cnvnator -root file.root -genotype bin_size [-ngc]
+
+cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
+```
+
 ### cnvkit exome
