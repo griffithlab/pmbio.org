@@ -12,7 +12,7 @@ Covered in this section: logging into AWC EC2 console, starting an instance from
 
 Basic intro to the instance (top, resources available, mount location of volumes, etc.).
 
-#### Logging into an instance
+#### Launching an AWS instance for the course
 
 In the previous section [AWS Intro](http://pmbio.org/module-01-setup/0001/02/01/AWS_Intro/) we reviewed fundamental concepts of cloud computing and some of the jargon and features specific to AWS. In this section we will learn how to launch an instance specifically for this course.
 
@@ -27,3 +27,17 @@ Instance details:
 * Other notes: Protect from accidental termination.
 
 NOTE: CHECK INSTANCE LIMITS FOR THE COURSE AWS REGION (EU LONDON) FOR THE INSTANCE TYPE WE CHOOSE. REQUESTED. CHECK BACK FOR APPROVAL
+
+#### Logging into your instance
+
+For this course the instructors have launched instances for you (so that you will not be charged). You will be provided with the IP address and/or a shorthand name for your instance. Each student will have an independent instance. It is important that you always use your own instance and do not share with another student. You can use the 'who' command to see if there is more than one login active on your instance.
+
+Example login commands (for Mac/linux laptops):
+```bash
+ssh -i pmbio.pem ubuntu@18.220.123.159
+
+```
+
+In this command, 'pmbio.pem' is the AWS key file used to authenticate SSH access to the machine, 'ubuntu' is the name of the user account on the machine (a common default user name for the Ubuntu linux operating system), and '18.220.123.159' is the IP address of the machine.  This last part will need to replace with your instance's unique IP address.
+
+
