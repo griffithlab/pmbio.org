@@ -14,7 +14,7 @@ A basic introduction to UNIX/LINUX command line operations. Students will learn 
 
 **Adapted by : Jason Walker, McDonnell Genome Institute**
 
-**Additional adaptation by : Alex Wagner, McDonnell Genome Institute**
+**Additional adaptation by : Alex Wagner and Malachi Griffith, McDonnell Genome Institute**
 
 **Original author : Keith Bradnam, UC Davis Genome Center**
 
@@ -107,9 +107,9 @@ There may be many hundreds of directories on any Unix machine, so how do you kno
     ubuntu@:~$ pwd
     /home/ubuntu
 
-    When you log in to a Unix computer, you are typically placed into your *home* directory. In this example, after we log in, we are placed in a directory called 'ubuntu' which itself is a *subdirectory* of another directory called 'home'. Conversely, 'users' is the *parent* directory of 'clmuser'. The first forward slash that appears in a list of directory names always refers to the top level directory of the file system (known as the root [directory](https://en.wikipedia.org/wiki/Root_directory)). The remaining forward slash (between 'home' and 'ubuntu') delimits the various parts of the directory hierarchy. If you ever get 'lost' in Unix, remember the pwd command.
+When you log in to a Unix computer, you are typically placed into your *home* directory. In this example, after we log in, we are placed in a directory called 'ubuntu' which itself is a *subdirectory* of another directory called 'home'. Conversely, 'users' is the *parent* directory of 'clmuser'. The first forward slash that appears in a list of directory names always refers to the top level directory of the file system (known as the root [directory](https://en.wikipedia.org/wiki/Root_directory)). The remaining forward slash (between 'home' and 'ubuntu') delimits the various parts of the directory hierarchy. If you ever get 'lost' in Unix, remember the pwd command.
 
-    As you learn Unix you will frequently type commands that don't seem to work. Most of the time this will be because you are in the wrong directory, so it's a really good habit to get used to running the pwd command a lot.
+As you learn Unix you will frequently type commands that don't seem to work. Most of the time this will be because you are in the wrong directory, so it's a really good habit to get used to running the pwd command a lot.
 
 ***
 
