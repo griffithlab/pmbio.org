@@ -60,38 +60,49 @@ After installing BCFtools:
 #### **Running MuTect2**
 __________________________
 Before preceeding, you will need to download COSMIC reference file (e.g. in folder `/data/refseq/`) after registering on their website:
-* `sftp <your registered email address>@sftp-cancer.sanger.ac.uk`
-* `get /files/grch38/cosmic/v79/VCF/CosmicCodingMuts.vcf.gz`
-* `get /files/grch38/cosmic/v79/VCF/CosmicNonCodingVariants.vcf.gz`
-* `Quit`
-* `zgrep "^#" CosmicCodingMuts.vcf.gz > VCF_Header`
-* `zgrep -v "^#" CosmicCodingMuts.vcf.gz | awk '{print "chr"$0}' | sed 's/^chrMT/chrM/' > CosmicCodingMuts.clean`
-* `zgrep -v "^#" CosmicNonCodingVariants.vcf.gz | awk '{print "chr"$0}' | sed 's/^chrMT/chrM/' > CosmicNonCodingVariants.clean`
-* `cat CosmicCodingMuts.clean CosmicNonCodingVariants.clean | sort -gk 2,2 > Cosmic_v79`
-* `cat VCF_Header Cosmic_v79 > Cosmic_v79.vcf`
-* `rm VCF_Header CosmicCodingMuts.clean CosmicNonCodingVariants.clean Cosmic_v79`
+```bash
+* sftp <your registered email address>@sftp-cancer.sanger.ac.uk
+* get /files/grch38/cosmic/v79/VCF/CosmicCodingMuts.vcf.gz
+* get /files/grch38/cosmic/v79/VCF/CosmicNonCodingVariants.vcf.gz
+* Quit
+* zgrep "^#" CosmicCodingMuts.vcf.gz > VCF_Header
+* zgrep -v "^#" CosmicCodingMuts.vcf.gz | awk '{print "chr"$0}' | sed 's/^chrMT/chrM/' > CosmicCodingMuts.clean
+* zgrep -v "^#" CosmicNonCodingVariants.vcf.gz | awk '{print "chr"$0}' | sed 's/^chrMT/chrM/' > CosmicNonCodingVariants.clean
+* cat CosmicCodingMuts.clean CosmicNonCodingVariants.clean | sort -gk 2,2 > Cosmic_v79
+* cat VCF_Header Cosmic_v79 > Cosmic_v79.vcf
+* rm VCF_Header CosmicCodingMuts.clean CosmicNonCodingVariants.clean Cosmic_v79
+```
 
 With picard tools installed:
+```bash
 * `java -jar picard.jar SortVcf I=/data/refseq/Cosmic_v79.vcf O=/data/refseq/Cosmic_v79.dictsorted.vcf SEQUENCE_DICTIONARY=/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa`
 * `java -Xmx4g -jar GenomeAnalysisTK.jar -T MuTect2 --disable_auto_index_creation_and_locking_when_reading_rods -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I:tumor /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -I:Normal /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam --dbsnp /data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --cosmic /data/refseq/Cosmic_v79.dictsorted.vcf.gz -o /data/mutect/exome.vcf.gz -L /data/refseq/NimbleGenExome_v3.interval_list`
 * `echo /data/mutect/exome.vcf.gz > /data/mutect/exome_vcf.fof`
 * `bcftools concat --allow-overlaps --remove-duplicates --file-list /data/mutect/exome_vcf.fof --output-type z --output /data/mutect/exome.vcf.gz`
 * `tabix /data/mutect/exome.vcf.gz`
-
+```
 #### **Merge Variants**
 __________________________
 With outputs from all three algorithms, we can now merge the variants to generate a comprehensive list of detected variants:
-* `java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions UNIQUIFY --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka /data/strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.unique.vcf.gz`
-* `java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.merged.vcf`
+```bash
+* java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions UNIQUIFY --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka /data/strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.unique.vcf.gz
+* java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.merged.vcf
+```
 
 ### **Left Align and Trim**
 __________________________
-`java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T LeftAlignAndTrimVariants --variant /data/exome_chr6.merged.vcf.gz -o exome_chr6.merged.leftalignandtrim.vcf -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa`
+Reference for explaining left align and trim:
+https://genome.sph.umich.edu/wiki/Variant_Normalization#Left_alignment
+```bash
+java -Xmx4g -jar /data/bin/gatk-4.0.10.1/gatk-package-4.0.10.1-local.jar LeftAlignAndTrimVariants -V /data/exome_chr6.merged.vcf -O exome_chr6.merged.leftalignandtrim.vcf -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa
+```
 
-Note that when running on chromosome 6 merged variants file, this gave 0 variants aligned. 
+Note that when running on chromosome 6 merged variants file, this gave 0 variants aligned.
 
 ### **Splitting Multi-allelic Variant**
 __________________________
-`docker run quay.io/biocontainers/vt:0.57721--hf74b74d_1 vt decompose -s file_to_be_decomposed.vcf -o decomposed.vcf`
+```bash
+/data/bin/vt/vt decompose -s exome_chr6.merged.leftalignandtrim.vcf -o exome_chr6.merged.leftalignandtrim.decomposed.vcf
+```
 
 **Please continue to the next section for instructions on how to filter, annotation and review variants**

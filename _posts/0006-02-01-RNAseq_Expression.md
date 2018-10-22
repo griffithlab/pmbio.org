@@ -10,7 +10,7 @@ date: 0006-02-01
 
 #### **Downloading RNA BAMs**
 
-First, if not done so already, make a separate folder named `/data/RNA_seq` and a subfolder called `fastqs_RNA` and download the RNA_seq data from `pmbio.org` to your instance.
+First, if not done so already, make a separate folder named `/data/RNA_seq` and a subfolder called `fastqs_RNA` and download the RNA_seq data from `genomedata.org` to your instance.
 In order to prevent storage space from running out, you may want to unzip the files sequentially and delete the original zipped file once the unzipped file have been obtained.
 
 You will need to have the following software installed, including `HISAT`, `Sambamba`, `StringTie`, `Gffcompare`, `R`. If you are missing any of the following software, or you run into problems with running commands using your currently installed version, please refer to the installation page.

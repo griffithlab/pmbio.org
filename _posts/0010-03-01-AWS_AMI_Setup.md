@@ -213,6 +213,7 @@ Describes dependencies and installation for GATK 4.0.2.1, used in this course fo
 sudo bash
 
 # install additional dependencies
+cd /usr/local/bin
 apt-get update -y && apt-get install -y \
   openjdk-8-jdk
 
@@ -220,9 +221,9 @@ apt-get update -y && apt-get install -y \
 R --vanilla -e 'install.packages(c("gsalib", "ggplot2","reshape", "gplots"), repos="http://cran.us.r-project.org")'
 
 # install GATK environment
-wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
-unzip gatk-4.0.2.1.zip
-cd /usr/local/bin/gatk-4.0.2.1
+wget https://github.com/broadinstitute/gatk/releases/download/4.0.10.1/gatk-4.0.10.1.zip
+unzip gatk-4.0.10.1.zip
+cd /usr/local/bin/gatk-4.0.10.1
 conda env create -n gatk -f gatkcondaenv.yml
 # to use gatk: source activate gatk
 # note that we told the installer to add conda to the paths
@@ -230,7 +231,7 @@ conda env create -n gatk -f gatkcondaenv.yml
 # export PATH="/usr/local/bin/miniconda/bin:$PATH"
 
 # symlink gatk executable
-ln -s /usr/local/bin/gatk-4.0.2.1/gatk /usr/local/bin/gatk
+ln -s /usr/local/bin/gatk-4.0.10.1/gatk /usr/local/bin/gatk
 
 # exit sudo shell
 exit
