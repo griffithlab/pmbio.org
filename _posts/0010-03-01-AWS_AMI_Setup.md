@@ -541,7 +541,7 @@ conda config --add channels bioconda
 conda create -n cnvkit cnvkit
 # source activate cnvkit to use
 
-#test cnvkit installation
+# test cnvkit installation
 source activate cnvkit
 cnvkit.py -h
 source deactivate
@@ -562,6 +562,9 @@ wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_l
 tar -zxvf kallisto_linux-v0.44.0.tar.gz
 ln -s /usr/local/bin/kallisto_linux-v0.44.0/kallisto /usr/local/bin/kallisto
 
+# test kallisto installation
+/usr/local/bin/kallisto
+
 # exit sudo shell
 exit
 ```
@@ -580,6 +583,9 @@ wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.t
 tar -zxvf pizzly_linux.tar.gz
 ln -s /usr/local/bin/pizzly-v0.37.3/pizzly /usr/local/bin/pizzly
 
+# test pizzly installation
+/usr/local/bin/pizzly --help
+
 # exit sudo shell
 exit
 ```
@@ -587,6 +593,9 @@ exit
 #### Manta 1.4.0
 Describes dependencies and installation of Manta, used in this course for SV datection.
 ```bash
+# start sudo shell
+sudo bash
+
 # download and extract
 cd /usr/local/bin
 wget https://github.com/Illumina/manta/releases/download/v1.4.0/manta-1.4.0.centos6_x86_64.tar.bz2
@@ -594,6 +603,12 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 
 # test installation
 python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
+
+# run strelka test analysis
+conda create --name manta python=2.7
+source activate manta
+/usr/local/bin/manta-1.4.0.centos6_x86_64/bin/runMantaWorkflowDemo.py
+source deactivate
 
 # exit sudo shell
 exit
@@ -608,6 +623,9 @@ sudo bash
 # install mosdepth
 cd /usr/local/bin
 conda install -y mosdepth
+
+# test mosdepth installation
+/usr/local/bin/miniconda/bin/mosdepth -h
 
 # exit sudo shell
 exit
@@ -631,7 +649,7 @@ cmake -Wno-dev /usr/local/bin/bam-readcount-latest
 make
 ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-readcount
 
-# test installation
+# test bam-readcount installation
 /usr/local/bin/bam-readcount
 
 # exit sudo shell
@@ -711,4 +729,9 @@ exit
 ```
 
 ### TO ADD
-[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)
+- [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
+- Optitype
+- pvactools
+- genvisr
+- R packages need in rnaseq?
+
