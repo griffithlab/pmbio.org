@@ -44,7 +44,7 @@ mkfs /dev/xvdb
 mount /dev/xvdb /workspace
 chown -R ubuntu:ubuntu /workspace
 
-# Make ephemeral storage mounts persistent simple approach
+# Make ephemeral storage mounts persistent using a simple approach
 #echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
 
 #Note that setting up a volume like that can occasionaly result in an unbootable state. Using the following device volume is safer
