@@ -186,7 +186,7 @@ apt-get update -y && apt-get install -y \
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 export PICARD='/usr/local/bin/picard.jar'
 
-# test picard installation 
+# test picard installation
 java -jar /usr/local/bin/picard.jar
 
 # exit sudo shell
@@ -254,7 +254,14 @@ exit
 ```
 
 #### VEP 93.4
-Describes dependencies for VEP 93.4, used in this course for variant annotation.
+Describes dependencies for VEP 93.4, used in this course for variant annotation. When running the VEP installer follow the prompts specified:
+
+1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
+2. Do you want to continue installing the API (y/n)? y [ENTER]
+3. Do you want to install any cache files (y/n)? y [ENTER] 186 [ENTER]
+4. Do you want to install any FASTA files (y/n)? y [ENTER] 42 [ENTER]
+5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
+
 - Note: VEP natively supports gnomad allele frequencies but it is unclear if this works for all variants or only for dbSNP subset of variants.
 See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_other.html#assembly
 
