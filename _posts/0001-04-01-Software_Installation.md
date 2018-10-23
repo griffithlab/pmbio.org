@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0001-04-01
 ---
 
-This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS AMI Setup](http://pmbio.org/module%2010.%20appendix/0010/02/28/AWS_AMI_Setup/) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution with the required dependencies.
+This workshop requires a large number of different bioinformatics tools. The instructions for installing these tools exist here. Note that depending on the operating system and environment, some additional dependencies would likely be needed. If you are using the AWS instance built for this course these dependencies have already been installed. However if you are interested in the underlying dependencies and how they were installed see the [AWS AMI Setup]({{ site.baseurl }}{% link _posts/0010-03-01-AWS_AMI_Setup.md %}) page. The remainder of this section will assume that you are on the AWS instance, however these instructions should work on any xenial ubuntu distribution with the required dependencies.
 
 ### Prepare for installation
 For this workshop we will be using the workspace folder to store results, executables, and input files. To start we must choose a single directory for installing tools, typically in linux, user compiled tools are installed in `/usr/local/bin` however backups of the tools we will be using have already been installed there. In this tutorial we will install tools in `~/workspace/bin`. Lets go ahead and make a `bin` directory in `~/workspace` to get started.
@@ -105,9 +105,19 @@ cd ~/workspace/bin
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 
+# Installing perl version 5.22.0
+wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
+tar -xzf perl-5.22.0.tar.gz
+cd perl-5.22.0
+./Configure -des -Dprefix=$HOME/localperl
+make
+make test
+make install
+
 # run the INSTALL.pl script provided by VEP
 cd ensembl-vep-release-93.5/
-perl INSTALL.pl --CACHEDIR /opt/vep_cache
+../perl-5.22.0/perl -MCPAN -e 'install DBI'
+../perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 #2. Do you want to continue installing the API (y/n)? y [ENTER] (if asked)
 #3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
@@ -368,5 +378,3 @@ make
 ~/workspace/bin/bam-readcount/bin/bam-readcount
 
 ```
-
-

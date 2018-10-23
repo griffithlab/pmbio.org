@@ -44,7 +44,7 @@ mkfs /dev/xvdb
 mount /dev/xvdb /workspace
 chown -R ubuntu:ubuntu /workspace
 
-# Make ephemeral storage mounts persistent simple approach
+# Make storage mounts persistent using a simple approach
 #echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
 
 #Note that setting up a volume like that can occasionaly result in an unbootable state. Using the following device volume is safer
@@ -120,6 +120,9 @@ cd R-3.5.1
 make
 make install
 
+# test R installation
+/usr/local/bin/Rscript
+
 # devtools and BiocManager dependencies
 apt-get update -y && apt-get install -y \
   libssl-dev \
@@ -161,6 +164,9 @@ cd samtools-1.7
 make
 make install
 
+# test samtools installation
+/usr/local/bin/samtools
+
 # exit sudo shell
 exit
 ```
@@ -179,6 +185,9 @@ apt-get update -y && apt-get install -y \
 # picard installation
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 export PICARD='/usr/local/bin/picard.jar'
+
+# test picard installation 
+java -jar /usr/local/bin/picard.jar
 
 # exit sudo shell
 exit
@@ -202,6 +211,9 @@ tar --bzip2 -xvf bwa-0.7.17.tar.bz2
 cd  bwa-0.7.17
 make
 ln -s /usr/local/bin/bwa-0.7.17/bwa /usr/local/bin/bwa
+
+# test bwa installation
+/usr/local/bin/bwa
 
 # exit sudo shell
 exit
@@ -234,6 +246,9 @@ conda env create -n gatk -f gatkcondaenv.yml
 # symlink gatk executable
 ln -s /usr/local/bin/gatk-4.0.10.1/gatk /usr/local/bin/gatk
 
+# test gatk installation
+/usr/local/bin/gatk
+
 # exit sudo shell
 exit
 ```
@@ -260,12 +275,22 @@ apt-get update -y && apt-get install -y \
   cpanminus
 cpanm -i Bio::Root::Version
 
+# Installing perl version 5.22.0
+wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
+tar -xzf perl-5.22.0.tar.gz
+cd perl-5.22.0
+./Configure -des -Dprefix=$HOME/localperl
+make
+make test
+make install
+
 # install vep with the various plugins
 mkdir -p /opt/vep_cache
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 cd ensembl-vep-release-93.5/
-perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:refseq,vep,merged
+../perl-5.22.0/perl -MCPAN -e 'install DBI'
+../perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
 
 # make a symlink
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
@@ -279,6 +304,9 @@ wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genot
 # unlock permissions for downloaded cache
 find /opt/vep_cache -type d -exec chmod 777 {} \;
 find /opt/vep_cache -type f -exec chmod 664 {} \;
+
+# test vep installation
+/usr/local/bin/vep
 
 # exit sudo shell
 exit
