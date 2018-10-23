@@ -239,17 +239,42 @@ cd /workspace/data/results/somatic/cnvnator_wgs
 # prepare data
 cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
 
+# link reference files
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr1.fa chr1.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr2.fa chr2.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr3.fa chr3.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr4.fa chr4.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr5.fa chr5.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa chr6.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr7.fa chr7.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr8.fa chr8.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr9.fa chr9.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr10.fa chr10.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr11.fa chr11.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr12.fa chr12.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr13.fa chr13.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr14.fa chr14.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr15.fa chr15.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr16.fa chr16.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr17.fa chr17.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr18.fa chr18.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr19.fa chr19.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr20.fa chr20.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr21.fa chr21.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr22.fa chr22.fa
+ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chrX.fa chrX.fa
+
 # make histogram
-cnvnator -root WGS_NORM.root chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -his 150 -genome /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -d /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/
+cnvnator -root WGS_NORM.root -his 150
 
 # calculate statistical significance
-./cnvnator -root file.root [-chrom name1 ...] -stat bin_size
+cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -stat 150
 
 # partition into similar regions
-./cnvnator -root file.root [-chrom name1 ...] -partition bin_size [-ngc]
+cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -partition 150
 
 # identify CNVs
-./cnvnator -root file.root [-chrom name1 ...] -call bin_size [-ngc]
+cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150 > WGS_NORM.cnvnator.tsv
 
 # visualzie CNV
 ./cnvnator -root file.root [-chrom chr_name1 ...] -view bin_size [-ngc]
@@ -258,6 +283,16 @@ cnvnator -root WGS_NORM.root chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 
 ./cnvnator -root file.root -genotype bin_size [-ngc]
 
 cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
+
+cnvnator -root WGS_Tumor.root -his 150
+
+cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -stat 150
+
+cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -partition 150
+
+cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150
+
+cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150 > WGS_Tumor.cnvnator.tsv
 ```
 
 ### cnvkit exome
