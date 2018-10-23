@@ -29,9 +29,10 @@ tar --bzip2 -xvf samtools-1.7.tar.bz2
 
 # configure and compile
 cd samtools-1.7/
-./configure --prefix=/home/ubuntu/workspace/
+./configure --prefix=/home/ubuntu/workspace/bin/samtools-1.7/
 make
 make install
+ln -s /home/ubuntu/workspace/bin/samtools-1.7/bin/samtools /home/ubuntu/workspace/bin/samtools
 
 # check instalation
 ~/workspace/bin/samtools --help
