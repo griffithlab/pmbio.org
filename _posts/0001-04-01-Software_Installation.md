@@ -115,7 +115,7 @@ make test
 make install
 
 # run the INSTALL.pl script provided by VEP
-cd ensembl-vep-release-93.5/
+cd ../ensembl-vep-release-93.5/
 ../perl-5.22.0/perl -MCPAN -e 'install DBI'
 ../perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
@@ -377,4 +377,29 @@ make
 # test installation
 ~/workspace/bin/bam-readcount/bin/bam-readcount
 
+```
+#### vt
+[vt](https://genome.sph.umich.edu/wiki/Vt) is a variant tool set that discovers short variants from Next Generation Sequencing data. We will use this for the purpose of splitting multi-allelic variants.
+```bash
+
+#install vt
+cd ~/workspace/bin
+git clone https://github.com/atks/vt.git
+cd vt
+make
+make test
+# test installation
+~/workspace/bin/vt/vt
+```
+
+#### vcf-annotation-tools
+[VCF Annotation Tools](https://github.com/griffithlab/vcf-annotation-tools) is a python package that includes several tools to annotate VCF files with data from other tools. We will be using this for the purpose of adding bam readcounts to the vcf files.
+```bash
+
+
+#install vcf-annotation-tools
+# pip install vcf-annotation-tools
+
+#testing Installation
+vcf-readcount-annotator -h
 ```
