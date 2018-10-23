@@ -123,8 +123,40 @@ tar -cvf fastqs.tar fastqs/
 ```
 
 ### Create downsampled data sets to allow faster analysis a teaching setting
-Starting with aligned data, the following steps were used to create down-sampled data files
+Starting with aligned data, the following steps were used to create down-sampled data files, example shown below for chr6 exome data:
+```bash
+#Starting off with slices of bam file with chr6 as the region specified. This contains all mapped reads that fall/overlap(?) with this region. We want to ensure that if read 1 is in this region that when reconstructing the fastq, we would also like to include read 2, thus we have the following approach.
+cd <directory containing Exome alignment>
 
-HUIMING TO ADD INSTRUCTIONS HERE
+samtools view chr6_Exome_Norm_sorted_mrkdup_bqsr.bam | cut -d$'\t' -f1 > chr6_Exome_Norm_readnames.txt
+samtools view chr6_Exome_Tumor_sorted_mrkdup_bqsr.bam | cut -d$'\t' -f1 > chr6_Exome_Tumor_readnames.txt
 
+java -jar /usr/local/bin/picard.jar FilterSamReads I=Exome_Tumor_sorted_mrkdup_bqsr.bam O=chr6_Exome_Tumor_all_read_pairs.bam READ_LIST_FILE=chr6_Exome_Tumor_readnames.txt FILTER=includeReadList
+java -jar /usr/local/bin/picard.jar FilterSamReads I=../final/Exome_Norm_sorted_mrkdup_bqsr.bam O=chr6_Exome_Norm_all_read_pairs.bam READ_LIST_FILE=chr6_Exome_Norm_readnames.txt FILTER=includeReadList
 
+ls -1 | grep chr6_Exome_Tumor_all_read_pairs.bam | perl -ne 'chomp; print "samtools view -H $_ | grep -H --label=$_ \@RG\n"' | bash > chr6_Exome_Tumor_readgroup_info.txt
+cat chr6_Exome_Tumor_readgroup_info.txt | perl -ne 'my ($bam, $id, $pl, $pu, $lb, $sm); if ($_=~/(\S+\.bam)\:/){$bam=$1} if ($_=~/(ID\:\d+)/){$id=$1} if ($_=~/(PL\:\w+)/){$pl=$1} if ($_=~/(PU\:\S+)/){$pu
+=$1} if($_=~/LB\:\"(.+)\"/){$lb=$1} if ($_=~/(SM\:\S+)/){$sm=$1} print "$bam\t$id\t$pl\t$pu\t$lb\t$sm\n";' > chr6_Exome_Tumor_readgroup_info.clean.txt
+
+ls -1 | grep chr6_Exome_Norm_all_read_pairs.bam | perl -ne 'chomp; print "samtools view -H $_ | grep -H --label=$_ \@RG\n"' | bash > chr6_Exome_Norm_readgroup_info.txt
+cat chr6_Exome_Norm_readgroup_info.txt | perl -ne 'my ($bam, $id, $pl, $pu, $lb, $sm); if ($_=~/(\S+\.bam)\:/){$bam=$1} if ($_=~/(ID\:\d+)/){$id=$1} if ($_=~/(PL\:\w+)/){$pl=$1} if ($_=~/(PU\:\S+)/){$pu
+=$1} if($_=~/LB\:\"(.+)\"/){$lb=$1} if ($_=~/(SM\:\S+)/){$sm=$1} print "$bam\t$id\t$pl\t$pu\t$lb\t$sm\n";' > chr6_Exome_Norm_readgroup_info.clean.txt
+
+#reverting bams
+mkdir -p reverted_bams
+mkdir -p reverted_bams/Exome_Norm reverted_bams/Exome_Tumor
+
+java -Xmx8g -jar /usr/local/bin/picard.jar RevertSam I=chr6_Exome_Tumor_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/Exome_Tumor/
+java -Xmx8g -jar /usr/local/bin/picard.jar RevertSam I=chr6_Exome_Norm_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/Exome_Norm/
+
+#Bam to Fastq:
+mkdir -p fastqs
+mkdir -p fastqs/Exome_Norm fastq/Exome_Tumor
+
+java -Xmx8g -jar /usr/local/bin/picard.jar SamToFastq I=reverted_bams/Exome_Norm/2891351068.bam F=fastqs/Exome_Norm/2891351068_1.fastq F2=fastqs/Exome_Norm/2891351068_2.fastq
+- java -Xmx8g -jar /data/bin/picard.jar SamToFastq I=reverted_bams/Exome_Tumor/2891351066.bam F=fastqs/Exome_Tumor/2891351066_1.fastq F2=fastqs/Exome_Tumor/2891351066_2.fastq
+
+# You may want to move all the above data generated into a designated space for that specific chromosome e.g. mkdir chr6_subset_data
+
+#After moving the data you would need to gzip files and tar ball them for uploading
+```

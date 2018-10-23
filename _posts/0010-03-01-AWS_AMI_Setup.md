@@ -82,11 +82,7 @@ apt-get update -y && apt-get install -y \
   git \
   curl \
   tree \
-  docker \
-  docker.io
-
-# allow the ubuntu user to use docker
-usermod -a -G docker ubuntu
+  docker
 
 # install miniconda dependency
 cd /usr/local/bin
@@ -702,20 +698,6 @@ pip install vcf-annotation-tools
 vcf-readcount-annotator -h
 ```
 
-#### Optitype
-Describes dependencies and installation of optitype, used in this course for HLA typing
-```bash
-
-# due to the complexity of optitype dependencies we will use a docker image for optitype
-docker pull fred2/optitype
-
-# test the optitype image
-docker run -t fred2/optitype
-
-
-```
-
-
 #### extra utilities
 Describes installation of extra software helpfull to instructors but not necessarily used by Students
 ```bash
@@ -788,12 +770,7 @@ exit
 ```
 
 ### TO ADD
-<<<<<<< HEAD
-[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)
-vt
-vcf-annotation-tools
-=======
-- [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
+[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
 - Optitype
 - pvactools
 - genvisr
