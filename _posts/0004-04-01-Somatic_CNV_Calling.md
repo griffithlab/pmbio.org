@@ -234,11 +234,6 @@ dev.off()
 mkdir -p /workspace/data/results/somatic/cnvnator_wgs
 cd /workspace/data/results/somatic/cnvnator_wgs
 
-# run cnvnator
-
-# prepare data
-cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
-
 # link reference files
 ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr1.fa chr1.fa
 ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr2.fa chr2.fa
@@ -264,6 +259,9 @@ ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hl
 ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr22.fa chr22.fa
 ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chrX.fa chrX.fa
 
+# prepare data
+cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
+
 # make histogram
 cnvnator -root WGS_NORM.root -his 150
 
@@ -276,12 +274,7 @@ cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9
 # identify CNVs
 cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150 > WGS_NORM.cnvnator.tsv
 
-# visualzie CNV
-./cnvnator -root file.root [-chrom chr_name1 ...] -view bin_size [-ngc]
-
-# genomtype
-./cnvnator -root file.root -genotype bin_size [-ngc]
-
+# do the same thing for the tumor
 cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
 
 cnvnator -root WGS_Tumor.root -his 150
@@ -293,6 +286,43 @@ cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr
 cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150
 
 cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150 > WGS_Tumor.cnvnator.tsv
+```
+
+```R
+# start R
+R
+
+# load libraries and data
+library(data.table)
+library(ggplot2)
+wgs_norm <- fread("WGS_Norm.cnvnator.tsv")
+wgs_tumor <- fread("WGS_Tumor.cnvnator.tsv")
+colnames(wgs_tumor) <- c("CNV_type", "coordinates", "CNV_size", "normalized_RD", "e-val1",
+                         "e-val2", "e-val3", "e-val4", "q0")
+colnames(wgs_norm) <- c("CNV_type", "coordinates", "CNV_size", "normalized_RD", "e-val1",
+                        "e-val2", "e-val3", "e-val4", "q0")
+
+# reformat data
+wgs_norm$chr <- as.character(lapply(strsplit(wgs_norm$coordinates, ":"), function(x) x[1]))
+wgs_norm$coord <- as.character(lapply(strsplit(wgs_norm$coordinates, ":"), function(x) x[2]))
+wgs_norm$start <- as.numeric(as.character(lapply(strsplit(wgs_norm$coord, "-"), function(x) x[1])))
+wgs_norm$stop <- as.numeric(as.character(lapply(strsplit(wgs_norm$coord, "-"), function(x) x[2])))
+wgs_norm$sample <- "Normal"
+
+wgs_tumor$chr <- as.character(lapply(strsplit(wgs_tumor$coordinates, ":"), function(x) x[1]))
+wgs_tumor$coord <- as.character(lapply(strsplit(wgs_tumor$coordinates, ":"), function(x) x[2]))
+wgs_tumor$start <- as.numeric(as.character(lapply(strsplit(wgs_tumor$coord, "-"), function(x) x[1])))
+wgs_tumor$stop <- as.numeric(as.character(lapply(strsplit(wgs_tumor$coord, "-"), function(x) x[2])))
+wgs_tumor$sample <- "Tumor"
+
+# combine the data
+wgs_master <- rbind(wgs_tumor, wgs_norm)
+
+# plot the data
+ggplot() + geom_hline(yintercept = c(1, 2, 3), linetype="longdash") +
+    geom_segment(data=wgs_master[wgs_master$chr == "chr6",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD, color=sample), size=1) +
+    theme(axis.text.x=element_text(angle=45, hjust=1)) + xlab("Coordinate") + ylab("?") +
+    theme_bw() + scale_color_manual(values=c("#fb5b11", "#004e62"))
 ```
 
 ### cnvkit exome
