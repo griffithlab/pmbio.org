@@ -82,7 +82,11 @@ apt-get update -y && apt-get install -y \
   git \
   curl \
   tree \
-  docker
+  docker \
+  docker.io
+
+# allow the ubuntu user to use docker
+usermod -a -G docker ubuntu
 
 # install miniconda dependency
 cd /usr/local/bin
@@ -657,6 +661,20 @@ ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-r
 exit
 
 ```
+
+#### Optitype
+Describes dependencies and installation of optitype, used in this course for HLA typing
+```bash
+
+# due to the complexity of optitype dependencies we will use a docker image for optitype
+docker pull fred2/optitype
+
+# test the optitype image
+docker run -t fred2/optitype
+
+
+```
+
 
 #### extra utilities
 Describes installation of extra software helpfull to instructors but not necessarily used by Students
