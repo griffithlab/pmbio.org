@@ -38,7 +38,7 @@ cd /
 mkdir workspace
 
 # format the mount
-mkfs /dev/xvdb
+mkfs -t ext4 /dev/xvdb
 
 # mount the drive with the allocated space
 mount /dev/xvdb /workspace
@@ -81,7 +81,8 @@ apt-get update -y && apt-get install -y \
   unzip \
   git \
   curl \
-  tree
+  tree \
+  docker
 
 # install miniconda dependency
 cd /usr/local/bin
@@ -284,7 +285,7 @@ cpanm -i Bio::Root::Version
 
 # Installing perl version 5.22.0
 wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
-tar -xzf perl-5.22.0.tar.gz
+tar -xzvf perl-5.22.0.tar.gz
 cd perl-5.22.0
 ./Configure -des -Dprefix=$HOME/localperl
 make
@@ -293,11 +294,12 @@ make install
 
 # install vep with the various plugins
 mkdir -p /opt/vep_cache
+cd /opt/vep_cache
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 cd ensembl-vep-release-93.5/
-../perl-5.22.0/perl -MCPAN -e 'install DBI'
-../perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
+/usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
+/usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
 
 # make a symlink
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
@@ -333,6 +335,9 @@ apt-get update -y && apt-get install -y \
 # install varscan
 curl -L -k -o VarScan.v2.4.2.jar https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar
 
+# test varscan installation
+java -jar /usr/local/bin/VarScan.v2.4.2.jar
+
 # exit sudo shell
 exit
 ```
@@ -356,6 +361,9 @@ cd bcftools-1.3.1
 make -j
 make prefix=/usr/local/ install
 
+# test bcftools installation
+/usr/local/bin/bcftools
+
 # exit sudo shell
 exit
 ```
@@ -375,6 +383,14 @@ apt-get update -y && apt-get install -y \
 curl -L -k -o strelka-2.7.1.centos5_x86_64.tar.bz2 https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2
 tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2 # note uses python2
 
+# test strelka installation
+python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
+
+# run strelka test analysis
+conda create --name strelka python=2.7
+source activate strelka
+/usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/runStrelkaWorkflowDemo.bash
+
 # exit sudo shell
 exit
 ```
@@ -390,6 +406,9 @@ cd /usr/local/bin
 curl -L -k -o sambamba_v0.6.4_linux.tar.bz2 https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2
 tar --bzip2 -xvf sambamba_v0.6.4_linux.tar.bz2
 ln -s /usr/local/bin/sambamba_v0.6.4 /usr/local/bin/sambamba
+
+# test sambamba installation
+/usr/local/bin/sambamba
 
 # exit sudo shell
 exit
@@ -407,6 +426,9 @@ wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.0.4-Linux_x86_
 unzip hisat2-2.0.4-Linux_x86_64.zip
 ln -s /usr/local/bin/hisat2-2.0.4/hisat2 /usr/local/bin/hisat2
 
+# test hisat installation
+/usr/local/bin/hisat2 -h
+
 # exit sudo shell
 exit
 ```
@@ -423,6 +445,9 @@ wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-1.3.0.Linux_x86_64.tar.g
 tar -xzvf stringtie-1.3.0.Linux_x86_64.tar.gz
 ln -s /usr/local/bin/stringtie-1.3.0.Linux_x86_64/stringtie /usr/local/bin/stringtie
 
+# test stringtie installation
+/usr/local/bin/stringtie -h
+
 # exit sudo shell
 exit
 ```
@@ -438,6 +463,9 @@ cd /usr/local/bin
 wget http://ccb.jhu.edu/software/stringtie/dl/gffcompare-0.9.8.Linux_x86_64.tar.gz
 tar -xzvf gffcompare-0.9.8.Linux_x86_64.tar.gz
 ln -s /usr/local/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare /usr/local/bin/gffcompare
+
+# test gffcompare installation
+/usr/local/bin/gffcompare
 
 # exit sudo shell
 exit
@@ -500,6 +528,9 @@ make
 # make sylink
 ln -s /usr/local/bin/CNVnator_v0.3.3/src/cnvnator /usr/local/bin/cnvnator
 
+# test cnvnator installation
+/usr/local/bin/cnvnator
+
 # exit sudo shell
 exit
 ```
@@ -516,7 +547,12 @@ conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
 conda create -n cnvkit cnvkit
-# source activate cnvkit
+# source activate cnvkit to use
+
+# test cnvkit installation
+source activate cnvkit
+cnvkit.py -h
+source deactivate
 
 # exit sudo shell
 exit
@@ -533,6 +569,9 @@ cd /usr/local/bin
 wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_linux-v0.44.0.tar.gz
 tar -zxvf kallisto_linux-v0.44.0.tar.gz
 ln -s /usr/local/bin/kallisto_linux-v0.44.0/kallisto /usr/local/bin/kallisto
+
+# test kallisto installation
+/usr/local/bin/kallisto
 
 # exit sudo shell
 exit
@@ -552,6 +591,9 @@ wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.t
 tar -zxvf pizzly_linux.tar.gz
 ln -s /usr/local/bin/pizzly-v0.37.3/pizzly /usr/local/bin/pizzly
 
+# test pizzly installation
+/usr/local/bin/pizzly --help
+
 # exit sudo shell
 exit
 ```
@@ -559,6 +601,9 @@ exit
 #### Manta 1.4.0
 Describes dependencies and installation of Manta, used in this course for SV datection.
 ```bash
+# start sudo shell
+sudo bash
+
 # download and extract
 cd /usr/local/bin
 wget https://github.com/Illumina/manta/releases/download/v1.4.0/manta-1.4.0.centos6_x86_64.tar.bz2
@@ -566,6 +611,12 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 
 # test installation
 python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
+
+# run strelka test analysis
+conda create --name manta python=2.7
+source activate manta
+/usr/local/bin/manta-1.4.0.centos6_x86_64/bin/runMantaWorkflowDemo.py
+source deactivate
 
 # exit sudo shell
 exit
@@ -580,6 +631,9 @@ sudo bash
 # install mosdepth
 cd /usr/local/bin
 conda install -y mosdepth
+
+# test mosdepth installation
+/usr/local/bin/miniconda/bin/mosdepth -h
 
 # exit sudo shell
 exit
@@ -603,7 +657,7 @@ cmake -Wno-dev /usr/local/bin/bam-readcount-latest
 make
 ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-readcount
 
-# test installation
+# test bam-readcount installation
 /usr/local/bin/bam-readcount
 
 # exit sudo shell
@@ -683,4 +737,9 @@ exit
 ```
 
 ### TO ADD
-[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)
+- [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
+- Optitype
+- pvactools
+- genvisr
+- R packages need in rnaseq?
+
