@@ -291,11 +291,12 @@ cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr
 ```R
 # start R
 R
+setwd("/workspace/data/results/somatic/cnvnator_wgs")
 
 # load libraries and data
 library(data.table)
 library(ggplot2)
-wgs_norm <- fread("WGS_Norm.cnvnator.tsv")
+wgs_norm <- fread("WGS_NORM.cnvnator.tsv")
 wgs_tumor <- fread("WGS_Tumor.cnvnator.tsv")
 colnames(wgs_tumor) <- c("CNV_type", "coordinates", "CNV_size", "normalized_RD", "e-val1",
                          "e-val2", "e-val3", "e-val4", "q0")
@@ -319,10 +320,27 @@ wgs_tumor$sample <- "Tumor"
 wgs_master <- rbind(wgs_tumor, wgs_norm)
 
 # plot the data
+pdf(file="cnvnator.chr22.pdf", height="5", width="10")
 ggplot() + geom_hline(yintercept = c(1, 2, 3), linetype="longdash") +
-    geom_segment(data=wgs_master[wgs_master$chr == "chr6",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD, color=sample), size=1) +
+    geom_segment(data=wgs_master[wgs_master$chr == "chr22",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD, color=sample), size=1) +
     theme(axis.text.x=element_text(angle=45, hjust=1)) + xlab("Coordinate") + ylab("?") +
     theme_bw() + scale_color_manual(values=c("#fb5b11", "#004e62"))
+dev.off()
 ```
 
 ### cnvkit exome
+```bash
+mkdir -p /workspace/data/results/somatic/cnvkit
+cd /workspace/data/results/somatic/cnvkit
+
+source activate cnvkit
+
+wget https://xfer.genome.wustl.edu/gxfer1/project/gms/testdata/bams/NimbleGenExome_v3.bed
+
+cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -x /workspace/data/results/somatic/copyCat_annotation/gaps.bed -o access-excludes.hg38.bed
+
+cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam \
+    --targets NimbleGenExome_v3.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa \
+    --access /workspace/data/raw_data/references/access-excludes.hg38.bed \
+    --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit/
+```
