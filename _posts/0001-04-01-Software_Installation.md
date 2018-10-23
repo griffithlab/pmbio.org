@@ -39,9 +39,9 @@ ln -s /home/ubuntu/workspace/bin/samtools-1.7/bin/samtools /home/ubuntu/workspac
 ```
 
 ### Install PICARD
-[PICARD](https://broadinstitute.github.io/picard/) is a set of java based tools developed by the Broad institute. It is usefull for manipulating next generation sequencing data and is available under an open source [MIT license](https://opensource.org/licenses/MIT). The version of Picard we will be using requires java 8 which has already been installed. All we need to do is download the jar file which is a package file used to distribute java code. We can do this with `wget` from there, to run the software, we simply need to call java with the -jar option and provide the jar file.
+[PICARD](https://broadinstitute.github.io/picard/) is a set of java based tools developed by the Broad institute. It is very useful for manipulating next generation sequencing data and is available under an open source [MIT license](https://opensource.org/licenses/MIT). The version of Picard we will be using requires java 8 which has already been installed. All we need to do is download the jar file which is a package file used to distribute java code. We can do this with `wget`. To run the software, we simply need to call java with the -jar option and provide the jar file.
 ```bash
-# change to the bin and download the jar file
+# change to the bin directory and download the jar file
 cd ~/workspace/bin
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 
@@ -100,25 +100,18 @@ source deactivate
 4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
 5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
 
+Note that the following assumes the existence of a particular version of Perl. We had to install Perl 5.22.0 since this is the last version supported by VEP and the version that comes with Ubuntu 18.04 is newer than this.
+
 ```bash
 # download and unzip vep
 cd ~/workspace/bin
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 
-# Installing perl version 5.22.0
-wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
-tar -xzf perl-5.22.0.tar.gz
-cd perl-5.22.0
-./Configure -des -Dprefix=$HOME/localperl
-make
-make test
-make install
-
 # run the INSTALL.pl script provided by VEP
 cd ../ensembl-vep-release-93.5/
-../perl-5.22.0/perl -MCPAN -e 'install DBI'
-../perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache
+/usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
+/usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 #2. Do you want to continue installing the API (y/n)? y [ENTER] (if asked)
 #3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
