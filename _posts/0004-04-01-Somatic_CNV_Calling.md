@@ -307,18 +307,22 @@ wgs_norm$chr <- as.character(lapply(strsplit(wgs_norm$coordinates, ":"), functio
 wgs_norm$coord <- as.character(lapply(strsplit(wgs_norm$coordinates, ":"), function(x) x[2]))
 wgs_norm$start <- as.numeric(as.character(lapply(strsplit(wgs_norm$coord, "-"), function(x) x[1])))
 wgs_norm$stop <- as.numeric(as.character(lapply(strsplit(wgs_norm$coord, "-"), function(x) x[2])))
+wgs_norm$sample <- "Normal"
 
 wgs_tumor$chr <- as.character(lapply(strsplit(wgs_tumor$coordinates, ":"), function(x) x[1]))
 wgs_tumor$coord <- as.character(lapply(strsplit(wgs_tumor$coordinates, ":"), function(x) x[2]))
 wgs_tumor$start <- as.numeric(as.character(lapply(strsplit(wgs_tumor$coord, "-"), function(x) x[1])))
 wgs_tumor$stop <- as.numeric(as.character(lapply(strsplit(wgs_tumor$coord, "-"), function(x) x[2])))
+wgs_tumor$sample <- "Tumor"
+
+# combine the data
+wgs_master <- rbind(wgs_tumor, wgs_norm)
 
 # plot the data
 ggplot() + geom_hline(yintercept = c(1, 2, 3), linetype="longdash") +
-    geom_segment(data=wgs_norm[wgs_norm$chr == "chr6",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD), color="red", size=1) +
-    geom_segment(data=wgs_tumor[wgs_tumor$chr == "chr6",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD), color="green", size=1) +
+    geom_segment(data=wgs_master[wgs_master$chr == "chr6",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD, color=sample), size=1) +
     theme(axis.text.x=element_text(angle=45, hjust=1)) + xlab("Coordinate") + ylab("?") +
-    theme_bw()
+    theme_bw() + scale_color_manual(values=c("#fb5b11", "#004e62"))
 ```
 
 ### cnvkit exome
