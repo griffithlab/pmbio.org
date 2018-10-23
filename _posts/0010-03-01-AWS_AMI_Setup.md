@@ -81,7 +81,8 @@ apt-get update -y && apt-get install -y \
   unzip \
   git \
   curl \
-  tree
+  tree \
+  docker
 
 # install miniconda dependency
 cd /usr/local/bin
