@@ -120,6 +120,9 @@ cd R-3.5.1
 make
 make install
 
+# test R installation
+/usr/local/bin/Rscript
+
 # devtools and BiocManager dependencies
 apt-get update -y && apt-get install -y \
   libssl-dev \
@@ -161,6 +164,9 @@ cd samtools-1.7
 make
 make install
 
+# test samtools installation
+/usr/local/bin/samtools
+
 # exit sudo shell
 exit
 ```
@@ -179,6 +185,9 @@ apt-get update -y && apt-get install -y \
 # picard installation
 wget https://github.com/broadinstitute/picard/releases/download/2.18.14/picard.jar
 export PICARD='/usr/local/bin/picard.jar'
+
+# test picard installation 
+java -jar /usr/local/bin/picard.jar
 
 # exit sudo shell
 exit
@@ -202,6 +211,9 @@ tar --bzip2 -xvf bwa-0.7.17.tar.bz2
 cd  bwa-0.7.17
 make
 ln -s /usr/local/bin/bwa-0.7.17/bwa /usr/local/bin/bwa
+
+# test bwa installation
+/usr/local/bin/bwa
 
 # exit sudo shell
 exit
@@ -233,6 +245,9 @@ conda env create -n gatk -f gatkcondaenv.yml
 
 # symlink gatk executable
 ln -s /usr/local/bin/gatk-4.0.10.1/gatk /usr/local/bin/gatk
+
+# test gatk installation
+/usr/local/bin/gatk
 
 # exit sudo shell
 exit
@@ -289,6 +304,9 @@ wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genot
 # unlock permissions for downloaded cache
 find /opt/vep_cache -type d -exec chmod 777 {} \;
 find /opt/vep_cache -type f -exec chmod 664 {} \;
+
+# test vep installation
+/usr/local/bin/vep
 
 # exit sudo shell
 exit
