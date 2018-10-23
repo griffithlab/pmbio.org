@@ -270,6 +270,7 @@ make test
 make install
 
 # install vep with the various plugins
+cd /usr/local/bin
 mkdir -p /opt/vep_cache
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
@@ -285,6 +286,10 @@ mkdir -p /opt/vep_cache/data
 cd /opt/vep_cache/data
 wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz
 wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
+
+# Install the WildType plugin
+cd /opt/vep_cache/Plugins
+wget Wildtype.pm https://raw.githubusercontent.com/griffithlab/pVAC-Seq/master/pvacseq/VEP_plugins/Wildtype.pm --no-check-certificate
 
 # unlock permissions for downloaded cache
 find /opt/vep_cache -type d -exec chmod 777 {} \;
@@ -585,6 +590,34 @@ ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-r
 exit
 
 ```
+#### vt
+vt is a variant tool set that discovers short variants from Next Generation Sequencing data. We will use this for the purpose of splitting multi-allelic variants.
+```bash
+# start sudo shell
+sudo bash
+
+#install vt
+cd /usr/local/bin
+git clone https://github.com/atks/vt.git
+cd vt
+make
+make test
+# test installation
+/usr/local/bin/vt/vt
+```
+
+#### vcf-annotation-tools
+VCF Annotation Tools is a python package that includes several tools to annotate VCF files with data from other tools. We will be using this for the purpose of adding bam readcounts to the vcf files.
+```bash
+# start sudo shell
+sudo bash
+
+#install vcf-annotation-tools
+pip install vcf-annotation-tools
+
+#testing Installation
+vcf-readcount-annotator -h
+```
 
 #### extra utilities
 Describes installation of extra software helpfull to instructors but not necessarily used by Students
@@ -659,3 +692,5 @@ exit
 
 ### TO ADD
 [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)
+vt
+vcf-annotation-tools
