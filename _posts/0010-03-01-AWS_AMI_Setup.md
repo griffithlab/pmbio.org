@@ -260,12 +260,22 @@ apt-get update -y && apt-get install -y \
   cpanminus
 cpanm -i Bio::Root::Version
 
+# Installing perl version 5.22.0
+wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
+tar -xzf perl-5.22.0.tar.gz
+cd perl-5.22.0
+./Configure -des -Dprefix=$HOME/localperl
+make
+make test
+make install
+
 # install vep with the various plugins
 mkdir -p /opt/vep_cache
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 cd ensembl-vep-release-93.5/
-perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:refseq,vep,merged
+../perl-5.22.0/perl -MCPAN -e 'install DBI'
+../perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
 
 # make a symlink
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
