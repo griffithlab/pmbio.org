@@ -292,14 +292,15 @@ make
 make test
 make install
 
+# install DBI dependency
+/usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
+
 # install vep with the various plugins
 cd /usr/local/bin
 mkdir -p /opt/vep_cache
-cd /opt/vep_cache
 wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 cd ensembl-vep-release-93.5/
-/usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
 /usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
 
 # make a symlink
