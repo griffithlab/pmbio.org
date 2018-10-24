@@ -860,6 +860,7 @@ exit
 ```
 
 #### liftOver
+Installation of the liftover tool, used in this course to convert coordinates from one genome build to another.
 ```bash
 # start sudo shell
 sudo bash
@@ -877,6 +878,7 @@ exit
 ```
 
 #### Sleuth
+Installation of the sleuth tool, used in this course for differential expression analysis starting from kallisto abundance estimates.
 ```bash
 # start sudo shell
 sudo bash
