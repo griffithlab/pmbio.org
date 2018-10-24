@@ -907,6 +907,29 @@ exit
 
 ```
 
+#### bedtools
+Installation of the bedtools suite, used in this course for various genome math
+```bash
+# start sudo shell
+sudo bash
+
+#install bedtools
+cd /usr/local/bin
+wget https://github.com/arq5x/bedtools2/releases/download/v2.27.1/bedtools-2.27.1.tar.gz
+tar -zxvf bedtools-2.27.1.tar.gz
+cd bedtools2
+make
+
+# create symlink
+ln -s /usr/local/bin/bedtools2/bin/bedtools /usr/local/bin/bedtools
+
+#test installation
+/usr/local/bin/bedtools
+
+#exit sudo shell
+exit
+
+```
 
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
@@ -918,7 +941,7 @@ sudo bash
 R --vanilla -e 'install.packages(c("tidyverse"), repos="http://cran.us.r-project.org")'
 
 # install some Bio Conductor packages
-R --vanilla -e 'BiocManager::install(c("genefilter", "ballgown", "edgeR", "GenomicRanges", "rhdf5", "biomaRt"))'
+R --vanilla -e 'BiocManager::install(c("genefilter", "ballgown", "edgeR", "GenomicRanges", "rhdf5", "biomaRt", "DESeq2", "gage"))'
 
 # exit sudo shell
 exit
@@ -998,6 +1021,6 @@ exit
 ```
 
 ### TO ADD
-...
+
 
 
