@@ -322,11 +322,11 @@ tar -zxvf kallisto_linux-v0.44.0.tar.gz
 ln -s ~/workspace/bin/kallisto_linux-v0.44.0/kallisto ~/workspace/bin/kallisto
 
 # test installation
-~/workspace/bin/kallisto --help
+~/workspace/bin/kallisto
 ```
 
 ### Install Pizzly
-[Pizzly](https://github.com/pmelsted/pizzly) is a fusion detection algorithm which uses output from Kallisto. Pizzly is has a binary distribution so we can download and extract that from github to get started.
+[Pizzly](https://github.com/pmelsted/pizzly) is a fusion detection algorithm which uses output from Kallisto. Pizzly has a binary distribution so we can download and extract that from github to get started.
 ```bash
 # download and extract
 cd ~/workspace/bin
@@ -334,6 +334,9 @@ mkdir pizzly-v0.37.3
 cd pizzly-v0.37.3
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
+
+# make symlink
+ln -s ~/workspace/bin/pizzly-v0.37.3/pizzly ~/workspace/bin/pizzly
 
 # test executable
 ~/workspace/bin/pizzly --help
@@ -355,10 +358,10 @@ python2 ~/workspace/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
 [mosdepth](https://github.com/brentp/mosdepth) is a program for determining depth in sequencing data. The easiest way to install mosdepth is through `bioconda` a channel for the `conda` package manager. The AMI already has conda setup to install to `/usr/local/bin/miniconda` and so we've already installed mosdepth for you. However below are the commands used during the installation.
 ```bash
 # add the bioconda channel
-conda config --add channels bioconda
+# conda config --add channels bioconda
 
 # install mosdepth with the conda package manager
-conda install mosdepth
+# conda install mosdepth
 ```
 
 ### bam-readcount
