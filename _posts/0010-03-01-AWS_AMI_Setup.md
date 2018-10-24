@@ -866,7 +866,7 @@ sudo bash
 
 # add remotes and install liftover
 conda config --add channels bioconda
-conda install ucsc-liftover
+conda install -y ucsc-liftover
 
 # test installation
 liftOver
