@@ -167,9 +167,12 @@ apt-get update -y && apt-get install -y \
 wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2
 tar --bzip2 -xvf samtools-1.7.tar.bz2
 cd samtools-1.7
-./configure --prefix=/usr/local/
+./configure --prefix=/usr/local/bin/samtools-1.7/
 make
 make install
+
+#create symlink
+ln -s /usr/local/bin/samtools/samtools-1.7/bin/samtools /usr/local/bin/samtools
 
 # test samtools installation
 /usr/local/bin/samtools
