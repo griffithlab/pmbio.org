@@ -364,7 +364,7 @@ apt-get update -y && apt-get install -y \
   libz-dev
 
 # install BCFtools
-curl -L -k -o bcftools-1.3.1.tar.bz2                https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
+curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
 tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
 cd bcftools-1.3.1
 make -j
