@@ -390,11 +390,17 @@ ln -s ~/workspace/bin/bam-readcount-latest/bin/bam-readcount ~/workspace/bin/bam
 #install vt
 cd ~/workspace/bin
 git clone https://github.com/atks/vt.git
-cd vt
+mv vt vt-latest
+cd vt-latest
 make
 make test
+
+# create symlink
+ln -s ~/workspace/bin/vt-latest/vt ~/workspace/bin/vt
+
 # test installation
-~/workspace/bin/vt/vt
+~/workspace/bin/vt
+
 ```
 
 #### vcf-annotation-tools
