@@ -290,7 +290,8 @@ apt-get update -y && apt-get install -y \
 
 cpanm -i Bio::Root::Version #note this seems to install a ton of .pl scripts in the current dir (/usr/local/bin) which is annoying. Do we really need this? Can it be installed in a tidier version. Doesn't this install it for system Perl anyway instead of the custom Perl below?
 
-# Installing perl version 5.22.0
+# Installing perl version 5.22.0 
+# NOTE if we upgrade to the latest version of VEP this may no longer be needed
 wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
 tar -xzvf perl-5.22.0.tar.gz
 cd perl-5.22.0
