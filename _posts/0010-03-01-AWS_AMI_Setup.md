@@ -399,7 +399,7 @@ tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2 # note uses python2
 python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
 
 # run strelka test analysis
-conda create --name strelka python=2.7
+conda create -y --name strelka python=2.7
 source activate strelka
 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/runStrelkaWorkflowDemo.bash
 source deactivate
@@ -559,7 +559,7 @@ cd /usr/local/bin
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
-conda create -n cnvkit cnvkit
+conda create -y -n cnvkit cnvkit
 # source activate cnvkit to use
 
 # test cnvkit installation
@@ -626,7 +626,7 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
 
 # run strelka test analysis
-conda create --name manta python=2.7
+conda create -y --name manta python=2.7
 source activate manta
 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/runMantaWorkflowDemo.py
 source deactivate
@@ -783,7 +783,10 @@ exit
 
 ### TO ADD
 [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
+- FastQC
+- Multi-QC
 - Optitype
 - pvactools
 - genvisr
 - R packages need in rnaseq?
+
