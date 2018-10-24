@@ -795,6 +795,19 @@ docker run -t griffithlab/pvactools:1.1.1 pvacseq --help
 
 ```
 
+#### GenVisR
+Installation of GenVisR, used in this course to created advanced publication quality genomic data visualizations.
+```bash
+# start sudo shell
+sudo bash
+
+# install GenVisR
+R --vanilla -e 'BiocManager::install(c("GenVisR"))'
+
+#exit sudo shell
+exit
+```
+
 #### extra utilities
 Describes installation of extra software helpfull to instructors but not necessarily used by Students
 ```bash
@@ -867,7 +880,5 @@ exit
 ```
 
 ### TO ADD
-- pvactools
-- genvisr
 - R packages need in rnaseq?
 
