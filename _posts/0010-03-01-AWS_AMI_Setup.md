@@ -84,16 +84,6 @@ sudo bash
 cd /usr/local/bin
 apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall
 
-# install imagemagick
-wget http://www.imagemagick.org/download/ImageMagick.tar.gz
-tar -xzvf ImageMagick.tar.gz
-cd ImageMagick-7.0.8-13/
-./configure
-make clean
-make
-checkinstall
-ldconfig /usr/local/lib
-
 # install miniconda dependency
 cd /usr/local/bin
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -102,6 +92,9 @@ source ~/.bashrc
 
 # the conda install messes up byobu which expects system python to be first in the path. Fix this by adding the following to ~/.bashrc
 #BYOBU_PYTHON=/usr/bin/python3
+
+# the imagemagick page has a bug in its convert functionality that requires an edit to its config
+# edit the PDF section in the config file `sudo vim /etc/ImageMagick-6/policy.xml` and change the PDF rights from `none` to `read|write`
 
 # exit sudo shell
 exit
