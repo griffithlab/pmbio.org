@@ -227,107 +227,6 @@ dev.off()
 
 {% include figure.html image="/assets/module_4/copyCat_final.png" %}
 
-### cnvnator germline
-
-```bash
-# make directory
-mkdir -p /workspace/data/results/somatic/cnvnator_wgs
-cd /workspace/data/results/somatic/cnvnator_wgs
-
-# link reference files
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr1.fa chr1.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr2.fa chr2.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr3.fa chr3.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr4.fa chr4.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr5.fa chr5.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa chr6.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr7.fa chr7.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr8.fa chr8.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr9.fa chr9.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr10.fa chr10.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr11.fa chr11.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr12.fa chr12.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr13.fa chr13.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr14.fa chr14.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr15.fa chr15.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr16.fa chr16.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr17.fa chr17.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr18.fa chr18.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr19.fa chr19.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr20.fa chr20.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr21.fa chr21.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr22.fa chr22.fa
-ln -s /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chrX.fa chrX.fa
-
-# prepare data
-cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
-
-# make histogram
-cnvnator -root WGS_NORM.root -his 150
-
-# calculate statistical significance
-cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -stat 150
-
-# partition into similar regions
-cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -partition 150
-
-# identify CNVs
-cnvnator -root WGS_NORM.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150 > WGS_NORM.cnvnator.tsv
-
-# do the same thing for the tumor
-cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX  -tree /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
-
-cnvnator -root WGS_Tumor.root -his 150
-
-cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -stat 150
-
-cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -partition 150
-
-cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150
-
-cnvnator -root WGS_Tumor.root -chrom chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX -call 150 > WGS_Tumor.cnvnator.tsv
-```
-
-```R
-# start R
-R
-setwd("/workspace/data/results/somatic/cnvnator_wgs")
-
-# load libraries and data
-library(data.table)
-library(ggplot2)
-wgs_norm <- fread("WGS_NORM.cnvnator.tsv")
-wgs_tumor <- fread("WGS_Tumor.cnvnator.tsv")
-colnames(wgs_tumor) <- c("CNV_type", "coordinates", "CNV_size", "normalized_RD", "e-val1",
-                         "e-val2", "e-val3", "e-val4", "q0")
-colnames(wgs_norm) <- c("CNV_type", "coordinates", "CNV_size", "normalized_RD", "e-val1",
-                        "e-val2", "e-val3", "e-val4", "q0")
-
-# reformat data
-wgs_norm$chr <- as.character(lapply(strsplit(wgs_norm$coordinates, ":"), function(x) x[1]))
-wgs_norm$coord <- as.character(lapply(strsplit(wgs_norm$coordinates, ":"), function(x) x[2]))
-wgs_norm$start <- as.numeric(as.character(lapply(strsplit(wgs_norm$coord, "-"), function(x) x[1])))
-wgs_norm$stop <- as.numeric(as.character(lapply(strsplit(wgs_norm$coord, "-"), function(x) x[2])))
-wgs_norm$sample <- "Normal"
-
-wgs_tumor$chr <- as.character(lapply(strsplit(wgs_tumor$coordinates, ":"), function(x) x[1]))
-wgs_tumor$coord <- as.character(lapply(strsplit(wgs_tumor$coordinates, ":"), function(x) x[2]))
-wgs_tumor$start <- as.numeric(as.character(lapply(strsplit(wgs_tumor$coord, "-"), function(x) x[1])))
-wgs_tumor$stop <- as.numeric(as.character(lapply(strsplit(wgs_tumor$coord, "-"), function(x) x[2])))
-wgs_tumor$sample <- "Tumor"
-
-# combine the data
-wgs_master <- rbind(wgs_tumor, wgs_norm)
-
-# plot the data
-pdf(file="cnvnator.chr22.pdf", height="5", width="10")
-ggplot() + geom_hline(yintercept = c(1, 2, 3), linetype="longdash") +
-    geom_segment(data=wgs_master[wgs_master$chr == "chr22",], aes(x=start, y=normalized_RD, xend=stop, yend=normalized_RD, color=sample), size=1) +
-    theme(axis.text.x=element_text(angle=45, hjust=1)) + xlab("Coordinate") + ylab("?") +
-    theme_bw() + scale_color_manual(values=c("#fb5b11", "#004e62"))
-dev.off()
-```
-
 ### cnvkit wgs
 ```bash
 mkdir -p /workspace/data/results/somatic/cnvkit_wgs
@@ -358,4 +257,10 @@ cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_pl
 cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets hglft_genome_304d_b78af0.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter
 
 source deactivate
+
+convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.png
+convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.jpg
+
+convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.png
+convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.jpg
 ```
