@@ -859,6 +859,22 @@ exit
 
 ```
 
+#### liftOver
+```bash
+# start sudo shell
+sudo bash
+
+# add remotes and install liftover
+conda config --add channels bioconda
+conda install ucsc-liftover
+
+# exit sudo shell
+exit
+
+liftOver
+
+```
+
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
 ```
@@ -952,17 +968,4 @@ exit
 - Sleuth
 - htseq-count
 
-### liftOver
-```bash
-# start sudo shell
-sudo bash
 
-# add remotes and install liftover
-conda config --add channels bioconda
-conda install ucsc-liftover
-
-# exit sudo shell
-exit
-
-liftOver --help
-```
