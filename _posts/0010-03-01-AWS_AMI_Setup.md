@@ -49,7 +49,7 @@ chown -R ubuntu:ubuntu /workspace
 
 #Note that setting up a volume like that can occasionaly result in an unbootable state. Using the following device volume is safer
 sudo file -s /dev/xvdb
-sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /data ext4 defaults,nofail 0 2\n"}'
+sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /workspace ext4 defaults,nofail 0 2\n"}'
 
 #Add a line like the following to fstab using vim editor. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
 #sudo vim /etc/fstab
@@ -777,4 +777,3 @@ exit
 - genvisr
 - R packages need in rnaseq?
 
->>>>>>> 067770bf3251bbd4ca54bc2e61b711e6583efe4c

@@ -214,7 +214,7 @@ ln -s ~/workspace/bin/stringtie-1.3.0.Linux_x86_64/stringtie ~/workspace/bin/str
 ~/workspace/bin/stringtie -h
 ```
 ### Install Gffcompare
-[Gffcompare](https://ccb.jhu.edu/software/stringtie/gffcompare.shtml) is a prgram that is used to perform operations on general feature format (GFF) and general transfer format (GTF) files. It has a binary distribution compatible with the linux we're using so we will just download, extract, and make a symlink.
+[Gffcompare](https://ccb.jhu.edu/software/stringtie/gffcompare.shtml) is a program that is used to perform operations on general feature format (GFF) and general transfer format (GTF) files. It has a binary distribution compatible with the linux we're using so we will just download, extract, and make a symlink.
 ```bash
 # download and extract
 cd ~/workspace/bin
@@ -228,7 +228,7 @@ ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/g
 ~/workspace/bin/gffcompare
 ```
 ### Install R
-[R](https://www.r-project.org/) is an feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a couple minutes to compile so we'll use one which has already been setup if we were to install R we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R.framework will go, this includes the additional R libraries we'll download later. From there we'd do make and make install to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below however it is exactly what was run to set up the R we will be using, except the installation location.
+[R](https://www.r-project.org/) is a feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a severalminutes to compile so we'll use one which has already been setup. If we were to install R, we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R framework will go, this includes the additional R libraries we'll download later. From there we'd do `make` and `make install` to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below, however it is exactly what was run to set up the R we will be using, except the installation location.
 ```bash
 ## download and extract
 #cd ~/workspace/bin
@@ -264,7 +264,7 @@ R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
 ```
 
 ### Install CNVnator
-[CNVnator](https://github.com/abyzovlab/CNVnator) is a depth based copy number caller. It is open source and available on github under a creative common public license (CCPL). To install we first download and extract the source code. CNVnator relies on a specific version of samtools which is distributed with CNVnator, so our first step is to run `make` on that samtools. To finnish the installation process we can then run `make` in CNVnator's main source directory.
+[CNVnator](https://github.com/abyzovlab/CNVnator) is a depth based copy number caller. It is open source and available on github under a creative common public license (CCPL). To install we first download and extract the source code. CNVnator relies on a specific version of samtools which is distributed with CNVnator, so our first step is to run `make` on that samtools. To finish the installation process we can then run `make` in CNVnator's main source directory.
 ```bash
 # download and decompress
 cd ~/workspace/bin
