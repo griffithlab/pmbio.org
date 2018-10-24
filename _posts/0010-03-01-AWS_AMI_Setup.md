@@ -84,6 +84,9 @@ sudo bash
 cd /usr/local/bin
 apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall
 
+# allow the ubuntu user to use docker
+usermod -a -G docker ubuntu
+
 # install miniconda dependency
 cd /usr/local/bin
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -768,6 +771,19 @@ exit
 
 ```
 
+#### Optitype
+Describes dependencies and installation of optitype, used in this course for HLA typing
+```bash
+
+# due to the complexity of optitype dependencies we will use a docker image for optitype
+docker pull fred2/optitype
+
+# test the optitype image
+
+docker run -t fred2/optitype
+
+```
+
 #### extra utilities
 Describes installation of extra software helpfull to instructors but not necessarily used by Students
 ```bash
@@ -840,7 +856,6 @@ exit
 ```
 
 ### TO ADD
-- Multi-QC
 - Optitype
 - pvactools
 - genvisr
