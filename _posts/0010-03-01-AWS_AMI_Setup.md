@@ -91,7 +91,7 @@ bash Miniconda3-latest-Linux-x86_64.sh # accept license, choose /usr/local/bin/m
 source ~/.bashrc
 
 # the conda install messes up byobu which expects system python to be first in the path. Fix this by adding the following to ~/.bashrc
-#BYOBU_PYTHON=/usr/bin/python3 byobu
+#BYOBU_PYTHON=/usr/bin/python3
 
 # exit sudo shell
 exit
