@@ -806,6 +806,24 @@ R --vanilla -e 'BiocManager::install(c("GenVisR"))'
 
 #exit sudo shell
 exit
+
+```
+
+#### some extra R packages that we might need
+There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
+```
+# start sudo shell
+sudo bash
+
+# install some R packages
+R --vanilla -e 'install.packages(c("tidyverse"), repos="http://cran.us.r-project.org")'
+
+# install some Bio Conductor packages
+R --vanilla -e 'BiocManager::install(c("genefilter", "ballgown", "edgeR", "GenomicRanges", "rhdf5", "biomaRt"))'
+
+# exit sudo shell
+exit
+
 ```
 
 #### extra utilities
@@ -819,6 +837,7 @@ conda install -y ucsc-fasplit
 
 # exit sudo shell
 exit
+
 ```
 
 ### apache web serve setup
