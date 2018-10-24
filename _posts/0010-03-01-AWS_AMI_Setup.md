@@ -774,13 +774,24 @@ exit
 #### Optitype
 Describes dependencies and installation of optitype, used in this course for HLA typing
 ```bash
-
 # due to the complexity of optitype dependencies we will use a docker image for optitype
+# pull docker image as ubuntu user
 docker pull fred2/optitype
 
 # test the optitype image
-
 docker run -t fred2/optitype
+
+```
+
+#### pvactools
+Installation of pvactools, used in this course for neantigen characterization
+```
+#To avoid having to install IEDB we will use a docker image for pvactools
+#pull docker image as ubuntu user
+docker pull griffithlab/pvactools:1.1.1
+
+# test the pvactools image
+docker run -t griffithlab/pvactools:1.1.1 pvacseq --help
 
 ```
 
@@ -856,7 +867,6 @@ exit
 ```
 
 ### TO ADD
-- Optitype
 - pvactools
 - genvisr
 - R packages need in rnaseq?
