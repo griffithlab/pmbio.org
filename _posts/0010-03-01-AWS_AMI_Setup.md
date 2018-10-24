@@ -732,7 +732,7 @@ unzip fastqc_v0.11.8.zip
 chmod 755 FastQC/fastqc
 
 # create a symlink
-ls -s /usr/local/bin/FastQC/fastqc /usr/local/bin/fastqc
+ln -s /usr/local/bin/FastQC/fastqc /usr/local/bin/fastqc
 
 # test the installation
 /usr/local/bin/fastqc --help
