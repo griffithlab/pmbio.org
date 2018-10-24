@@ -184,13 +184,12 @@ Note - the filter_vep tool immediately and automatically limits to variants with
 
 #Filter hard-filtered WGS results for clinical relevance
 #Filter VEP VCF
-~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
 #Filter tabular VEP
-~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
-
-
+NOTE: VEP TSV results appear truncated
 
 
 #Filter VQSR-filtered exome results for clinical relevance
@@ -206,11 +205,12 @@ Note - the filter_vep tool immediately and automatically limits to variants with
 
 #Filter VQSR-filtered WGS results for clinical relevance
 #Filter VEP VCF
-~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
 #Filter tabular VEP
-~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
+NOTE: VEP TSV results appear truncated
 
 
 
