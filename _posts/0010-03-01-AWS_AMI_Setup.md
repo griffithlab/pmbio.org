@@ -890,6 +890,24 @@ R --vanilla -e 'devtools::install_github("pachterlab/sleuth")'
 exit
 ```
 
+#### HTSeq
+Installation of the HTSeq tool, used in this course to get raw read counts for RNA-seq data.
+```bash
+# start sudo shell
+sudo bash
+
+# install htseq using pip
+pip install HTSeq
+
+# test installation
+htseq-count -h
+
+#exit sudo shell
+exit
+
+```
+
+
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
 ```
@@ -980,6 +998,6 @@ exit
 ```
 
 ### TO ADD
-- htseq-count
+...
 
 
