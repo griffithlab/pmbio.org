@@ -376,7 +376,10 @@ curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releas
 tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
 cd bcftools-1.3.1
 make -j
-make prefix=/usr/local/ install
+make prefix=/usr/local/bin/bcftools-1.3.1 install
+
+# make symlink
+ln -s /usr/local/bin/bcftools-1.3.1/bin/bcftools /usr/local/bin/bcftools
 
 # test bcftools installation
 /usr/local/bin/bcftools
