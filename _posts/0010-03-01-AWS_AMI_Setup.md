@@ -82,7 +82,7 @@ sudo bash
 
 # general tools for installation and use
 cd /usr/local/bin
-apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io
+apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io imagemagick
 
 # install miniconda dependency
 cd /usr/local/bin
