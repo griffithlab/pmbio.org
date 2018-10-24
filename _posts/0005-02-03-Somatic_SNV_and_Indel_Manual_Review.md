@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: Somatic SNV and Indel Manual Review
 categories:
-    - Module-04-Somatic
+    - Module-05-Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0004-02-03
+date: 0005-02-03
 ---
 
 ### **Somatic Variant Refinement**

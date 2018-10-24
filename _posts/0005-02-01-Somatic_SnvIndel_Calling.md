@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: Somatic SNV/InDel Calling
 categories:
-    - Module-04-Somatic
+    - Module-05-Somatic
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0004-02-01
+date: 0005-02-01
 ---
 
 TODO: Change directory names as needed for consistency across modules, also we will need a version for subset samples.
