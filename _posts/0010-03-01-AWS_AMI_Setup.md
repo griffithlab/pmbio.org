@@ -26,7 +26,8 @@ For development purposes we started with a very large instance (overkill). Futur
 
 ### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
 ```bash
-sudo apt-get update -y && sudo apt-get upgrade -y 
+# sudo apt-get update -y && sudo apt-get upgrade -y 
+# Note that this can lead to a grub update and possibly some confusion about the boot device. Avoid this for now...
 
 ```
 
