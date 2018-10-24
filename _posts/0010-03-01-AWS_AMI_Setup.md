@@ -791,7 +791,6 @@ exit
 ```
 
 ### TO ADD
-[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
 - FastQC
 - Multi-QC
 - Optitype
