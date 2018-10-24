@@ -172,7 +172,7 @@ make
 make install
 
 #create symlink
-ln -s /usr/local/bin/samtools/samtools-1.7/bin/samtools /usr/local/bin/samtools
+ln -s /usr/local/bin/samtools-1.7/bin/samtools /usr/local/bin/samtools
 
 # test samtools installation
 /usr/local/bin/samtools
