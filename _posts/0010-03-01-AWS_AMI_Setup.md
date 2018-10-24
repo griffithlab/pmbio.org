@@ -84,16 +84,6 @@ sudo bash
 cd /usr/local/bin
 apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall
 
-# install imagemagick
-wget http://www.imagemagick.org/download/ImageMagick.tar.gz
-tar -xzvf ImageMagick.tar.gz
-cd ImageMagick-7.0.8-13/
-./configure
-make clean
-make
-checkinstall
-ldconfig /usr/local/lib
-
 # install miniconda dependency
 cd /usr/local/bin
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -102,6 +92,9 @@ source ~/.bashrc
 
 # the conda install messes up byobu which expects system python to be first in the path. Fix this by adding the following to ~/.bashrc
 #BYOBU_PYTHON=/usr/bin/python3
+
+# the imagemagick page has a bug in its convert functionality that requires an edit to its config
+# edit the PDF section in the config file `sudo vim /etc/ImageMagick-6/policy.xml` and change the PDF rights from `none` to `read|write`
 
 # exit sudo shell
 exit
@@ -406,7 +399,7 @@ tar --bzip2 -xvf strelka-2.7.1.centos5_x86_64.tar.bz2 # note uses python2
 python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow.py -h
 
 # run strelka test analysis
-conda create --name strelka python=2.7
+conda create -y --name strelka python=2.7
 source activate strelka
 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/runStrelkaWorkflowDemo.bash
 source deactivate
@@ -566,7 +559,7 @@ cd /usr/local/bin
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
-conda create -n cnvkit cnvkit
+conda create -y -n cnvkit cnvkit
 # source activate cnvkit to use
 
 # test cnvkit installation
@@ -633,7 +626,7 @@ tar --bzip2 -xvf manta-1.4.0.centos6_x86_64.tar.bz2
 python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
 
 # run strelka test analysis
-conda create --name manta python=2.7
+conda create -y --name manta python=2.7
 source activate manta
 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/runMantaWorkflowDemo.py
 source deactivate
@@ -690,14 +683,23 @@ vt is a variant tool set that discovers short variants from Next Generation Sequ
 # start sudo shell
 sudo bash
 
-#install vt
+# install vt
 cd /usr/local/bin
 git clone https://github.com/atks/vt.git
-cd vt
+mv vt vt-latest
+cd vt-latest
 make
 make test
+
+#create symlink
+ln -s /usr/local/bin/vt-latest/vt /usr/local/bin/vt
+
 # test installation
-/usr/local/bin/vt/vt
+/usr/local/bin/vt
+
+# exit sudo shell
+exit
+
 ```
 
 #### vcf-annotation-tools
@@ -790,7 +792,10 @@ exit
 
 ### TO ADD
 [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
+- FastQC
+- Multi-QC
 - Optitype
 - pvactools
 - genvisr
 - R packages need in rnaseq?
+
