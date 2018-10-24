@@ -699,11 +699,15 @@ VCF Annotation Tools is a python package that includes several tools to annotate
 # start sudo shell
 sudo bash
 
-#install vcf-annotation-tools
+# install vcf-annotation-tools
 pip install vcf-annotation-tools
 
-#testing Installation
+# testing Installation
 vcf-readcount-annotator -h
+
+# exit sudo shell
+exit
+
 ```
 
 #### extra utilities
