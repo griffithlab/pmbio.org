@@ -26,7 +26,7 @@ For development purposes we started with a very large instance (overkill). Futur
 
 ### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
 ```bash
-sudo apt-get update -y && sudo apt-get upgrade -u 
+sudo apt-get update -y && sudo apt-get upgrade -y 
 
 ```
 
