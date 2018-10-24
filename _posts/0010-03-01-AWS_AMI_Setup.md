@@ -880,5 +880,9 @@ exit
 ```
 
 ### TO ADD
-- R packages need in rnaseq?
-
+- Additional R packages needed in rnaseq?: dplyr
+- Additional Bioconductor packages needed for rnaseq: genefilter, ballgown, edgeR, GenomicRanges, rhdf5, biomaRt
+- Flexbar
+- RegTools
+- Sleuth
+- htseq-count
