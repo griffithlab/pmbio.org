@@ -24,6 +24,12 @@ For development purposes we started with a very large instance (overkill). Futur
 - Configure security: Allow SSH and HTTP access
 - Login with key the usual way (e.g., ssh -i pmbio.pem ubuntu@18.217.114.211)
 
+### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
+```bash
+sudo apt-get update -y && sudo apt-get upgrade -u 
+
+```
+
 ### Formatting and mounting storage volumes
 After initializing the EC2 instance we will need to mount and format the storage volume we allocated. Students will use this volume to install their own copies of tools used as well as input data and results. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
 ```bash
