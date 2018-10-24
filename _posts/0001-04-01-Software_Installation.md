@@ -130,7 +130,7 @@ ln -s ~/workspace/bin/ensembl-vep-release-93.5/vep ~/workspace/bin/vep
 ```
 
 ### Install Varscan
-[Varscan](http://dkoboldt.github.io/varscan/) is a java program designed to call variants in sequencing data. It was developed at the Genome Institute at Washington University and is hosted on [github](https://github.com/dkoboldt/varscan/). To use Varscan we simply need to download the distributed jar file into our `~/workspace/bin`. As with the other java programs which have already been installed in this section we can envoke Varscan via `java -jar`.
+[Varscan](http://dkoboldt.github.io/varscan/) is a java program designed to call variants in sequencing data. It was developed at the Genome Institute at Washington University and is hosted on [github](https://github.com/dkoboldt/varscan/). To use Varscan we simply need to download the distributed jar file into our `~/workspace/bin`. As with the other java programs which have already been installed in this section we can invoke Varscan via `java -jar`.
 ```bash
 # Install Varscan
 cd ~/workspace/bin
@@ -144,13 +144,14 @@ java -jar ~/workspace/bin/VarScan.v2.4.2.jar
 ```bash
 # download and extract
 cd ~/workspace/bin
-curl -L -k -o bcftools-1.3.1.tar.bz2                https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
+curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
 tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
 
 # install the software
 cd bcftools-1.3.1
 make -j
-make prefix=~/workspace/ install
+make prefix=~/workspace/bin/bcftools-1.3.1 install
+ln -s ~/workspace/bin/bcftools-1.3.1/bin/bcftools ~/workspace/bin/bcftools
 
 # test installation
 ~/workspace/bin/bcftools -h
