@@ -696,6 +696,10 @@ ln -s /usr/local/bin/vt-latest/vt /usr/local/bin/vt
 
 # test installation
 /usr/local/bin/vt
+
+# exit sudo shell
+exit
+
 ```
 
 #### vcf-annotation-tools
