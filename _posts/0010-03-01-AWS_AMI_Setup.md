@@ -832,6 +832,32 @@ exit
 
 ```
 
+#### regtools
+Installation of regtools, used in this course for splice junction and regulatory variant analysis
+```bash
+# start sudo shell
+sudo bash
+
+# install regtools
+cd /usr/local/bin
+git clone https://github.com/griffithlab/regtools
+mv regtools regtools-latest
+cd regtools-latest/
+mkdir build
+cd build/
+cmake ..
+make
+
+# create symlink
+ln -s /usr/local/bin/regtools-latest/build/regtools /usr/local/bin/regtools
+
+# test installation
+/usr/local/bin/regtools
+
+# exit sudo shell
+exit
+
+```
 
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
@@ -923,10 +949,6 @@ exit
 ```
 
 ### TO ADD
-- Additional R packages needed in rnaseq?: dplyr
-- Additional Bioconductor packages needed for rnaseq: genefilter, ballgown, edgeR, GenomicRanges, rhdf5, biomaRt
-- Flexbar
-- RegTools
 - Sleuth
 - htseq-count
 - liftOver
