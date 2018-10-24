@@ -3,9 +3,9 @@ feature_text: |
   ## Precision Medicine
 title: Germline SNV/Indel Filtering/Annotation/Review
 categories:
-    - Module-05-Germline
+    - Module-04-Germline
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0005-02-02
+date: 0004-02-02
 ---
 
 ### Module objectives

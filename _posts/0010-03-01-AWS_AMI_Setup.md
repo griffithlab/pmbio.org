@@ -167,9 +167,12 @@ apt-get update -y && apt-get install -y \
 wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2
 tar --bzip2 -xvf samtools-1.7.tar.bz2
 cd samtools-1.7
-./configure --prefix=/usr/local/
+./configure --prefix=/usr/local/bin/samtools-1.7/
 make
 make install
+
+#create symlink
+ln -s /usr/local/bin/samtools/samtools-1.7/bin/samtools /usr/local/bin/samtools
 
 # test samtools installation
 /usr/local/bin/samtools
@@ -287,9 +290,11 @@ apt-get update -y && apt-get install -y \
   zlib1g-dev \
   libmodule-build-perl \
   cpanminus
-cpanm -i Bio::Root::Version
 
-# Installing perl version 5.22.0
+cpanm -i Bio::Root::Version #note this seems to install a ton of .pl scripts in the current dir (/usr/local/bin) which is annoying. Do we really need this? Can it be installed in a tidier version. Doesn't this install it for system Perl anyway instead of the custom Perl below?
+
+# Installing perl version 5.22.0 
+# NOTE if we upgrade to the latest version of VEP this may no longer be needed
 wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
 tar -xzvf perl-5.22.0.tar.gz
 cd perl-5.22.0
@@ -711,8 +716,49 @@ sudo bash
 # install vcf-annotation-tools
 pip install vcf-annotation-tools
 
-# testing Installation
+# test installation
 vcf-readcount-annotator -h
+
+# exit sudo shell
+exit
+
+```
+
+#### fastqc
+FastQC is a quality control tool for high throughput sequence data used in the course to produce visual QC reports for FastQ and BAM files.
+```bash
+# start sudo shell
+sudo bash
+
+# install fastqc
+cd /usr/local/bin
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip
+unzip fastqc_v0.11.8.zip
+chmod 755 FastQC/fastqc
+
+# create a symlink
+ln -s /usr/local/bin/FastQC/fastqc /usr/local/bin/fastqc
+
+# test the installation
+/usr/local/bin/fastqc --help
+
+# exit sudo shell
+exit
+
+```
+
+#### MultiQC
+MultiQC is a quality control tool that searches a given directory for analysis logs and compiles a HTML report. We use it in the course to compile and organize QC results from other tools into a single report.
+```bash
+# start sudo shell
+sudo bash
+
+# install multiqc
+cd /usr/local/bin
+pip install multiqc 
+
+# test the installation
+multiqc -h
 
 # exit sudo shell
 exit
@@ -791,8 +837,6 @@ exit
 ```
 
 ### TO ADD
-[faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html)a
-- FastQC
 - Multi-QC
 - Optitype
 - pvactools
