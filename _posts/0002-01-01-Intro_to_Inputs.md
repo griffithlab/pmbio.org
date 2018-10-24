@@ -17,4 +17,3 @@ date: 0002-01-01
 * Download and explore raw data files
 * Review experimental details for a proof-of-principle personalized genomics exercise
 * Perform a raw data quality assessment and discuss any data quality issues that are observed. What are their implications for interpretation of the results?
-
