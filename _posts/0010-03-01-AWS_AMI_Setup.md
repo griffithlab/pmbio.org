@@ -737,7 +737,25 @@ ln -s /usr/local/bin/FastQC/fastqc /usr/local/bin/fastqc
 # test the installation
 /usr/local/bin/fastqc --help
 
-#exit sudo shell
+# exit sudo shell
+exit
+
+```
+
+#### MultiQC
+MultiQC is a quality control tool that searches a given directory for analysis logs and compiles a HTML report. We use it in the course to compile and organize QC results from other tools into a single report.
+```bash
+# start sudo shell
+sudo bash
+
+# install multiqc
+cd /usr/local/bin
+pip install multiqc 
+
+# test the installation
+multiqc -h
+
+# exit sudo shell
 exit
 
 ```
@@ -814,7 +832,6 @@ exit
 ```
 
 ### TO ADD
-- FastQC
 - Multi-QC
 - Optitype
 - pvactools
