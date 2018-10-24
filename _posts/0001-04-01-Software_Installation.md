@@ -76,6 +76,9 @@ cd ~/workspace/bin
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
 
+# make sure ubuntu user can create their own conda environments
+sudo chown -R ubuntu:ubuntu /home/ubuntu/.conda
+
 # create conda environment for gatk
 cd gatk-4.0.2.1/
 conda env create -f gatkcondaenv.yml -p ~/workspace/bin/conda/gatk
@@ -92,15 +95,16 @@ source deactivate
 ```
 
 ### Install VEP 93.4
-[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files for hg38 in the directory `/opt/vep_cache` as they can take a bit of time to download. To get an idea of what it's like to install these we will install a vep_cache for petromyzon_marinus, a much smaller genome. so to start we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software which will ask a series of questions listed below. We also make a symlink when the installer completes.
+[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files for hg38 in the directory `/opt/vep_cache` as they can take a bit of time to download. To get an idea of what it's like to install these we will install a vep_cache for petromyzon_marinus, a much smaller genome. To start we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software which will ask a series of questions listed below. We also make a symlink when the installer completes.
 
+Note that the following assumes the existence of a particular version of Perl. We had to install Perl 5.22.0 since this is the last version supported by VEP and the version that comes with Ubuntu 18.04 is newer than this.
+
+When prompted by the install step below use these answers:
 1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 2. Do you want to continue installing the API (y/n)? y [ENTER]
 3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
 4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
-5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
-
-Note that the following assumes the existence of a particular version of Perl. We had to install Perl 5.22.0 since this is the last version supported by VEP and the version that comes with Ubuntu 18.04 is newer than this.
+5. Do you want to install any plugins (y/n)? n [ENTER]
 
 ```bash
 # download and unzip vep
@@ -109,7 +113,7 @@ wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 
 # run the INSTALL.pl script provided by VEP
-cd ../ensembl-vep-release-93.5/
+cd ensembl-vep-release-93.5/
 /usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
 /usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
