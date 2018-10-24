@@ -683,14 +683,19 @@ vt is a variant tool set that discovers short variants from Next Generation Sequ
 # start sudo shell
 sudo bash
 
-#install vt
+# install vt
 cd /usr/local/bin
 git clone https://github.com/atks/vt.git
-cd vt
+mv vt vt-latest
+cd vt-latest
 make
 make test
+
+#create symlink
+ln -s /usr/local/bin/vt-latest/vt /usr/local/bin/vt
+
 # test installation
-/usr/local/bin/vt/vt
+/usr/local/bin/vt
 ```
 
 #### vcf-annotation-tools
