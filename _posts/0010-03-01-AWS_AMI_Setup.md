@@ -24,6 +24,13 @@ For development purposes we started with a very large instance (overkill). Futur
 - Configure security: Allow SSH and HTTP access
 - Login with key the usual way (e.g., ssh -i pmbio.pem ubuntu@18.217.114.211)
 
+### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
+```bash
+# sudo apt-get update -y && sudo apt-get upgrade -y 
+# Note that this can lead to a grub update and possibly some confusion about the boot device. Avoid this for now...
+
+```
+
 ### Formatting and mounting storage volumes
 After initializing the EC2 instance we will need to mount and format the storage volume we allocated. Students will use this volume to install their own copies of tools used as well as input data and results. See [http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html) for guidance on setting up fstab records for AWS.
 ```bash
@@ -49,7 +56,7 @@ chown -R ubuntu:ubuntu /workspace
 
 #Note that setting up a volume like that can occasionaly result in an unbootable state. Using the following device volume is safer
 sudo file -s /dev/xvdb
-sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /data ext4 defaults,nofail 0 2\n"}'
+sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /workspace ext4 defaults,nofail 0 2\n"}'
 
 #Add a line like the following to fstab using vim editor. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
 #sudo vim /etc/fstab
@@ -75,14 +82,7 @@ sudo bash
 
 # general tools for installation and use
 cd /usr/local/bin
-apt-get update -y && apt-get install -y \
-  wget \
-  bzip2 \
-  unzip \
-  git \
-  curl \
-  tree \
-  docker
+apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io
 
 # install miniconda dependency
 cd /usr/local/bin
@@ -695,11 +695,15 @@ VCF Annotation Tools is a python package that includes several tools to annotate
 # start sudo shell
 sudo bash
 
-#install vcf-annotation-tools
+# install vcf-annotation-tools
 pip install vcf-annotation-tools
 
-#testing Installation
+# testing Installation
 vcf-readcount-annotator -h
+
+# exit sudo shell
+exit
+
 ```
 
 #### extra utilities
@@ -780,4 +784,3 @@ exit
 - genvisr
 - R packages need in rnaseq?
 
->>>>>>> 067770bf3251bbd4ca54bc2e61b711e6583efe4c

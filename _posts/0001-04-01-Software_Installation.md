@@ -76,6 +76,9 @@ cd ~/workspace/bin
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.2.1/gatk-4.0.2.1.zip
 unzip gatk-4.0.2.1.zip
 
+# make sure ubuntu user can create their own conda environments
+sudo chown -R ubuntu:ubuntu /home/ubuntu/.conda
+
 # create conda environment for gatk
 cd gatk-4.0.2.1/
 conda env create -f gatkcondaenv.yml -p ~/workspace/bin/conda/gatk
@@ -92,15 +95,16 @@ source deactivate
 ```
 
 ### Install VEP 93.4
-[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files for hg38 in the directory `/opt/vep_cache` as they can take a bit of time to download. To get an idea of what it's like to install these we will install a vep_cache for petromyzon_marinus, a much smaller genome. so to start we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software which will ask a series of questions listed below. We also make a symlink when the installer completes.
+[VEP](https://ensembl.org/info/docs/tools/vep/index.html) is a variant annotation tool developed by ensembl and written in [perl](https://www.perl.org/). By default VEP will perform annotations by making web-based API queries however it is much faster to have a local copy of cache and fasta files. The AWS AMI image we're using already has these files for hg38 in the directory `/opt/vep_cache` as they can take a bit of time to download. To get an idea of what it's like to install these we will install a vep_cache for petromyzon_marinus, a much smaller genome. To start we need to download vep from github using `wget` and unzip VEP. From there we can use the INSTALL.pl script vep provides to install the software which will ask a series of questions listed below. We also make a symlink when the installer completes.
 
+Note that the following assumes the existence of a particular version of Perl. We had to install Perl 5.22.0 since this is the last version supported by VEP and the version that comes with Ubuntu 18.04 is newer than this.
+
+When prompted by the install step below use these answers:
 1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 2. Do you want to continue installing the API (y/n)? y [ENTER]
 3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
 4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
-5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
-
-Note that the following assumes the existence of a particular version of Perl. We had to install Perl 5.22.0 since this is the last version supported by VEP and the version that comes with Ubuntu 18.04 is newer than this.
+5. Do you want to install any plugins (y/n)? n [ENTER]
 
 ```bash
 # download and unzip vep
@@ -109,7 +113,7 @@ wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
 unzip 93.5.zip
 
 # run the INSTALL.pl script provided by VEP
-cd ../ensembl-vep-release-93.5/
+cd ensembl-vep-release-93.5/
 /usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
 /usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
@@ -126,7 +130,7 @@ ln -s ~/workspace/bin/ensembl-vep-release-93.5/vep ~/workspace/bin/vep
 ```
 
 ### Install Varscan
-[Varscan](http://dkoboldt.github.io/varscan/) is a java program designed to call variants in sequencing data. It was developed at the Genome Institute at Washington University and is hosted on [github](https://github.com/dkoboldt/varscan/). To use Varscan we simply need to download the distributed jar file into our `~/workspace/bin`. As with the other java programs which have already been installed in this section we can envoke Varscan via `java -jar`.
+[Varscan](http://dkoboldt.github.io/varscan/) is a java program designed to call variants in sequencing data. It was developed at the Genome Institute at Washington University and is hosted on [github](https://github.com/dkoboldt/varscan/). To use Varscan we simply need to download the distributed jar file into our `~/workspace/bin`. As with the other java programs which have already been installed in this section we can invoke Varscan via `java -jar`.
 ```bash
 # Install Varscan
 cd ~/workspace/bin
@@ -140,13 +144,14 @@ java -jar ~/workspace/bin/VarScan.v2.4.2.jar
 ```bash
 # download and extract
 cd ~/workspace/bin
-curl -L -k -o bcftools-1.3.1.tar.bz2                https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
+curl -L -k -o bcftools-1.3.1.tar.bz2 https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2
 tar --bzip2 -xvf bcftools-1.3.1.tar.bz2
 
 # install the software
 cd bcftools-1.3.1
 make -j
-make prefix=~/workspace/ install
+make prefix=~/workspace/bin/bcftools-1.3.1 install
+ln -s ~/workspace/bin/bcftools-1.3.1/bin/bcftools ~/workspace/bin/bcftools
 
 # test installation
 ~/workspace/bin/bcftools -h
@@ -209,7 +214,7 @@ ln -s ~/workspace/bin/stringtie-1.3.0.Linux_x86_64/stringtie ~/workspace/bin/str
 ~/workspace/bin/stringtie -h
 ```
 ### Install Gffcompare
-[Gffcompare](https://ccb.jhu.edu/software/stringtie/gffcompare.shtml) is a prgram that is used to perform operations on general feature format (GFF) and general transfer format (GTF) files. It has a binary distribution compatible with the linux we're using so we will just download, extract, and make a symlink.
+[Gffcompare](https://ccb.jhu.edu/software/stringtie/gffcompare.shtml) is a program that is used to perform operations on general feature format (GFF) and general transfer format (GTF) files. It has a binary distribution compatible with the linux we're using so we will just download, extract, and make a symlink.
 ```bash
 # download and extract
 cd ~/workspace/bin
@@ -223,7 +228,7 @@ ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/g
 ~/workspace/bin/gffcompare
 ```
 ### Install R
-[R](https://www.r-project.org/) is an feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a couple minutes to compile so we'll use one which has already been setup if we were to install R we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R.framework will go, this includes the additional R libraries we'll download later. From there we'd do make and make install to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below however it is exactly what was run to set up the R we will be using, except the installation location.
+[R](https://www.r-project.org/) is a feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a severalminutes to compile so we'll use one which has already been setup. If we were to install R, we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R framework will go, this includes the additional R libraries we'll download later. From there we'd do `make` and `make install` to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below, however it is exactly what was run to set up the R we will be using, except the installation location.
 ```bash
 ## download and extract
 #cd ~/workspace/bin
@@ -259,7 +264,7 @@ R --vanilla -e 'devtools::install_github("chrisamiller/copycat")'
 ```
 
 ### Install CNVnator
-[CNVnator](https://github.com/abyzovlab/CNVnator) is a depth based copy number caller. It is open source and available on github under a creative common public license (CCPL). To install we first download and extract the source code. CNVnator relies on a specific version of samtools which is distributed with CNVnator, so our first step is to run `make` on that samtools. To finnish the installation process we can then run `make` in CNVnator's main source directory.
+[CNVnator](https://github.com/abyzovlab/CNVnator) is a depth based copy number caller. It is open source and available on github under a creative common public license (CCPL). To install we first download and extract the source code. CNVnator relies on a specific version of samtools which is distributed with CNVnator, so our first step is to run `make` on that samtools. To finish the installation process we can then run `make` in CNVnator's main source directory.
 ```bash
 # download and decompress
 cd ~/workspace/bin
@@ -317,11 +322,11 @@ tar -zxvf kallisto_linux-v0.44.0.tar.gz
 ln -s ~/workspace/bin/kallisto_linux-v0.44.0/kallisto ~/workspace/bin/kallisto
 
 # test installation
-~/workspace/bin/kallisto --help
+~/workspace/bin/kallisto
 ```
 
 ### Install Pizzly
-[Pizzly](https://github.com/pmelsted/pizzly) is a fusion detection algorithm which uses output from Kallisto. Pizzly is has a binary distribution so we can download and extract that from github to get started.
+[Pizzly](https://github.com/pmelsted/pizzly) is a fusion detection algorithm which uses output from Kallisto. Pizzly has a binary distribution so we can download and extract that from github to get started.
 ```bash
 # download and extract
 cd ~/workspace/bin
@@ -329,6 +334,9 @@ mkdir pizzly-v0.37.3
 cd pizzly-v0.37.3
 wget https://github.com/pmelsted/pizzly/releases/download/v0.37.3/pizzly_linux.tar.gz
 tar -zxvf pizzly_linux.tar.gz
+
+# make symlink
+ln -s ~/workspace/bin/pizzly-v0.37.3/pizzly ~/workspace/bin/pizzly
 
 # test executable
 ~/workspace/bin/pizzly --help
@@ -350,10 +358,10 @@ python2 ~/workspace/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --help
 [mosdepth](https://github.com/brentp/mosdepth) is a program for determining depth in sequencing data. The easiest way to install mosdepth is through `bioconda` a channel for the `conda` package manager. The AMI already has conda setup to install to `/usr/local/bin/miniconda` and so we've already installed mosdepth for you. However below are the commands used during the installation.
 ```bash
 # add the bioconda channel
-conda config --add channels bioconda
+# conda config --add channels bioconda
 
 # install mosdepth with the conda package manager
-conda install mosdepth
+# conda install mosdepth
 ```
 
 ### bam-readcount
@@ -368,8 +376,11 @@ export SAMTOOLS_ROOT=/home/ubuntu//workspace/bin/samtools-1.7
 cmake -Wno-dev /home/ubuntu/workspace/bin/bam-readcount-latest
 make
 
+# create symlink
+ln -s ~/workspace/bin/bam-readcount-latest/bin/bam-readcount ~/workspace/bin/bam-readcount
+
 # test installation
-~/workspace/bin/bam-readcount/bin/bam-readcount
+~/workspace/bin/bam-readcount
 
 ```
 #### vt
@@ -379,11 +390,17 @@ make
 #install vt
 cd ~/workspace/bin
 git clone https://github.com/atks/vt.git
-cd vt
+mv vt vt-latest
+cd vt-latest
 make
 make test
+
+# create symlink
+ln -s ~/workspace/bin/vt-latest/vt ~/workspace/bin/vt
+
 # test installation
-~/workspace/bin/vt/vt
+~/workspace/bin/vt
+
 ```
 
 #### vcf-annotation-tools

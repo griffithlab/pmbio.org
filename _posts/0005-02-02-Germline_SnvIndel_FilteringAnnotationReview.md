@@ -90,7 +90,7 @@ gatk --java-options '-Xmx64g' ApplyVQSR -R /home/ubuntu/data/reference/GRCh38_fu
 #Build Indel recalibration model
 gatk --java-options '-Xmx64g' VariantRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated_snps_raw_indels.vcf --resource mills,known=false,training=true,truth=true,prior=12.0:/home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQRankSum -an ReadPosRankSum --mode INDEL -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 --max-gaussians 4 -O recalibrate_INDEL.recal --tranches-file recalibrate_INDEL.tranches --rscript-file recalibrate_INDEL_plots.R  
 
-#Apply recalibration to SNPs
+#Apply recalibration to Indels
 gatk --java-options '-Xmx64g' ApplyVQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated_snps_raw_indels.vcf --mode INDEL --truth-sensitivity-filter-level 99.0 --recal-file /home/ubuntu/data/germline_variants/recalibrate_INDEL.recal --tranches-file /home/ubuntu/data/germline_variants/recalibrate_INDEL.tranches -O /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated.vcf
 
 # Extract PASS variants only and only variants actually called and non-reference in our sample of interest
@@ -98,10 +98,8 @@ gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh
 
 ```
 
+
 ### Perform VQSR filtering of WGS variants
-
-
-#UPDATE THE FOLLOWING COMMANDS, ADD DP filter
 
 ```
 
@@ -110,47 +108,60 @@ gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh
 #Note: For exome data, exclude "-an DP" as this coverage metric should only be used if extreme deviations in coverage are not expected and indicative of errors
 #Note: The "-an InbreedingCoeff" option is for a population level statistic that requires at least 10 samples in order to be computed (When?). For projects with fewer samples, or that includes many closely related samples (such as a family) please omit this annotation from the command line.
 
-gatk --java-options '-Xmx64g' VariantRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls.vcf --resource hapmap,known=false,training=true,truth=true,prior=15.0:/home/ubuntu/data/reference/hapmap_3.3.hg38.vcf.gz --resource omni,known=false,training=true,truth=true,prior=12.0:/home/ubuntu/data/reference/1000G_omni2.5.hg38.vcf.gz --resource 1000G,known=false,training=true,truth=false,prior=10.0:/home/ubuntu/data/reference/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQ -an MQRankSum -an ReadPosRankSum --mode SNP -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 -O recalibrate_SNP.recal --tranches-file recalibrate_SNP.tranches --rscript-file recalibrate_SNP_plots.R
+gatk --java-options '-Xmx64g' VariantRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.vcf --resource hapmap,known=false,training=true,truth=true,prior=15.0:/home/ubuntu/data/reference/hapmap_3.3.hg38.vcf.gz --resource omni,known=false,training=true,truth=true,prior=12.0:/home/ubuntu/data/reference/1000G_omni2.5.hg38.vcf.gz --resource 1000G,known=false,training=true,truth=false,prior=10.0:/home/ubuntu/data/reference/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQ -an MQRankSum -an ReadPosRankSum -an DP --mode SNP -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 -O recalibrate_SNP.WGS.recal --tranches-file recalibrate_SNP.WGS.tranches --rscript-file recalibrate_SNP_plots.R
 
 #Apply recalibration to SNPs
-gatk --java-options '-Xmx64g' ApplyVQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls.vcf --mode SNP --truth-sensitivity-filter-level 99.0 --recal-file /home/ubuntu/data/germline_variants/recalibrate_SNP.recal --tranches-file /home/ubuntu/data/germline_variants/recalibrate_SNP.tranches -O /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated_snps_raw_indels.vcf
+gatk --java-options '-Xmx64g' ApplyVQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.vcf --mode SNP --truth-sensitivity-filter-level 99.0 --recal-file /home/ubuntu/data/germline_variants/recalibrate_SNP.WGS.recal --tranches-file /home/ubuntu/data/germline_variants/recalibrate_SNP.WGS.tranches -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated_snps_raw_indels.vcf
 
 #Build Indel recalibration model
-gatk --java-options '-Xmx64g' VariantRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated_snps_raw_indels.vcf --resource mills,known=false,training=true,truth=true,prior=12.0:/home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQRankSum -an ReadPosRankSum --mode INDEL -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 --max-gaussians 4 -O recalibrate_INDEL.recal --tranches-file recalibrate_INDEL.tranches --rscript-file recalibrate_INDEL_plots.R
-#Apply recalibration to SNPs
-gatk --java-options '-Xmx64g' ApplyVQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated_snps_raw_indels.vcf --mode INDEL --truth-sensitivity-filter-level 99.0 --recal-file /home/ubuntu/data/germline_variants/recalibrate_INDEL.recal --tranches-file /home/ubuntu/data/germline_variants/recalibrate_INDEL.tranches -O /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated.vcf
+gatk --java-options '-Xmx64g' VariantRecalibrator -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated_snps_raw_indels.vcf --resource mills,known=false,training=true,truth=true,prior=12.0:/home/ubuntu/data/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/home/ubuntu/data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQRankSum -an ReadPosRankSum -an DP --mode INDEL -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 --max-gaussians 4 -O recalibrate_INDEL.WGS.recal --tranches-file recalibrate_INDEL.WGS.tranches --rscript-file recalibrate_INDEL_plots.R
+
+#Apply recalibration to Indels
+gatk --java-options '-Xmx64g' ApplyVQSR -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated_snps_raw_indels.vcf --mode INDEL --truth-sensitivity-filter-level 99.0 --recal-file /home/ubuntu/data/germline_variants/recalibrate_INDEL.WGS.recal --tranches-file /home/ubuntu/data/germline_variants/recalibrate_INDEL.WGS.tranches -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.vcf
 
 # Extract PASS variants only and only variants actually called and non-reference in our sample of interest
-gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_GGVCFs_jointcalls_recalibrated.vcf -O /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vcf --exclude-filtered --exclude-non-variants --remove-unused-alternates --sample-name HCC1395BL_DNA
+gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.vcf -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vcf --exclude-filtered --exclude-non-variants --remove-unused-alternates --sample-name HCC1395BL_DNA
 
 ```
-
-
-
 
 
 ### Perform VEP annotation of filtered results
 
 ```
-#Annotate hard-filtered results
+#Annotate hard-filtered exome results
 #Output VEP VCF
 ~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.vcf
 
 #Output tabular VEP
 ~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --tab --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.tsv
 
-#Annotate VQSR filtered results
+#Annotate hard-filtered WGS results
+#Output VEP VCF
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.vcf
+
+#Output tabular VEP
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --tab --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.tsv
+
+
+#Annotate VQSR filtered exome results
 #Output VEP VCF
 ~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.vcf
 
 #Output tabular VEP
 ~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --tab --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.tsv
 
+#Annotate VQSR filtered WGS results
+#Output VEP VCF
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --vcf --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.vcf
+
+#Output tabular VEP
+~/bin/ensembl-vep/vep --cache --dir_cache /home/ubuntu/data/vep_cache --dir_plugins /home/ubuntu/data/vep_cache/Plugins --fasta /home/ubuntu/data/vep_cache/homo_sapiens/91_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --assembly=GRCh38 --offline --tab --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.tsv
+
 ```
 
 ### Filter VEP annotated VCF further for variants of potential clinical relevance
 
-Use the `filter_vep` tool to filter to interesting variants.
+Use the `filter_vep` tool to filter to clinically interesting variants.
 
 Note - I'm obtaining different results depending on the order of filters supplied if using separate "--filter" options. This should not be the case. Combining into a single expression seems to work though.
 
@@ -161,19 +172,48 @@ Note - the filter_vep tool immediately and automatically limits to variants with
 
 ```
 
-#Filter hard-filtered results
+#Filter hard-filtered exome results for clinical relevance
 #Filter VEP VCF
 ~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
 #Filter tabular VEP
 ~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
-#Filter VQSR-filtered results
+
+
+
+#Filter hard-filtered WGS results for clinical relevance
+#Filter VEP VCF
+~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+#Filter tabular VEP
+~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.filtered.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+NOTE: VEP TSV results appear truncated
+
+
+#Filter VQSR-filtered exome results for clinical relevance
 #Filter VEP VCF
 ~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
 
 #Filter tabular VEP
 ~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+
+
+
+
+#Filter VQSR-filtered WGS results for clinical relevance
+#Filter VEP VCF
+~/bin/ensembl-vep/filter_vep --format vcf -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.vcf -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.interesting.vcf --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+#Filter tabular VEP
+~/bin/ensembl-vep/filter_vep --format tab -i /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.tsv -o /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vep.interesting.tsv --force_overwrite --filter "(MAX_AF < 0.001 or not MAX_AF) and ((IMPACT is HIGH) or (IMPACT is MODERATE and (SIFT match deleterious or PolyPhen match damaging)))"
+
+NOTE: VEP TSV results appear truncated
+
+
+
 
 ```
 
