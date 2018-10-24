@@ -868,10 +868,11 @@ sudo bash
 conda config --add channels bioconda
 conda install ucsc-liftover
 
+# test installation
+liftOver
+
 # exit sudo shell
 exit
-
-liftOver
 
 ```
 
