@@ -832,6 +832,81 @@ exit
 
 ```
 
+#### regtools
+Installation of regtools, used in this course for splice junction and regulatory variant analysis
+```bash
+# start sudo shell
+sudo bash
+
+# install regtools
+cd /usr/local/bin
+git clone https://github.com/griffithlab/regtools
+mv regtools regtools-latest
+cd regtools-latest/
+mkdir build
+cd build/
+cmake ..
+make
+
+# create symlink
+ln -s /usr/local/bin/regtools-latest/build/regtools /usr/local/bin/regtools
+
+# test installation
+/usr/local/bin/regtools
+
+# exit sudo shell
+exit
+
+```
+
+#### liftOver
+Installation of the liftover tool, used in this course to convert coordinates from one genome build to another.
+```bash
+# start sudo shell
+sudo bash
+
+# add remotes and install liftover
+conda config --add channels bioconda
+conda install -y ucsc-liftover
+
+# test installation
+liftOver
+
+# exit sudo shell
+exit
+
+```
+
+#### Sleuth
+Installation of the sleuth tool, used in this course for differential expression analysis starting from kallisto abundance estimates.
+```bash
+# start sudo shell
+sudo bash
+
+# install sleuth
+R --vanilla -e 'devtools::install_github("pachterlab/sleuth")'
+
+# exit sudo shell
+exit
+```
+
+#### HTSeq
+Installation of the HTSeq tool, used in this course to get raw read counts for RNA-seq data.
+```bash
+# start sudo shell
+sudo bash
+
+# install htseq using pip
+pip install HTSeq
+
+# test installation
+htseq-count -h
+
+#exit sudo shell
+exit
+
+```
+
 
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
@@ -923,24 +998,6 @@ exit
 ```
 
 ### TO ADD
-- Additional R packages needed in rnaseq?: dplyr
-- Additional Bioconductor packages needed for rnaseq: genefilter, ballgown, edgeR, GenomicRanges, rhdf5, biomaRt
-- Flexbar
-- RegTools
-- Sleuth
-- htseq-count
+...
 
-### liftOver
-```bash
-# start sudo shell
-sudo bash
 
-# add remotes and install liftover
-conda config --add channels bioconda
-conda install ucsc-liftover
-
-# exit sudo shell
-exit
-
-liftOver --help
-```
