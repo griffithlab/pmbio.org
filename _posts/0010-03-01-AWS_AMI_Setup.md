@@ -876,6 +876,18 @@ exit
 
 ```
 
+#### Sleuth
+```bash
+# start sudo shell
+sudo bash
+
+# install sleuth
+R --vanilla -e 'devtools::install_github("pachterlab/sleuth")'
+
+# exit sudo shell
+exit
+```
+
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
 ```
@@ -966,7 +978,6 @@ exit
 ```
 
 ### TO ADD
-- Sleuth
 - htseq-count
 
 
