@@ -711,10 +711,33 @@ sudo bash
 # install vcf-annotation-tools
 pip install vcf-annotation-tools
 
-# testing Installation
+# test installation
 vcf-readcount-annotator -h
 
 # exit sudo shell
+exit
+
+```
+
+#### fastqc
+FastQC is a quality control tool for high throughput sequence data used in the course to produce visual QC reports for FastQ and BAM files.
+```bash
+# start sudo shell
+sudo bash
+
+# install fastqc
+cd /usr/local/bin
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip
+unzip fastqc_v0.11.8.zip
+chmod 755 FastQC/fastqc
+
+# create a symlink
+ls -s /usr/local/bin/FastQC/fastqc /usr/local/bin/fastqc
+
+# test the installation
+/usr/local/bin/fastqc --help
+
+#exit sudo shell
 exit
 
 ```
