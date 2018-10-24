@@ -26,7 +26,7 @@ For development purposes we started with a very large instance (overkill). Futur
 
 ### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
 ```bash
-# sudo apt-get update -y && sudo apt-get upgrade -y 
+# sudo apt-get update -y && sudo apt-get upgrade -y
 # Note that this can lead to a grub update and possibly some confusion about the boot device. Avoid this for now...
 
 ```
@@ -82,7 +82,17 @@ sudo bash
 
 # general tools for installation and use
 cd /usr/local/bin
-apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io imagemagick
+apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall
+
+# install imagemagick
+wget http://www.imagemagick.org/download/ImageMagick.tar.gz
+tar -xzvf ImageMagick.tar.gz
+cd ImageMagick-7.0.8-13/
+./configure
+make clean
+make
+checkinstall
+ldconfig /usr/local/lib
 
 # install miniconda dependency
 cd /usr/local/bin
@@ -784,4 +794,3 @@ exit
 - pvactools
 - genvisr
 - R packages need in rnaseq?
-
