@@ -8,17 +8,21 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-02-01
 ---
 
-TODO: Change directory names as needed for consistency across modules, also we will need a version for subset samples.
-#### **Downloading Reference Files**
+#### Downloading Reference Files
 __________________________  
-In order to run the following variant detection algorithms, you will need to download a few reference files from `genome_data.org` to your directory for reference file storage (e.g. `/data/refseq/`):
-* `hglft_genome_304d_b78af0.bed`
-* `NimbleGenExome_v3.interval_list`
+In order to run the following variant detection algorithms, you will need to download a few reference files from `genome_data.org` to your directory for reference file storage:
 
-#### **Running VARSCAN**
+```bash
+mkdir -p ~/workspace/references
+cd ~/workspace/references
+wget genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
+#`hglft_genome_304d_b78af0.bed`
+```
+
+#### Running VARSCAN
 __________________________  
 
-Given that you have VARSCAN properly installed, here are the commands for running VARSCAN in order, you may need to adjust according to how you have named and placed your directories:
+Given that you have VARSCAN properly installed, we will now run multiple variant callers on our results generated from the alignment pipeline:
 
 * `java -Xmx4g -jar VarScan.v2.4.2.jar somatic <(samtools mpileup -l /data/refseq/hglft_genome_304d_b78af0.bed --no-BAQ -f /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf`
 * `cd /data/varscan/`
