@@ -399,6 +399,7 @@ python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaWorkflow
 conda create --name strelka python=2.7
 source activate strelka
 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/runStrelkaWorkflowDemo.bash
+source deactivate
 
 # exit sudo shell
 exit
