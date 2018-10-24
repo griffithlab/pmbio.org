@@ -376,8 +376,11 @@ export SAMTOOLS_ROOT=/home/ubuntu//workspace/bin/samtools-1.7
 cmake -Wno-dev /home/ubuntu/workspace/bin/bam-readcount-latest
 make
 
+# create symlink
+ln -s ~/workspace/bin/bam-readcount-latest/bin/bam-readcount ~/workspace/bin/bam-readcount
+
 # test installation
-~/workspace/bin/bam-readcount/bin/bam-readcount
+~/workspace/bin/bam-readcount
 
 ```
 #### vt
