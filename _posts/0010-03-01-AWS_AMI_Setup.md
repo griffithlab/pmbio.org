@@ -809,6 +809,30 @@ exit
 
 ```
 
+#### flexbar
+Installation of flexbar, used in this course for read trimming exercises of various kinds.
+```bash
+# start sudo shell
+sudo bash
+
+# install flexbar
+cd /usr/local/bin
+wget https://github.com/seqan/flexbar/releases/download/v3.4.0/flexbar-3.4.0-linux.tar.gz
+tar -zxvf flexbar-3.4.0-linux.tar.gz
+cd flexbar-3.4.0-linux
+
+# create symlink 
+ln -s /usr/local/bin/flexbar-3.4.0-linux/flexbar /usr/local/bin/flexbar
+
+# test installation
+/usr/local/bin/flexbar --help
+
+# exit sudo shell
+exit
+
+```
+
+
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
 ```
