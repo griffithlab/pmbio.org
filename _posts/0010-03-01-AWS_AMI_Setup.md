@@ -463,7 +463,7 @@ exit
 ```
 
 #### Gffcompare 0.9.8
-Describes dependencies and installation for Gffcompare 0.9.8, used in this course for ....
+Describes dependencies and installation for Gffcompare 0.9.8, used in this course to compare assembled/predicted RNA transcripts to known transcript annotations
 ```bash
 # start sudo shell
 sudo bash
