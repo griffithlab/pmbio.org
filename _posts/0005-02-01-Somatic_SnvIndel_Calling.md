@@ -16,13 +16,12 @@ In order to run the following variant detection algorithms, you will need to dow
 mkdir -p ~/workspace/references
 cd ~/workspace/references
 wget genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
-#`hglft_genome_304d_b78af0.bed`
 ```
 
 #### Running VARSCAN
 __________________________  
 
-Given that you have VARSCAN properly installed, we will now run multiple variant callers on our results generated from the alignment pipeline:
+The first variant caller that we will use here is [VARSCAN](http://varscan.sourceforge.net/), VarScan is a platform-independent mutation caller for targeted, exome, and whole-genome resequencing data and employs a robust heuristic/statistic approach to call variants that meet desired thresholds for read depth, base quality, variant allele frequency, and statistical significance.:
 
 * `java -Xmx4g -jar VarScan.v2.4.2.jar somatic <(samtools mpileup -l /data/refseq/hglft_genome_304d_b78af0.bed --no-BAQ -f /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf`
 * `cd /data/varscan/`
