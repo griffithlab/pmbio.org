@@ -13,7 +13,7 @@ This module is primarily for the course developers to document how the AWS AMI w
 ***
 
 ### Current published version of this course AMI
-The AMI has already been built using the following intructions and is available as: 
+The AMI has already been built using the following intructions and is available as:
 
 `pmbio ami v1` (`ami-044e3e087a45b75e1`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
 
@@ -832,7 +832,7 @@ wget https://github.com/seqan/flexbar/releases/download/v3.4.0/flexbar-3.4.0-lin
 tar -zxvf flexbar-3.4.0-linux.tar.gz
 cd flexbar-3.4.0-linux
 
-# create symlink 
+# create symlink
 ln -s /usr/local/bin/flexbar-3.4.0-linux/flexbar /usr/local/bin/flexbar
 
 # test installation
@@ -942,6 +942,23 @@ exit
 
 ```
 
+#### gsutil
+```bash
+cd /usr/local/bin
+
+#Create an environment variable for the correct distribution:
+export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+
+#Add the Cloud SDK distribution URI as a package source
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+#Import the Google Cloud public key
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+#Update and install the Cloud SDK
+sudo update && sudo apt-get install google-cloud-sdk
+```
+
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
 ```
@@ -1032,6 +1049,5 @@ exit
 ```
 
 ### TO ADD
-
-
-
+For downloading reference files in section `Obtain Additional GATK resources needed`:
+[gsutil](https://cloud.google.com/storage/docs/gsutil_install)
