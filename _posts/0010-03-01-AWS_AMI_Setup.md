@@ -29,6 +29,12 @@ For development purposes we started with a very large instance (overkill). Futur
 - Configure security: Allow SSH and HTTP access
 - Login with key the usual way (e.g., ssh -i pmbio.pem ubuntu@18.217.114.211)
 
+### Note on creating DNS records for students to use
+Instead of each student using their instances public IP address or public DNS, we can create pmbio.org sub-domains for them to use that point to the AWS instance (e.g. `student1.pmbio.org`). If we want to shut down instances during the course and spin them up later, since the IP address will change we could update the DNS record and the student could continue to use the same DNS name to log in. This can be done in the Google Domains dashboard for pmbio.org in two ways:
+- NAME, TYPE, TTL, DATA
+- student1, A, 1h, 18.220.123.159
+- student1, CNAME, 1h, ec2-18-220-123-159.us-east-2.compute.amazonaws.com
+
 ### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
 ```bash
 # sudo apt-get update -y && sudo apt-get upgrade -y
