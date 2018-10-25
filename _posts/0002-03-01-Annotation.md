@@ -35,9 +35,11 @@ To start we first need to download a chain file specific to the assembly convers
 3. Path to output file containing the new coordinates
 4. Path to output file containing any coordinates that did not convert successfully
 
+It will also be usefull to have a version of this file without the gene annotations lets go ahead and do that here has well.
+
 ```bash
 # change to the appropriate directory
-cd /workspace/data/results/inputs
+cd ~/results/inputs
 
 # download the chain file
 wget -c http://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz
@@ -45,7 +47,7 @@ wget -c http://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.
 # run liftover
 liftOver SeqCapEZ_Exome_v3.0_Design_Annotation_files/SeqCap_EZ_Exome_v3_hg19_primary_targets.bed  hg19ToHg38.over.chain.gz SeqCap_EZ_Exome_v3_hg38_primary_targets.bed unMapped.bed
 
-# create a version in true bed format (chr, start, stop)
+# create a version in standard bed format (chr, start, stop)
 cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
 ```
 
