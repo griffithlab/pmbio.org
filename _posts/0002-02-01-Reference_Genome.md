@@ -19,7 +19,10 @@ We will use the 1000 genomes version of the human GRCh38 build. This reference i
 - README.20150309.GRCh38_full_analysis_set_plus_decoy_hla
 
 ```bash
-cd /workspace/data/raw_data/references
+mkdir -p /workspace/references/genome
+cd /workspace/references/genome
+
+# dowload human reference genome files from the course data server
 wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.dict
 wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/20150713_location_of_centromeres_and_other_regions.txt

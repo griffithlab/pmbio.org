@@ -10,6 +10,50 @@ date: 0010-02-01
 
 This module is used to document background details that are generally considered too obscure for use in the main workshop but are helpful for the course developers to keep track of certain details.
 
+### Set up reference genome files and store on genomedata.org
+```
+
+# set up genome references dir
+cd /workspace/
+mkdir -p references/genome/
+cd references/genome/
+
+# download original references file 
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.dict
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/20150713_location_of_centromeres_and_other_regions.txt
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla-extra.fa
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/README.20150309.GRCh38_full_analysis_set_plus_decoy_hla
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai
+mkdir all
+mkdir chr6
+mkdir chr17
+mkdir chr6_and_chr17
+
+# store original full genome and rename files for consistency
+mv 20150713_location_of_centromeres_and_other_regions.txt all/location_of_centromeres_and_other_regions.txt
+mv GRCh38_full_analysis_set_plus_decoy_hla-extra.fa all/ref_genome-extra.fa
+mv GRCh38_full_analysis_set_plus_decoy_hla.dict all/ref_genome.dict
+mv GRCh38_full_analysis_set_plus_decoy_hla.fa all/ref_genome.fa
+mv GRCh38_full_analysis_set_plus_decoy_hla.fa.fai all/ref_genome.fa.fai
+mv README.20150309.GRCh38_full_analysis_set_plus_decoy_hla all/README.txt
+
+# split ref genome into pieces
+mkdir split/
+faSplit byname all/ref_genome.fa split/
+mv split/chr6.fa chr6/ref_genome.fa
+mv split/chr17.fa chr17/ref_genome.fa
+cat chr6/ref_genome.fa chr17/ref_genome.fa > chr6_and_chr17/ref_genome.fa
+rm -fr split
+
+# create .dict and .fai files for each version of the reference
+
+#compress the reference files for storage on the file server
+
+
+```
+
+
 ### Prepare original starting data
 
 The plan is to provide students with raw down-sampled fastq files as starting point. These notes document our original source of data files and any transformations needed.
