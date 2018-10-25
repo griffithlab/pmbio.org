@@ -13,7 +13,7 @@ This module is primarily for the course developers to document how the AWS AMI w
 ***
 
 ### Current published version of this course AMI
-The AMI has already been built using the following intructions and is available as: 
+The AMI has already been built using the following intructions and is available as:
 
 `pmbio ami v1` (`ami-044e3e087a45b75e1`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
 
@@ -832,7 +832,7 @@ wget https://github.com/seqan/flexbar/releases/download/v3.4.0/flexbar-3.4.0-lin
 tar -zxvf flexbar-3.4.0-linux.tar.gz
 cd flexbar-3.4.0-linux
 
-# create symlink 
+# create symlink
 ln -s /usr/local/bin/flexbar-3.4.0-linux/flexbar /usr/local/bin/flexbar
 
 # test installation
@@ -1032,6 +1032,6 @@ exit
 ```
 
 ### TO ADD
-
-
-
+For downloading reference files in section `Obtain Additional GATK resources needed`:
+[gsutil](https://cloud.google.com/storage/docs/gsutil_install)
+cpanm -i LWP::UserAgent

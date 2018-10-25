@@ -21,14 +21,15 @@ wget genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
 #### Running VARSCAN
 __________________________  
 
-The first variant caller that we will use here is [VARSCAN](http://varscan.sourceforge.net/), VarScan is a platform-independent mutation caller for targeted, exome, and whole-genome resequencing data and employs a robust heuristic/statistic approach to call variants that meet desired thresholds for read depth, base quality, variant allele frequency, and statistical significance.:
-
-* `java -Xmx4g -jar VarScan.v2.4.2.jar somatic <(samtools mpileup -l /data/refseq/hglft_genome_304d_b78af0.bed --no-BAQ -f /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf`
-* `cd /data/varscan/`
-* `java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.snp.vcf exome.snp`
-* `java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.indel.vcf exome.indel`
-* `find /data/varscan -name '*.vcf' -exec bgzip -f {} \;`
-* `find /data/varscan -name '*.vcf.gz' -exec tabix -f {} \;`
+The first variant caller that we will use here is [VARSCAN](http://varscan.sourceforge.net/), VarScan is a platform-independent mutation caller for targeted, exome, and whole-genome resequencing data and employs a robust heuristic/statistic approach to call variants that meet desired thresholds for read depth, base quality, variant allele frequency, and statistical significance:
+```bash
+java -Xmx4g -jar VarScan.v2.4.2.jar somatic <(samtools mpileup -l ~/workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --no-BAQ -f ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa ~/workspace/data/DNA_alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/data/DNA_alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf
+cd /data/varscan/
+java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.snp.vcf exome.snp
+java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.indel.vcf exome.indel
+find /data/varscan -name '*.vcf' -exec bgzip -f {} \;
+find /data/varscan -name '*.vcf.gz' -exec tabix -f {} \;
+```
 
 In order to continue to the next step, you may need to redownload GATK if you run into errors with your current installation:
 1. Manually download GATK after accepting the license : `https://www.broadinstitute.org/gatk/download/auth?package=GATK`
