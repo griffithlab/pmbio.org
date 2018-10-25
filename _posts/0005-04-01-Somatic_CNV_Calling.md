@@ -244,6 +244,7 @@ convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdu
 convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.png
 convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.jpg
 ```
+
 ```bash
 mkdir -p /workspace/data/results/somatic/cnvkit_exome
 cd /workspace/data/results/somatic/cnvkit_exome
@@ -254,7 +255,7 @@ wget http://18.223.213.22/refseq/hglft_genome_304d_b78af0.bed
 
 cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -x /workspace/data/results/somatic/copyCat_annotation/gaps.bed -o /workspace/data/raw_data/references/access-excludes.hg38.bed
 
-cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets hglft_genome_304d_b78af0.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter
+cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter
 
 source deactivate
 

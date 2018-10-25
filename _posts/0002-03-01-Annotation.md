@@ -8,7 +8,8 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0002-03-01
 ---
 
-### Design files for HCC1395 capture
+### SeqCapEZ_Exome_v3.0
+The reagent used for the exome sequencing of the data used in this course was the SeqCapEZ_Exome_v3.0 from Roche Nimblegen. 
 [here](https://sequencing.roche.com/en/products-solutions/by-category/target-enrichment/hybridization/seqcap-ez-exome-v3-kit.html)
 ```bash
 cd /workspace/data/results/inputs
