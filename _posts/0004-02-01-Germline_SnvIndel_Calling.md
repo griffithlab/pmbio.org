@@ -8,22 +8,20 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0004-02-01
 ---
 
-### Acknowledgements and citations
-
-- GATK
-
 ### Module objectives
 
-- Perform single sample germline variant calling with GATK on WGS and Exome data
-- Perform single sample germline variant calling GATK GVCF workflow on Exome data for HCC1395 and 1000genome exomes
+- Perform single-sample germline variant calling with GATK HaplotypeCaller on WGS and exome data
+- Perform single-sample germline variant calling with GATK GVCF workflow on WGS and exome data
+- Perform single-sample germline variant calling with GATK GVCF workflow on additional exomes from 1000 Genomes Project
+- Perform joint genotype calling on exome data, including additional exomes from 1000 Genomes Project
 
-In this module we will use the GATK HaplotypeCaller to call variants from our aligned bams. Since we are only interested in germline variants in this module, we will only call variants in the normal samples (WGS and exome). The following tutorial and example commands are based on suggestions from following [GATK tutorial](https://gatkforums.broadinstitute.org/gatk/discussion/7869/howto-discover-variants-with-gatk-a-gatk-workshop-tutorial), provided by the Broad Institute. 
+In this module we will use the GATK HaplotypeCaller to call variants from our aligned bams. Since we are only interested in germline variants in this module, we will only call variants in the normal samples (WGS_Norm and Exome_Norm). The following tutorial and example commands were inspired by an excellent [GATK tutorial](https://gatkforums.broadinstitute.org/gatk/discussion/7869/howto-discover-variants-with-gatk-a-gatk-workshop-tutorial), provided by the Broad Institute. 
+
+Note, we are using [GATK4 v4.0.10.0](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.10.0/) for this tutorial. First, we will run the HaplotypeCaller
 
 ### Run GATK HaplotypeCaller
 
-Include option to generate bam output from haplotype caller so that local reassembly/realignment around called variants can be visualized.
-
-Runtimes: Exome, 160min; 
+First, we will run [GATK HaplotypeCaller](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.10.0/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php) to call germline SNPs and indels. Whenever HaplotypeCaller finds signs of variation it performs a local de novo re-assembly of reads. This improves the accuracy of variant calling, especially in challenging regions, and represents a substantial improvement over the previous GATK UnifiedGenotyper caller. We will include an option to generate bam output from HaplotypeCaller so that local reassembly/realignment around called variants can be visualized.
 
 NOTE: In the following command we have limited to calling variants on chr1-22, X, Y and MT. You may wish to also run on alt contigs.
 
@@ -46,7 +44,7 @@ TO DO: Consider implementing the following options from CCDG workflow: -ERC GVCF
 See: https://confluence.ris.wustl.edu/display/BIO/Proposed+CCDG+Analysis+Workflow+-+2017.7.14
 
 ```bash
-
+s
 #Call variants in GVCF mode for exome data
 gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.g.vcf --bam-output /home/ubuntu/data/germline_variants/Exome_Norm_HC_GVCF_out.bam -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
@@ -120,11 +118,21 @@ gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /data/reference/GRCh3
 
 Create joint genotype vcf, combining HCC1395 Exome normal together with a set of 1KG exomes, for use in VQSR filtering.
 
-```
+```bash
 #Combine gvcfs into a single vcf for use with GenotypeGVCFs
 gatk --java-options '-Xmx64g' CombineGVCFs -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /data/germline_variants/Exome_Norm_HC_calls.g.vcf -V /data/germline_variants/HG00099_HC_calls.g.vcf -V /data/germline_variants/HG00102_HC_calls.g.vcf -V /data/germline_variants/HG00104_HC_calls.g.vcf -V /data/germline_variants/HG00106_HC_calls.g.vcf -V /data/germline_variants/HG00118_HC_calls.g.vcf -O /data/germline_variants/Exome_Norm_1KG_HC_calls_combined.g.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
 
 #Perform joint genotyping
 gatk --java-options '-Xmx64g' GenotypeGVCFs -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /data/germline_variants/Exome_Norm_1KG_HC_calls_combined.g.vcf -O /data/germline_variants/Exome_GGVCFs_jointcalls.vcf -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM
-
 ```
+
+
+### Acknowledgements and citations
+
+This analysis demonstrated in this tutorial would not be possible without the efforts of developers who wrote and maintain the GATK suite of tools. We have also acknowledged their excellent tutorials, documentation, forums, and workshop materials wherever possible. Similarly, this tutorial benefits from the public availability of data from the 1000 Genomes Project. The GATK and 1000 Genomes papers are also cited below. Please remember to cite these tools in your publications when using them.
+
+* **The Genome Analysis Toolkit: a MapReduce framework for analyzing next-generation DNA sequencing data**. McKenna A, Hanna M, Banks E, Sivachenko A, Cibulskis K, Kernytsky A, Garimella K, Altshuler D, Gabriel S, Daly M, DePristo MA. Genome Res. 2010 Sep;20(9):1297-303. doi: [10.1101/gr.107524.110](https://doi.org/10.1101/gr.107524.110). Epub 2010 Jul 19.
+* **A framework for variation discovery and genotyping using next-generation DNA sequencing data**. DePristo MA, Banks E, Poplin R, Garimella KV, Maguire JR, Hartl C, Philippakis AA, del Angel G, Rivas MA, Hanna M, McKenna A, Fennell TJ, Kernytsky AM, Sivachenko AY, Cibulskis K, Gabriel SB, Altshuler D, Daly MJ. Nat Genet. 2011 May;43(5):491-8. doi: [10.1038/ng.806](https://doi.org/10.1038/ng.806). Epub 2011 Apr 10.
+* **From FastQ data to high confidence variant calls: the Genome Analysis Toolkit best practices pipeline**. Van der Auwera GA, Carneiro MO, Hartl C, Poplin R, Del Angel G, Levy-Moonshine A, Jordan T, Shakir K, Roazen D, Thibault J, Banks E, Garimella KV, Altshuler D, Gabriel S, DePristo MA. Curr Protoc Bioinformatics. 2013;43:11.10.1-33. doi: [10.1002/0471250953.bi1110s43](https://doi.org/10.1002/0471250953.bi1110s43).
+* **A global reference for human genetic variation. 1000 Genomes Project Consortium**. Auton A, Brooks LD, Durbin RM, Garrison EP, Kang HM, Korbel JO, Marchini JL, McCarthy S, McVean GA, Abecasis GR. Nature. 2015 Oct 1;526(7571):68-74. doi: [10.1038/nature15393](https://doi.org/10.1038/nature15393). 
+
