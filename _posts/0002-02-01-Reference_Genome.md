@@ -24,24 +24,107 @@ For this course we have selected two chromosomes: chr6 and chr17.  We chose thes
 Download the genome reference files for this course using the following commands. Note use of an environment variable `CHRS` to specify the custom reference genome we are using here.
 
 ```bash
-echo `CHRS` #If this doesn't give a value, please return to the Environment section of the course
+# make sure CHRS environment variable is set.  If this command doesn't give a value, please return to the Environment section of the course
+echo $CHRS
 
-mkdir -p /workspace/references/genome
-cd /workspace/references/genome
+# enter the `inputs` directory where we will store various input files
+cd ~/workspace/inputs
+
+# create a directory for reference genome files and enter this dir
+mkdir -p /workspace/inputs/references/genome
+cd /workspace/inputs/references/genome
 
 # dowload human reference genome files from the course data server
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.dict
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/20150713_location_of_centromeres_and_other_regions.txt
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla-extra.fa
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/README.20150309.GRCh38_full_analysis_set_plus_decoy_hla
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai
+wget http://genomedata.org/pmbio-workshop/references/genome/$CHRS/ref_genome.tar
+
+# unpack the archive using `tar -xvf` (`x` for extract, `v` for verbose, `f` for file) 
+tar -xvf ref_genome.tar
+
+# view contents
+tree
+
+# remove the archive
+rm -f ref_genome.tar
+
+# uncompress the reference genome FASTA file
+gunzip $CHRS/ref_genome.fa.gz
+
+# view contents
+tree
+
 ```
+
+### Explore the contents of the reference genome file
+```bash
+cd /workspace/inputs/$CHRS
+
+# View the first 10 lines of this file. Note the header line starting with `>`. Why does the sequence look like this?
+head ref_genome.fa
+
+# Pull out only the header lines
+grep ">" ref_genome.fa
+
+# How many lines and characters are in this file? 
+wc ref_genome.fa
+
+# How long are to two chromosomes combined (in bases and Mbp)? Use grep to skip the header lines for each chromosome.
+grep -v ">" ref_genome.fa | wc 
+
+# How long does that command take to run?
+time grep -v ">" ref_genome.fa | wc
+
+# View 10 lines from approximately the middle of this file
+head -n 2500000 ref_genome.fa | tail
+
+# What is the count of each base in the entire reference genome file (skipping the header lines for each sequence)?
+cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $bases{$_}++ for split //; if (eof){print "$_ $bases{$_}\n" for sort keys %bases}'
+
+# What does each of these bases refer to? What are the "unexpected bases"?
+
+```
+
+### EXERCISE
+Use a commandline scripting approach of your choice to further examine our reference genome file and answer the following question. How many occurences of the EcoRI restriction site are present in the sequence?
+
+{% include question.html question="Solution" answer='EcoRI site (GAATTC) count = 71525' %}
+
+```bash
+cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $s = uc($_); print $_;' | perl -ne '$c += $_ =~ s/GAATTC/XXXXXX/g; if (eof){print "\nEcoRI site (GAATTC) count = $c\n\n";}'
+```
+
+How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
+
+
+### Learn how to create our own Fasta Index (.fai) files and Dictionary (.dict) files
+Index and dictionary files are widely used by other tools to access information in fasta files more efficiently (i.e. faster). These files were included with our reference files (sometimes the case) but it is useful to know how to generate these yourself. You may work with a custom reference in the future where you are required to create such "helper" files.
+
+```bash
+# first remove the .fai and .dict files that were downloaded. Do not remove the .fa file though!
+cd /workspace/inputs/$CHRS
+rm -f ref_genome.fa.fai ref_genome.dict
+
+# use samtools to create a fasta index file
+samtools faidx ref_genome.fa
+
+# view the contents of the index file
+head ref_genome.fa.fai
+
+
+# use picard to create a dictionary file
+java -jar /usr/local/bin/picard.jar CreateSequenceDictionary R=ref_genome.fa O=ref_genome.dict
+
+# view the content of the dictionary file
+cat ref_genome.dict
+
+```
+
+### EXERCISE
+Figure out what the contents of the fasta index file refer to ...
 
 ### Obtain Additional GATK resources needed
 
 ```bash
-cd ~/data/reference/
+cd /workspace/inputs/reference/
 
 #SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf ~/workspace/data/raw_data/references
