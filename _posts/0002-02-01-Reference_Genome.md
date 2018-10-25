@@ -8,17 +8,24 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0002-02-01
 ---
 
+First let’s go over what a reference assembly actually is, in essence it’s just a representation of the nucleotide sequence from a cohort. These assemblies allow for a shortcut when mapping reads as they can be mapped to the assembly, rather than each other, to piece the genome of an individual together. This has a number of benefits, the most obvious of which is that it is far more effecient than attempting to build a genome from scratch. By its very nature however using this approach means there is no perfect reference assembly for an individual due to polymorphism (i.e. snps, hla-type, etc.). Further due to the presence of repetitive structural elements such as duplications, inverted repeats, tandem repeats, etc. a given assembly is almost always incomplete, and is constantly being improved upon. This leads to the publication of new assembly versions every so often such as grch37 (Feb. 2009) and grch38 (Dec. 2013). It is also good to be aware that different organization can publish different reference assemblies, for example grch37 (NCBI) and hg19 (UCSC) are identical save for a few minor differences such as in the mitochondria sequence and annotation of chromosomes (1 vs chr1). For a nice summary of genome versions and their release names refer to the [Assembly Releases and Versions FAQ](http://genome.ucsc.edu/FAQ/FAQreleases.html).
+
 ### Obtain a reference genome
 
-We will use the 1000 genomes version of the human GRCh38 build. This reference includes extra decoy and HLA sequences in addition to the alternate haplotypes provided from the GRC consortium. We should also download the dictionary (.dict) file, location of centromeres file, extra sequence fasta and README file for later reference.
+We will use the 1000 genomes version of the human GRCh38 build. This reference includes extra decoy and HLA sequences in addition to the alternate haplotypes provided from the GRC consortium. The 1000 genomes project is one of several places that people routinely obtain human reference genome files. Some additional sources including those that host many non-human reference genomes are described later in this section.
 
-- GRCh38_full_analysis_set_plus_decoy_hla.fa
-- GRCh38_full_analysis_set_plus_decoy_hla.dict
-- GRCh38_full_analysis_set_plus_decoy_hla-extra.fa
-- 20150713_location_of_centromeres_and_other_regions.txt
-- README.20150309.GRCh38_full_analysis_set_plus_decoy_hla
+We obtained the original reference genome files from the 1000 genomes FTP site here:
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/
+
+We have created a copy of these files on our course file server.  Furthermore, we have created a smaller version of the reference to allow us to complete this analysis more quickly.  Using the whole reference genome would take too long for a workshop setting.  For example, aligning reads from a single lange of whole genome data to the whole reference genome can take several hours.
+
+For this course we have selected two chromosomes: chr6 and chr17.  We chose these two chromosomes to illustrate fundamentals of bioinformatics analysis efficiently but also because of the significance of these two chromosomes to cancer biology.  Why are chr6 and chr17 particularly relevant to cancer?
+
+Download the genome reference files for this course using the following commands. Note use of an environment variable `CHRS` to specify the custom reference genome we are using here.
 
 ```bash
+echo `CHRS` #If this doesn't give a value, please return to the Environment section of the course
+
 mkdir -p /workspace/references/genome
 cd /workspace/references/genome
 
