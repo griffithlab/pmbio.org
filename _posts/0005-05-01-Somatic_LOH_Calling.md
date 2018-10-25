@@ -17,8 +17,6 @@ date: 0005-05-01
 
 Note: We are only going to analyze LOH in chromosomes 6 and 17
 
-Get SNPs from vcf file
-
 We will use gatk SelectVariants to extract SNPs from VQSR filtered file create in Germline SNV and Indel Calling section
 
 ```bash
@@ -71,7 +69,9 @@ normal_calls$VAF_1 <- normal_calls$AD_1/normal_calls$DP; normal_calls$VAF_2 <- n
 
 # Split into separate files for each VAF, remerge so we have one column with all VAFs to filter for heterozygous variants
 VAF_1 <- select(normal_calls, CHROM, POS, GT, AD_1, DP, VAF_1); VAF_2 <- select(normal_calls, CHROM, POS, GT, AD_2, DP, VAF_2); VAF_3 <- select(normal_calls, CHROM, POS, GT, AD_3, DP, VAF_3)
+
 colnames(VAF_1) <- c("CHROM", "POS", "GT", "AD", "DP", "VAF"); colnames(VAF_2) <- c("CHROM", "POS", "GT", "AD", "DP", "VAF"); colnames(VAF_3) <- c("CHROM", "POS", "GT", "AD", "DP", "VAF") 
+
 normal_calls <- normal_calls <- merge(VAF_1, VAF_2, all = TRUE); normal_calls <- merge(normal_calls, VAF_3, all = TRUE)
 
 # Filter for heterozygous posistions, i.e. positions with VAF between .4 and .6
@@ -84,4 +84,64 @@ write.table(normal_calls, file="heterozygous.snps.table", sep = "\t", col.names 
 heterozygous.positions <- unique(normal_calls[c("CHROM", "POS")])
 write.table(heterozygous.positions[ ,c("CHROM", "POS", "POS")], file = "heterozygous.positions.txt", sep="\t", col.names = FALSE, row.names = FALSE, quote = FALSE)
  
+```
+
+Next, to get the data needed to calculate VAFs in our tumor sample, we will run bam-readcount
+
+```bash
+
+# Run bam-readcount, requires reference fasta, position list, bam file
+~/workspace/bin/bam-readcount -w 0 -b 20 -q 20 -f /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -l heterozygous.positions.txt /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam chr6 chr17 > tumor.readcounts
+
+```
+Now use output of bam-readcount to calculate tumor VAFs in R
+
+```bash
+
+# Start R
+R
+
+# Need to set working directory again?
+
+# Load libraries
+library(dplyr)
+library(tidyr)
+
+# Read bam-readcount into R
+tumor_VAFS <- read.delim("tumor.readcounts", header = FALSE, fill = TRUE, col.names = c("CHROM", "POS", "REF", "TUMOR_DP", "5", "count_A", "count_C", "count_G", "count_T", "11", "12", "13", "14"))
+
+# Select columns relevant to our calculation
+tumor_VAFs <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, count_A, count_C, count_G, count_T)
+
+# Filter down to positions with at least 20x coverage
+tumor_VAFs <- subset.data.frame(tumor_VAFs, TUMOR_DP > 20)
+
+# Spilt columns with allele information into columns with allele depth
+tumor_VAFs <- tumor_VAFs %>% separate(count_A, c("A", "A_AD"), extra = "drop"); tumor_VAFs <- tumor_VAFs %>% separate(count_C, c("C", "C_AD"), extra = "drop"); tumor_VAFs <- tumor_VAFs %>% separate(count_G, c("G", "G_AD"), extra = "drop"); tumor_VAFs <- tumor_VAFs %>% separate(count_T, c("T", "T_AD"), extra = "drop")
+
+# Again, select columns new columns relevant to VAF calculation
+tumor_VAFs <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, A_AD, C_AD, G_AD, T_AD)
+ 
+# Make sure allele depth columns are numeric
+tumor_VAFs$A_AD <- as.numeric(tumor_VAFs$A_AD); tumor_VAFs$C_AD <- as.numeric(tumor_VAFs$C_AD); tumor_VAFs$G_AD <- as.numeric(tumor_VAFs$G_AD); tumor_VAFs$T_AD <- as.numeric(tumor_VAFs$T_AD)
+
+# Calculate VAFs
+tumor_VAFs$VAF_A <- tumor_VAFs$A_AD/tumor_VAFs$TUMOR_DP; tumor_VAFs$VAF_C <- tumor_VAFs$C_AD/tumor_VAFs$TUMOR_DP; tumor_VAFs$VAF_G <- tumor_VAFs$G_AD/tumor_VAFs$TUMOR_DP; tumor_VAFs$VAF_T <- tumor_VAFs$T_AD/tumor_VAFs$TUMOR_DP
+
+# Split into separate files for each VAF, remerge so we have one column with all VAFs
+VAF_A <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, A_AD, VAF_A); VAF_C <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, C_AD, VAF_C); VAF_G <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, G_AD, VAF_G); VAF_T <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, T_AD, VAF_T)
+
+colnames(VAF_A) <- c("CHROM", "POS", "TUMOR_DP", "AD", "VAF"); colnames(VAF_C) <- c("CHROM", "POS", "TUMOR_DP", "AD", "VAF"); colnames(VAF_G) <- c("CHROM", "POS", "TUMOR_DP", "AD", "VAF"); colnames(VAF_T)<- c("CHROM", "POS", "TUMOR_DP", "AD", "VAF")
+
+tumor_VAFs <- merge(VAF_A, VAF_C, all = TRUE); tumor_VAFs <- merge(tumor_VAFs, VAF_G, all = TRUE); tumor_VAFs <- merge(tumor_VAFs, VAF_T, all = TRUE)
+
+# Filter VAFs where no reads mapped (i.e VAFs = 0), complete LOH positions still reflect by VAF = 1
+tumor_VAFs <- subset.data.frame(tumor_VAFs, VAF > 0)
+
+# Create table with info about tumor VAFs
+write.table(tumor_VAFs, file="tumor.VAFs.table", sep = "\t", col.names = TRUE, row.names = FALSE, quote = FALSE)
+
+# Read in previously made normal table
+
+# Plot, okay to make png?
 ```
