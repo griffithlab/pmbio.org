@@ -9,11 +9,12 @@ date: 0002-03-01
 ---
 
 ### SeqCapEZ_Exome_v3.0
-The reagent used for the exome sequencing of the data used in this course was the SeqCapEZ_Exome_v3.0 from Roche Nimblegen. 
+The reagent used for the exome sequencing of the data used in this course was the SeqCapEZ_Exome_v3.0 from Roche Nimblegen.
 [here](https://sequencing.roche.com/en/products-solutions/by-category/target-enrichment/hybridization/seqcap-ez-exome-v3-kit.html)
 ```bash
 cd /workspace/data/results/inputs
 wget -c https://sequencing.roche.com/content/dam/rochesequence/worldwide/resources/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
+unzip SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
 ```
 
 ### liftOver chain file
@@ -26,4 +27,9 @@ wget -c http://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.
 cd /workspace/data/results/inputs
 liftOver SeqCapEZ_Exome_v3.0_Design_Annotation_files/SeqCap_EZ_Exome_v3_hg19_primary_targets.bed  hg19ToHg38.over.chain.gz SeqCap_EZ_Exome_v3_hg38_primary_targets.bed unMapped.bed
 cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
+```
+### Creating an interval list from bed file
+```bash
+cd /workspace/data/results/inputs
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed O=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.interval_list SD=/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.dict
 ```
