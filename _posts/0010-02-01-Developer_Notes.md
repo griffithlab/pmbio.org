@@ -46,9 +46,34 @@ mv split/chr17.fa chr17/ref_genome.fa
 cat chr6/ref_genome.fa chr17/ref_genome.fa > chr6_and_chr17/ref_genome.fa
 rm -fr split
 
-# create .dict and .fai files for each version of the reference
+# create .fai files for each version of the reference
+samtools faidx chr6/ref_genome.fa
+samtools faidx chr17/ref_genome.fa
+samtools faidx chr6_and_chr17/ref_genome.fa
 
-#compress the reference files for storage on the file server
+# create .dict files for each version of the reference
+java -jar /usr/local/bin/picard.jar CreateSequenceDictionary R=chr6/ref_genome.fa O=chr6/ref_genome.dict
+java -jar /usr/local/bin/picard.jar CreateSequenceDictionary R=chr17/ref_genome.fa O=chr17/ref_genome.dict
+java -jar /usr/local/bin/picard.jar CreateSequenceDictionary R=chr6_and_chr17/ref_genome.fa O=chr6_and_chr17/ref_genome.dict
+
+# compress the reference files for storage on the file server
+gzip all/ref_genome.fa
+gzip chr6/ref_genome.fa
+gzip chr17/ref_genome.fa
+gzip chr6_and_chr17/ref_genome.fa
+
+# create tarballs for convenient downloading
+tar -cf all/ref_genome.tar all/*
+rm -f all/README.txt all/location_of_centromeres_and_other_regions.txt all/ref_genome-extra.fa all/ref_genome.dict all/ref_genome.fa.gz all/ref_genome.fa.fai
+
+tar -cf chr6/ref_genome.tar chr6/*
+rm -f chr6/ref_genome.dict chr6/ref_genome.fa.gz chr6/ref_genome.fa.fai
+
+tar -cf chr17/ref_genome.tar chr17/*
+rm -f chr17/ref_genome.dict chr17/ref_genome.fa.gz chr17/ref_genome.fa.fai
+
+tar -cf chr6_and_chr17/ref_genome.tar chr6_and_chr17/*
+rm -f chr6_and_chr17/ref_genome.dict chr6_and_chr17/ref_genome.fa.gz chr6_and_chr17/ref_genome.fa.fai
 
 
 ```
