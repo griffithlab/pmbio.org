@@ -12,6 +12,11 @@ This module is primarily for the course developers to document how the AWS AMI w
 
 ***
 
+### Current published version of this course AMI
+The AMI has already been built using the following intructions and is available as: 
+
+`pmbio ami v1` (`ami-044e3e087a45b75e1`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
+
 ### Initial AWS setup for development and testing purposes
 
 For development purposes we started with a very large instance (overkill). Future experimentation is needed to determine the appropriate size for actual student instances.
