@@ -28,4 +28,7 @@ mkdir inputs align germline somatic rnaseq clinical immune cwl
 # view the directory structure
 tree
 
+# try omitting the bin directory
+tree -I bin
+
 ```
