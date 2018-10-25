@@ -25,4 +25,8 @@ export _JAVA_OPTIONS=-Djava.io.tmpdir=/workspace/tmp/ #Consider changing this to
 
 # add some locally installed tools to our path
 export PATH=/home/ubuntu/bin/samtools-1.7/bin:/home/ubuntu/bin/bwa-0.7.17:/home/ubuntu/bin/gatk-4.0.2.1:$PATH
+
+# the data subset we will use in this course
+export CHRS='chr6_and_chr17'
+
 ```

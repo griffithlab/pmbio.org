@@ -10,15 +10,20 @@ date: 0002-02-01
 
 ### Obtain a reference genome
 
-We will use the 1000 genomes version of the human GRCh38 build. This reference includes extra decoy and HLA sequences in addition to the alternate haplotypes provided from the GRC consortium. We should also download the dictionary (.dict) file, location of centromeres file, extra sequence fasta and README file for later reference.
+We will use the 1000 genomes version of the human GRCh38 build. This reference includes extra decoy and HLA sequences in addition to the alternate haplotypes provided from the GRC consortium. The 1000 genomes project is one of several places that people routinely obtain human reference genome files. Some additional sources including those that host many non-human reference genomes are described later in this section.
 
-- GRCh38_full_analysis_set_plus_decoy_hla.fa
-- GRCh38_full_analysis_set_plus_decoy_hla.dict
-- GRCh38_full_analysis_set_plus_decoy_hla-extra.fa
-- 20150713_location_of_centromeres_and_other_regions.txt
-- README.20150309.GRCh38_full_analysis_set_plus_decoy_hla
+We obtained the original reference genome files from the 1000 genomes FTP site here:
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/
+
+We have created a copy of these files on our course file server.  Furthermore, we have created a smaller version of the reference to allow us to complete this analysis more quickly.  Using the whole reference genome would take too long for a workshop setting.  For example, aligning reads from a single lange of whole genome data to the whole reference genome can take several hours.
+
+For this course we have selected two chromosomes: chr6 and chr17.  We chose these two chromosomes to illustrate fundamentals of bioinformatics analysis efficiently but also because of the significance of these two chromosomes to cancer biology.  Why are chr6 and chr17 particularly relevant to cancer?
+
+Download the genome reference files for this course using the following commands. Note use of an environment variable `CHRS` to specify the custom reference genome we are using here.
 
 ```bash
+echo `CHRS` #If this doesn't give a value, please return to the Environment section of the course
+
 mkdir -p /workspace/references/genome
 cd /workspace/references/genome
 
