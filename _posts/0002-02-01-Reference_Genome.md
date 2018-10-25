@@ -85,11 +85,7 @@ Use a commandline scripting approach of your choice to further examine our refer
 
 {% include question.html question="Solution" answer='EcoRI site (GAATTC) count = 71525' %}
 
-```bash
-cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $s = uc($_); print $_;' | perl -ne '$c += $_ =~ s/GAATTC/XXXXXX/g; if (eof){print "\nEcoRI site (GAATTC) count = $c\n\n";}'
-```
 
-How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
 
 
 ### Learn how to create our own Fasta Index (.fai) files and Dictionary (.dict) files
@@ -142,3 +138,13 @@ gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling
 
 To do: Create a table documenting key reference genome options (builds/sources) and pros/cons
 - e.g., 1000G, ensembl, UCSC, GDC
+
+### EXERCISE ANSWERS
+How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
+
+```bash
+# example code
+cd /workspace/inputs/references/genome/
+cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $s = uc($_); print $_;' | perl -ne '$c += $_ =~ s/GAATTC/XXXXXX/g; if (eof){print "\nEcoRI site (GAATTC) count = $c\n\n";}'
+```
+
