@@ -27,9 +27,6 @@ Download the genome reference files for this course using the following commands
 # make sure CHRS environment variable is set.  If this command doesn't give a value, please return to the Environment section of the course
 echo $CHRS
 
-# enter the `inputs` directory where we will store various input files
-cd ~/workspace/inputs
-
 # create a directory for reference genome files and enter this dir
 mkdir -p /workspace/inputs/references/genome
 cd /workspace/inputs/references/genome
@@ -47,7 +44,7 @@ tree
 rm -f ref_genome.tar
 
 # uncompress the reference genome FASTA file
-gunzip $CHRS/ref_genome.fa.gz
+gunzip ref_genome.fa.gz
 
 # view contents
 tree
@@ -56,7 +53,7 @@ tree
 
 ### Explore the contents of the reference genome file
 ```bash
-cd /workspace/inputs/$CHRS
+cd /workspace/inputs/references/genome
 
 # View the first 10 lines of this file. Note the header line starting with `>`. Why does the sequence look like this?
 head ref_genome.fa
@@ -100,7 +97,7 @@ Index and dictionary files are widely used by other tools to access information 
 
 ```bash
 # first remove the .fai and .dict files that were downloaded. Do not remove the .fa file though!
-cd /workspace/inputs/$CHRS
+cd /workspace/inputs/references/genome
 rm -f ref_genome.fa.fai ref_genome.dict
 
 # use samtools to create a fasta index file
@@ -108,7 +105,6 @@ samtools faidx ref_genome.fa
 
 # view the contents of the index file
 head ref_genome.fa.fai
-
 
 # use picard to create a dictionary file
 java -jar /usr/local/bin/picard.jar CreateSequenceDictionary R=ref_genome.fa O=ref_genome.dict
@@ -124,7 +120,7 @@ Figure out what the contents of the fasta index file refer to ...
 ### Obtain Additional GATK resources needed
 
 ```bash
-cd /workspace/inputs/reference/
+cd /workspace/inputs/references/genome/
 
 #SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf ~/workspace/data/raw_data/references
