@@ -166,13 +166,57 @@ rm *.bai
 
 ```
 
-### Alignment Instructions for running on Chr6
+### Alignment Instructions for running on Chr6+Chr17
+All of these may be missing WGS data processing
+#### Run bwa mem
 ```bash
-mkdir -p ~/workspace/fastqs
-mkdir -p ~/workspace/fastqs/chr6
-wget http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
-wget http://genomedata.org/pmbio-workshop/fastqs/chr6/Exome_Norm.tar
+mkdir -p ~/workspace/data/raw_data/fastqs/
+wget http://genomedata.org/pmbio-workshop/fastqs/chr6+chr17/Exome_Norm.tar
+wget http://genomedata.org/pmbio-workshop/fastqs/chr6+chr17/Exome_Tumor.tar
+
+mkdir -p ~/workspace/data/DNA_alignments/chr6+chr17
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+
+bwa mem -t 4 -Y -R "@RG\tID:2891351068\tPL:ILLUMINA\tPU:C1TD1ACXX-CGATGT.7\tLB:exome_norm_lib1\tSM:HCC1395BL_DNA" -o ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Norm.sam ~/workspace/data/raw_data/references/chr6+chr17.fa ~/workspace/data/raw_data/fastqs/chr6+chr17/Exome_Norm/Exome_Norm_R1.fastq.gz ~/workspace/data/raw_data/fastqs/chr6+chr17/Exome_Norm/Exome_Norm_R2.fastq.gz
+bwa mem -t 4 -Y -R "@RG\tID:2891351066\tPL:ILLUMINA\tPU:C1TD1ACXX-ATCACG.7\tLB:exome_tumor_lib1\tSM:HCC1395_DNA" -o ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Tumor.sam ~/workspace/data/raw_data/references/chr6+chr17.fa ~/workspace/data/raw_data/fastqs/chr6+chr17/Exome_Tumor/Exome_Tumor_R1.fastq.gz ~/workspace/data/raw_data/fastqs/chr6+chr17/Exome_Tumor/Exome_Tumor_R2.fastq.gz
 ```
+
+#### Convert SAM to BAM format
+```bash
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+samtools view -h -b -o Exome_Norm.bam Exome_Norm.sam
+samtools view -h -b -o Exome_Tumor.bam Exome_Tumor.sam
+```
+#### Merge Bam Files for WGS
+```bash
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+samtools merge -@ 4 WGS_Norm_merged.bam WGS_Norm_Lane1.bam WGS_Norm_Lane2.bam WGS_Norm_Lane3.bam
+```
+#### Query name sort bam files
+```bash
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+java -Xmx12g -jar $PICARD SortSam I=Exome_Norm.bam O=Exome_Norm_namesorted.bam SO=queryname
+java -Xmx12g -jar $PICARD SortSam I=Exome_Tumor.bam O=Exome_Tumor_namesorted.bam SO=queryname
+```
+#### Mark Duplicates
+```bash
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+java -Xmx12g -jar $PICARD MarkDuplicates I=Exome_Norm_namesorted.bam O=Exome_Norm_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=Exome_Norm_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+java -Xmx12g -jar $PICARD MarkDuplicates I=Exome_Tumor_namesorted.bam O=Exome_Tumor_namesorted_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=Exome_Tumor_mrkdup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+```
+#### Position sort bam file
+```bash
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+java -Xmx12g -jar $PICARD SortSam I=Exome_Norm_namesorted_mrkdup.bam O=Exome_Norm_sorted_mrkdup.bam SO=coordinate
+java -Xmx12g -jar $PICARD SortSam I=Exome_Tumor_namesorted_mrkdup.bam O=Exome_Tumor_sorted_mrkdup.bam SO=coordinate
+```
+#### Create bam index for use with GATK, IGV, etc.
+```bash
+cd ~/workspace/data/DNA_alignments/chr6+chr17
+java -Xmx12g -jar $PICARD BuildBamIndex I=Exome_Norm_sorted_mrkdup.bam
+java -Xmx12g -jar $PICARD BuildBamIndex I=Exome_Tumor_sorted_mrkdup.bam
+```
+
 
 ### Assess alignment quality
 
