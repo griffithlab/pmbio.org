@@ -218,9 +218,10 @@ java -Xmx12g -jar $PICARD BuildBamIndex I=Exome_Tumor_sorted_mrkdup.bam
 ```
 #### Calculate BQSR Table
 ```bash
-gatk --java-options '-Xmx12g' BaseRecalibrator -R ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Norm_sorted_mrkdup.bam -O ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites
-~/workspace/data/raw_data/references/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22
+gatk --java-options '-Xmx12g' BaseRecalibrator -R ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Norm_sorted_mrkdup.bam -O ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites ~/workspace/data/raw_data/references/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching -L chr6 -L chr17
 
+gatk --java-options '-Xmx12g' BaseRecalibrator -R ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Tumor_sorted_mrkdup.bam -O ~/workspace/data/DNA_alignments/chr6+chr17/Exome_Tumor_sorted_mrkdup_bqsr.table --known-sites ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites
+~/workspace/data/raw_data/references/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching  -L chr6 -L chr17
 
 ```
 
