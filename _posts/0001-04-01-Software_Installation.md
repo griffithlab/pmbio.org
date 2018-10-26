@@ -250,7 +250,7 @@ ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/g
 #~/workspace/bin/Rscript --version
 
 ## install additional packages
-#~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+#~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager", "dplyr", "tidyr", "ggplot2"), repos="http://cran.us.r-project.org")'
 ```
 
 ### Install copyCat

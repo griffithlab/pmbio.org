@@ -11,6 +11,9 @@ use IO::File;
 
 #arg 2 = ensembl GTF file (source)
 
+unless ($ARGV[0] && $ARGV[1] && $ARGV[2]){
+    die "\n\nExample usage: convertEnsemblGTF.pl ref_genome.dict /opt/vep_cache/homo_sapiens/93_GRCh38/chr_synonyms.txt transcripts.gtf\n\n";
+}
 
 #read in the chromosomes we're looking for
 my %targetChrs;

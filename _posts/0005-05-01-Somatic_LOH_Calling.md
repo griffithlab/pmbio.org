@@ -8,46 +8,47 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-05-01
 ---
 
-### Objectives
--Calculate VAFs in normal sample, find heterozygyous germline SNPs
+### Module objectives
+- Calculate VAFs in normal sample, find heterozygyous germline positions
+- Run bam-readcount on tumor sample, use readcounts to calculate tumor VAFs at heterozygous positions
+- Determine segments of LOH in tumor sample
 
--Run bam-readcount on tumor sample, use readcounts to calculate tumor VAFs at heterozygous positions
+### Run GATK SelectVariants 
 
--Determine regions of LOH in tumor sample
-
-Note: We are only going to analyze LOH in chromosomes 6 and 17
-
-We will use gatk SelectVariants to extract SNPs from VQSR filtered file create in Germline SNV and Indel Calling section
+First, we will extract all SNPs from the VQSR-filtered whole genome VCF file created in the Germline section.
 
 ```bash
+# Make sure you are in directory for somatic results
+cd ~/workspace/data/results/somatic
+
+# Create directory for LOH results, move into that directory
+mkdir loh
+cd loh
+
 #Extract SNPs
 gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls_recalibrated.PASS.vcf -select-type SNP -O WGS_Norm_HC_calls.recalibrated.PASS.snps.vcf
 ```
 
-Next, we will use gatk VariantsToTable to extract columns with data relevant for calculating germline VAFs
+### Run GATK VariantsToTable
+Next, we will extract the columns with the data we will need for calculating VAFs and determining positions of heterozygosity. 
 
 ```bash
-#Create table that has columns for chromosome, position, genotype, allele depth, total depth
+#Create table with columns for chromosome, position, genotype, allele depth, total depth
 gatk --java-options '-Xmx64g' VariantsToTable -V WGS_Norm_HC_calls.recalibrated.PASS.snps.vcf -F CHROM -F POS -GF GT -GF AD -GF DP -O WGS_Norm_HC_calls.recalibrated.PASS.snps.table
 ```
 
-Next calculate germline VAFs for chr6 and chr17 in R, filter to heterozygous positions
+### Calculate VAFs and find heterozygous positions
+Now, we will use R to calulate the variant allele frequencies for each allele at each position, then we will get a list of heterozygous positions by filtering our data to positions with VAFs from 40% to 60% allele frequency.
 
 ```bash
 # Start R
 R
-
-# Set working directory
-setwd("")
  
-# Load libraries, ";" separates commands so we can run multiple commands in one line
+# Load libraries, Note: ";" separates commands so we can run multiple commands in one line
 library(dplyr); library(tidyr)
 
 # Read in table made with VariantsToTable command
 normal_calls <- read.delim("WGS_Norm_HC_calls.recalibrated.PASS.snps.table", header = TRUE, col.names = c("CHROM", "POS", "GT", "GT_AD", "DP"))
-
-# Filter down to data for chromosomes 6 and 17
-chr6_normal_calls <- subset.data.frame(normal_calls, CHROM == "chr6"); chr17_normal_calls <- subset.data.frame(normal_calls, CHROM == "chr17"); normal_calls <- merge(chr6_normal_calls, chr17_normal_calls, all = TRUE)
 
 # Filter for positions with at least 20x coverage
 normal_calls <- subset.data.frame(normal_calls, DP >= 20)
@@ -75,22 +76,27 @@ write.table(normal_calls, file="heterozygous.snps.table", sep = "\t", col.names 
 # Get list of heterozygous positions to use with bam-readcount
 heterozygous.positions <- unique(normal_calls[c("CHROM", "POS")])
 write.table(heterozygous.positions[ ,c("CHROM", "POS", "POS")], file = "heterozygous.positions.txt", sep="\t", col.names = FALSE, row.names = FALSE, quote = FALSE)
-```
 
-Next, to get the data needed to calculate VAFs in our tumor sample, we will run bam-readcount
+# Exit R, you do not need to save workspace 
+q()
+```
+You should now see two new files in your loh directory:
+1. heterozygous.snps.table - we will use this for plotting later
+2. heterozygous.positions.txt - we will use this with bam-readcount
+
+### Run bam-readcount
+Next, to get the data needed to calculate VAFs in our tumor sample, we will run bam-readcount. The inputs needed for bam-readcount are our reference fasta file, our whole genome bam file, and our position list.
 
 ```bash
-# Run bam-readcount, requires reference fasta, position list, bam file
-~/workspace/bin/bam-readcount -w 0 -b 20 -q 20 -f /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -l heterozygous.positions.txt /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam chr6 chr17 > tumor.readcounts
+# Run bam-readcount
+~/workspace/bin/bam-readcount -w 1 -b 20 -q 20 -f /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -l heterozygous.positions.txt /home/ubuntu/data/alignment/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam chr6 chr17 > tumor.readcounts
 ```
-Now we will use output from bam-readcount to calculate tumor VAFs in R
+### Calculate tumor VAFs
+Now we will use output from bam-readcount to calculate tumor VAFs in R.
 
 ```bash
 # Start R
 R
-
-# Set working directory
-setwd("")
 
 # Load libraries
 library(dplyr); library(tidyr); library(ggplot2)
@@ -141,5 +147,18 @@ png("chr17_normal_vs_tumor_VAFs.png", width = 1340, height = 300)
 chr17_VAF_plot <- ggplot() + geom_point(data = germline_VAFs[germline_VAFs$CHROM == "chr17", ], aes(POS,VAF), color="blue") + geom_point(data = tumor_VAFs[tumor_VAFs$CHROM == "chr17", ], aes(POS,VAF), color="green") + xlab("Chr17 Position") + ylab("VAF")
 plot(chr17_VAF_plot)
 dev.off()
+
+# Exit R, no need to save workspace
+q()
 ```
-To-do: add normal_vs_tumor images
+You should now see three new files in your loh directory
+1. tumor.VAFs.table
+2. chr6_normal_vs_tumor_VAFs.png
+3. chr17_normal_vs_tumor_VAFs.png
+
+The two plots will look similar to these:
+{% include figure.html image="/assets/module_5/chr6_normal_vs_tumor_VAFs.png" position="left" width="1340" %}
+
+{% include figure.html image="/assets/module_5/chr17_normal_vs_tumor_VAFs.png" position="left" width="1340" %}
+
+In the next section, we will look for sgemented regions of LOH 
