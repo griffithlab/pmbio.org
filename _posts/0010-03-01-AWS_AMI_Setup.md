@@ -958,6 +958,7 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
 # Update and install the Cloud SDK
 sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+cd /home/ubuntu
 sudo chown -R ubuntu:ubuntu .config
 
 # test installation

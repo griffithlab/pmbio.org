@@ -83,10 +83,7 @@ cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $bases{$_}++ for split //;
 ### EXERCISE
 Use a commandline scripting approach of your choice to further examine our reference genome file and answer the following question. How many occurences of the EcoRI restriction site are present in the sequence?
 
-{% include question.html question="Solution" answer='EcoRI site (GAATTC) count = 71525' %}
-
-
-
+{% include question.html question="Answer" answer='EcoRI site (GAATTC) count = 71525' %}
 
 ### Learn how to create our own Fasta Index (.fai) files and Dictionary (.dict) files
 Index and dictionary files are widely used by other tools to access information in fasta files more efficiently (i.e. faster). These files were included with our reference files (sometimes the case) but it is useful to know how to generate these yourself. You may work with a custom reference in the future where you are required to create such "helper" files.
@@ -111,33 +108,43 @@ cat ref_genome.dict
 ```
 
 ### EXERCISE
-Figure out what the contents of the fasta index file refer to ...
+Figure out what the contents of the fasta index and dictionary files refer to ...
 
-### Obtain Additional GATK resources needed
+### Obtain Additional GATK resources needed - MOVE THIS TO ANNOTATIONS SECTION
+Use Google's `gsutil` to download various annotation files that will be used by GATK and other resources. `gsutil` will be used to download these file from Google cloud storage. They could also be downloaded using wget from the course file server from here: http://genomedata.org/pmbio-workshop/references/gatk/. 
 
 ```bash
-cd /workspace/inputs/references/genome/
+cd /workspace/inputs/references/
+mkdir misc
+cd misc
 
-#SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf ~/workspace/data/raw_data/references
-bgzip ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.dbsnp138.vcf
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz ~/workspace/data/raw_data/references
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz ~/workspace/data/raw_data/references
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz ~/workspace/data/raw_data/references
+# SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf . 
+gzip Homo_sapiens_assembly38.dbsnp138.vcf
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz .
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz .
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz .
 
-#Indel calibration call sets - dbsnp, Mills
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz ~/workspace/data/raw_data/references
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz ~/workspace/data/raw_data/references
+# Indel calibration call sets - dbsnp, Mills
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz .
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz .
 
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list ~/workspace/data/raw_data/references
-gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling_intervals/ ~/workspace/data/raw_data/references
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list .
+gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling_intervals/ .
+
+# list the files we just downloaded
+ls -lh
 
 ```
 
 ### Reference Genome Options
+We have selected a particular version of the human reference genome. Even within build38 of the reference there are several commons sources to obtain the reference genome, each with minor (but important differences).  The following summarizes some of the commonly selected options and notes and distinguishing features (e.g. use of 'chr' in chromosome names, naming style for unplaced contigs, inclusion of alternative haplotype sequences, use and nature of "decoy" sequences, use of lowercase to indicate repeat elements in the genome, etc.)
 
-To do: Create a table documenting key reference genome options (builds/sources) and pros/cons
-- e.g., 1000G, ensembl, UCSC, GDC
+- 1000 Genomes reference. Used in this course.
+- Ensembl reference.
+- UCSC reference. 
+- NCBI reference.
+- Genomic Data Commons (GDC) reference.
 
 ### EXERCISE ANSWERS
 How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
