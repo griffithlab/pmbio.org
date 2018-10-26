@@ -123,8 +123,8 @@ Run the GATK HaplotypeCaller GVCF workflow commands as above.
 gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00099_HC_calls.g.vcf $GATK_REGIONS 
 gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00102_HC_calls.g.vcf $GATK_REGIONS
 gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00104_HC_calls.g.vcf $GATK_REGIONS
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00106.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00106_HC_calls.g.vcf $GATK_REGIONS
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00118.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00118_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00150_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00158_HC_calls.g.vcf $GATK_REGIONS
 ```
 
 ### Perform joint genotype calling
@@ -133,7 +133,7 @@ Create a joint genotype GVCF, combining HCC1395 Exome normal together with the s
 
 ```bash
 #Combine gvcfs into a single vcf for use with GenotypeGVCFs
-gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00106_HC_calls.g.vcf -V /workspace/germline/HG00118_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00150_HC_calls.g.vcf -V /workspace/germline/HG00158_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
 
 #Perform joint genotyping
 gatk --java-options '-Xmx60g' GenotypeGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf -O /workspace/germline/Exome_GGVCFs_jointcalls.vcf $GATK_REGIONS 
