@@ -966,6 +966,48 @@ gsutil
 
 ```
 
+#### tophat
+Installation of the tophat suite. Note, this tool is currently only installed for the gtf_to_fasta tool to get a custom transcriptome fasta for use with  kallisto.
+
+```bash
+# start sudo shell
+sudo bash
+
+# install tophat
+cd /usr/local/bin
+wget https://ccb.jhu.edu/software/tophat/downloads/tophat-2.1.1.Linux_x86_64.tar.gz
+tar -zxvf tophat-2.1.1.Linux_x86_64.tar.gz
+ln -s /usr/local/bin/tophat-2.1.1.Linux_x86_64/gtf_to_fasta /usr/local/bin/gtf_to_fasta
+
+# test gtf_to_fasta tool
+/usr/local/bin/gtf_to_fasta
+
+#exit sudo shell 
+exit
+
+```
+
+#### Install any custom scripts we need
+We try to avoid it as much as possible but in some cases we need custom scripts to accomplish certain tasks. In those cases we make these scripts available in the course github site and intall them in /usr/local/bin.
+
+```bash
+# start sudo shell
+sudo bash
+
+# install custom script to fix the chromosomes names in a GTF to be compatible with 1000g genome (or other genome that uses 'chr', non-ensembl names))
+cd /usr/local/bin
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/convertEnsemblGTF.pl
+chmod +x /usr/local/bin/convertEnsemblGTF.pl
+
+# test installation
+/usr/local/bin/convertEnsemblGTF.pl
+
+# exit sudo shell
+exit
+
+```
+
+
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
 ```
@@ -1057,5 +1099,5 @@ exit
 
 ### TO ADD
 - Add custom script to fix GTF chr naming: https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/convertEnsemblGTF.pl
-
+- TopHat so that we have gtf_to_fasta tool. 
 
