@@ -18,6 +18,6 @@ This work would not be possible without building upon what others have contribut
 
 Creation of the section on Amazon AWS EC2 and the cost of student instances was generously supported by [Amazon AWS Education grants](http://aws.amazon.com/grants/).
 
-In addition to the main [Authors](/Authors) of this workshop (Obi Griffith, Malachi Griffith, Zachary Skidmore, Huiming Xia and Erica Barnell), we would also like to thank the following researchers who contributed to lecture or exercise materials that inspired some aspects of this workshop: Aaron Quinlan, Sorana Morrissy, Jim Robinson, Ben Ainscough, Jason Walker, and many more.
+In addition to the main [Authors](/authors) of this workshop (Obi Griffith, Malachi Griffith, Zachary Skidmore, Huiming Xia, Sharon Freshour, and Erica Barnell), we would also like to thank the following researchers who contributed to lecture or exercise materials that inspired some aspects of this workshop: Aaron Quinlan, Sorana Morrissy, Jim Robinson, Ben Ainscough, Jason Walker, and many more.
 
 Finally, we would like to thank the students who participated and contributed in many ways to development of these materials.
