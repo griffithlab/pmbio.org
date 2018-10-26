@@ -90,16 +90,25 @@ cd /home/ubuntu/workspace/inputs/references/
 mkdir transcriptome
 cd transcriptome
 
-# download the GTF and Fasta file for the desired version of Ensembl
-wget ftp://ftp.ensembl.org/pub/release-93/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+# download the GTF file for the desired version of Ensembl
 wget ftp://ftp.ensembl.org/pub/release-93/gtf/homo_sapiens/Homo_sapiens.GRCh38.93.gtf.gz
-gunzip *
+gunzip Homo_sapiens.GRCh38.93.gtf.gz
+
+# create a version of the GTF with the chr names fixed for our reference genome (i.e. with chr names, etc.)
+# in order to do this we need a .dict file for the whole reference genome
+wget http://genomedata.org/pmbio-workshop/references/genome/all/ref_genome.dict
+convertEnsemblGTF.pl ref_genome.dict /opt/vep_cache/homo_sapiens/93_GRCh38/chr_synonyms.txt Homo_sapiens.GRCh38.93.gtf > Homo_sapiens.GRCh38.93.namefixed.gtf 
+rm -f ref_genome.dict
 
 # produce GTF files of various subsets
+mkdir all chr6 chr17 chr6_and_chr17
+mv Homo_sapiens.GRCh38.93.gtf all/ref_transcriptome_nochrs.gtf
+mv Homo_sapiens.GRCh38.93.namefixed.gtf all/ref_transcriptome.gtf
+cat all/ref_transcriptome.gtf | grep --color=never -w "^chr6" > chr6/ref_transcriptome.gtf
+cat all/ref_transcriptome.gtf | grep --color=never -w "^chr17" > chr17/ref_transcriptome.gtf
+cat chr6/ref_transcriptome.gtf chr17/ref_transcriptome.gtf > chr6_and_chr17/ref_transcriptome.gtf
 
-
-
-# produce transcriptome (cDNA) fasta files of various subsets
+# produce transcriptome (cDNA) fasta files of various subsets using our GTF and genome Fasta files
 
 
 ```
