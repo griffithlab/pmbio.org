@@ -110,41 +110,24 @@ cat ref_genome.dict
 ### EXERCISE
 Figure out what the contents of the fasta index and dictionary files refer to ...
 
-### Obtain Additional GATK resources needed - MOVE THIS TO ANNOTATIONS SECTION
-Use Google's `gsutil` to download various annotation files that will be used by GATK and other resources. `gsutil` will be used to download these file from Google cloud storage. They could also be downloaded using wget from the course file server from here: http://genomedata.org/pmbio-workshop/references/gatk/. 
-
-```bash
-cd /workspace/inputs/references/
-mkdir -p gatk
-cd gatk
-
-# SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf . 
-gzip Homo_sapiens_assembly38.dbsnp138.vcf
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz .
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz .
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz .
-
-# Indel calibration call sets - dbsnp, Mills
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz .
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz .
-
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list .
-gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling_intervals/ .
-
-# list the files we just downloaded
-ls -lh
-
-```
-
 ### Reference Genome Options
-We have selected a particular version of the human reference genome. Even within build38 of the reference there are several commons sources to obtain the reference genome, each with minor (but important differences).  The following summarizes some of the commonly selected options and notes and distinguishing features (e.g. use of 'chr' in chromosome names, naming style for unplaced contigs, inclusion of alternative haplotype sequences, use and nature of "decoy" sequences, use of lowercase to indicate repeat elements in the genome, etc.)
+We have selected a particular version of the human reference genome. Even within build38 of the reference there are several commons sources to obtain the reference genome, each with minor (but important differences).  The following summarizes some of the commonly selected options and notes and distinguishing features (e.g. use of 'chr' in chromosome names, naming style for unplaced contigs, inclusion of alternative haplotype sequences, use and nature of "decoy" sequences, use of lowercase to indicate repeat elements in the genome, etc.).  Many groups have historically started with one of the references below and removed the alternate contig sequences.
 
-- 1000 Genomes reference. Used in this course.
-- Ensembl reference.
-- UCSC reference. 
-- NCBI reference.
-- Genomic Data Commons (GDC) reference.
+For more details on each version of the reference, look for a README file in the download locations linked to in the table below.
+
+|--------------------------------------+---------------------|
+| Name (link) | Description |
+|--------------------------------------+---------------------|
+| [1000 Genomes reference](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/) | Used in this course. The 1000g reference names chromosomes as follows (`chr1`, `chr2`, .., `chr22`, `chrX`, `chrY`, `chrM`). This reference includes "decoy" sequences (mostly low complexity sequences) that have been added to the standard genome build sequence. This reduces misalignment of reads that would otherwise get placed somewhere they don't belong. The developer of the BWA aligner documents use of this version of the reference genome. This reference includes the alternative contigs. |
+| [Ensembl reference](ftp://ftp.ensembl.org/pub/release-93/fasta/homo_sapiens/dna/) | Ensembl names the chromosomes as follows (`1`, `2`, .., `22`, `X`, `Y`, `MT`). The names of some unplaced contigs also differ. This reference does NOT have the decoy sequences. This reference includes the alternative contigs. |
+| [UCSC reference](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/) | The UCSC reference names chromosomes as follows (`chr1`, `chr2`, .., `chr22`, `chrX`, `chrY`, `chrM`). This reference does NOT have the decoy sequences. This reference includes the alternative contigs. |
+| [NCBI reference](ftp://ftp.ncbi.nih.gov/genomes/Homo_sapiens) | NCBI names the chromosomes as follows (`chr1`, `chr2`, .., `chr22`, `chrX`, `chrY`, `chrMT`). This reference does NOT include the decoy sequences. This reference includes the alternative contigs. The major annotation centers such as UCSC and Ensembl start with raw files from NCBI ([Various Human Assemblies](ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/)). Most other people do not use these NCBI files directly but rather get a version of the files from UCSC, Ensembl, etc. |
+| [Genomic Data Commons (GDC) reference](https://gdc.cancer.gov/about-data/data-harmonization-and-generation/gdc-reference-files) | The GDC reference names chromosomes as follows (`chr1`, `chr2`, .., `chr22`, `chrX`, `chrY`, `chrM`). The GDC created their own version of the reference for harmonized analysis of the TCGA and other large cancer sequencing projects. This reference includes "decoy" sequences. This reference does NOT include the alternative contigs. Unique to this reference is the inclusion of several virus sequences for viruses with known or suspected roles in cancer (e.g. HPV, EBV, etc.). |
+|--------------------------------------|---------------------|
+
+<br>
+
+Note that throughout this course there are places where we obtain annotation files that may not be perfectly compatible with the reference genome we have chosen. This is a common (almost unavoidable problem). For some analyses we may have to adjust chromosome names or take other measures to work around the differences that result from the lack of a clear standard reference genome. 
 
 ### EXERCISE ANSWERS
 How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
