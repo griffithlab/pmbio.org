@@ -15,7 +15,7 @@ This module is primarily for the course developers to document how the AWS AMI w
 ### Current published version of this course AMI
 The AMI has already been built using the following intructions and is available as:
 
-`pmbio ami v2` (`ami-05e7748522d05848c`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
+`pmbio ami v3` (`ami-08d777ebd086b116f`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
 
 ### Initial AWS setup for development and testing purposes
 
@@ -1115,7 +1115,5 @@ exit
 ```
 
 ### TO ADD
-- Add custom script to fix GTF chr naming: https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/convertEnsemblGTF.pl
-- TopHat so that we have gtf_to_fasta tool. 
-- svviz
+- nothing known at present
 
