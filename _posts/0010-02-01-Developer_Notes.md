@@ -18,7 +18,7 @@ cd /workspace/
 mkdir -p references/genome/
 cd references/genome/
 
-# download original references file 
+# download original references file
 wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.dict
 wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/20150713_location_of_centromeres_and_other_regions.txt
@@ -193,6 +193,7 @@ tar -cvf fastqs.tar fastqs/
 
 ### Create downsampled data sets to allow faster analysis a teaching setting
 Starting with aligned data, the following steps were used to create down-sampled data files, example shown below for chr6 exome data:
+Our current version of downsampled data hosted on genomedata.org was generated with Exome_Norm_sorted_mrkdup.bam/Exome_Tumor_sorted_mrkdup.bam (without BQSR). This should be changed later such that the Exome_Norm_sorted_mrkdup_bqsr.bam/Exome_Tumor_sorted_mrkdup_bqsr.bam are used for generating the downsized data. 
 ```bash
 #Starting off with slices of bam file with chr6 as the region specified. This contains all mapped reads that fall/overlap(?) with this region. We want to ensure that if read 1 is in this region that when reconstructing the fastq, we would also like to include read 2, thus we have the following approach.
 cd <directory containing Exome alignment>

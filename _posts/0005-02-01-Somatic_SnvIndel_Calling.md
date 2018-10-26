@@ -49,42 +49,44 @@ The second variant caller that we will use is [STRELKA](https://github.com/Illum
 mkdir -p ~/workspace/data/results/somatic/strelka
 cd ~
 
-python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --exome --runDir=/workspace/data/results/somatic/strelka
+python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/data/raw_data/references/ref_genome.fa --exome --runDir=/workspace/data/results/somatic/strelka
 
-/data/strelka/exome/runWorkflow.py -m local -j 4 (Please specify according to the number of cpus avaliable. In this case I have 4 for my instance)
-zcat exome/results/variants/somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.snvs.gt.vcf
-zcat exome/results/variants/somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.indels.gt.vcf
-find exome/results/variants -name *.vcf -exec bgzip -f {} \;
-find exome/results/variants -name *.vcf.gz -exec tabix -f {} \;
+#Please specify according to the number of cpus available or how many you would like to allocate to this job. In this case, four were given.
+python2 /workspace/data/results/somatic/strelka/runWorkflow.py -m local -j 4
+cd ~/workspace/data/results/somatic/strelka/results/variants
+zcat somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.snvs.gt.vcf
+zcat somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.indels.gt.vcf
+find ~/workspace/data/results/somatic/strelka/results/variants/ -name "*.vcf" -exec bgzip -f {} \;
+find ~/workspace/data/results/somatic/strelka/results/variants/ -name "*.vcf.gz" -exec tabix -f {} \;
 
-bcftools concat -a -o exome.vcf.gz -O z exome/results/variants/somatic.snvs.gt.vcf.gz exome/results/variants/somatic.indels.gt.vcf.gz
+bcftools concat -a -o exome.vcf.gz -O z somatic.snvs.gt.vcf.gz somatic.indels.gt.vcf.gz
+
 tabix exome.vcf.gz
 ```
 
 #### **Running MuTect2**
 __________________________
-Before preceeding, you will need to download COSMIC reference file (e.g. in folder `/data/refseq/`) after registering on their website:
+The final variant caller that we will also use results from is [MuTect2](https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_cancer_m2_MuTect2.php). MuTect2 is a somatic SNP and indel caller that combines the DREAM challenge-winning somatic genotyping engine of the original MuTect (Cibulskis et al., 2013) with the assembly-based machinery of HaplotypeCaller.
+
 ```bash
-* sftp <your registered email address>@sftp-cancer.sanger.ac.uk
-* get /files/grch38/cosmic/v79/VCF/CosmicCodingMuts.vcf.gz
-* get /files/grch38/cosmic/v79/VCF/CosmicNonCodingVariants.vcf.gz
-* Quit
-* zgrep "^#" CosmicCodingMuts.vcf.gz > VCF_Header
-* zgrep -v "^#" CosmicCodingMuts.vcf.gz | awk '{print "chr"$0}' | sed 's/^chrMT/chrM/' > CosmicCodingMuts.clean
-* zgrep -v "^#" CosmicNonCodingVariants.vcf.gz | awk '{print "chr"$0}' | sed 's/^chrMT/chrM/' > CosmicNonCodingVariants.clean
-* cat CosmicCodingMuts.clean CosmicNonCodingVariants.clean | sort -gk 2,2 > Cosmic_v79
-* cat VCF_Header Cosmic_v79 > Cosmic_v79.vcf
-* rm VCF_Header CosmicCodingMuts.clean CosmicNonCodingVariants.clean Cosmic_v79
+#Obtaining germline resource from GATK
+cd ~/workspace/data/raw_data/references
+gsutil cp gs://gatk-best-practices/somatic-hg38/af-only-gnomad.hg38.vcf.gz ./
+
+mkdir -p ~/workspace/data/results/somatic/mutect
+cd ~/workspace/data/results/somatic/mutect
+
+#Creating a panel of normals
+/usr/local/bin/gatk Mutect2 -R ~/workspace/data/raw_data/references/ref_genome.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam -tumor-sample HCC1395BL_DNA -O Exome_Norm_PON.vcf.gz
+
+#Running Mutect2
+/usr/local/bin/gatk Mutect2 -R ~/workspace/data/raw_data/references/ref_genome.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/data/raw_data/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/data/results/somatic/mutect/Exome_Norm_PON.vcf.gz -O ~/workspace/data/results/somatic/mutect/exome.vcf.gz -L chr6 -L chr17
+
+echo ~/workspace/data/results/somatic/mutect/exome.vcf.gz > ~/workspace/data/results/somatic/mutect/exome_vcf.fof
+bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/data/results/somatic/mutect/exome_vcf.fof --output-type z --output ~/workspace/data/results/somatic/mutect/exome.vcf.gz
+tabix ~/workspace/data/results/somatic/mutect/exome.vcf.gz
 ```
 
-With picard tools installed:
-```bash
-* `java -jar picard.jar SortVcf I=/data/refseq/Cosmic_v79.vcf O=/data/refseq/Cosmic_v79.dictsorted.vcf SEQUENCE_DICTIONARY=/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa`
-* `java -Xmx4g -jar GenomeAnalysisTK.jar -T MuTect2 --disable_auto_index_creation_and_locking_when_reading_rods -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -I:tumor /data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -I:Normal /data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam --dbsnp /data/reference/Homo_sapiens_assembly38.dbsnp138.vcf.gz --cosmic /data/refseq/Cosmic_v79.dictsorted.vcf.gz -o /data/mutect/exome.vcf.gz -L /data/refseq/NimbleGenExome_v3.interval_list`
-* `echo /data/mutect/exome.vcf.gz > /data/mutect/exome_vcf.fof`
-* `bcftools concat --allow-overlaps --remove-duplicates --file-list /data/mutect/exome_vcf.fof --output-type z --output /data/mutect/exome.vcf.gz`
-* `tabix /data/mutect/exome.vcf.gz`
-```
 #### **Merge Variants**
 __________________________
 With outputs from all three algorithms, we can now merge the variants to generate a comprehensive list of detected variants:
