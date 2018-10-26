@@ -19,7 +19,7 @@ In the previous section [AWS Intro](http://pmbio.org/module-01-setup/0001/02/01/
 In order to launch your own instance you will either need to use your own personal AWS account (not recommended unless you are already familiar with and using AWS) OR you will need to be assigned an AWS account using the IAMS system. If neither of these is possible, the instructors will have to launch an instance for you and provide the login details.
 
 Instance details:
-* AMI: `pmbio ami v1` (`ami-044e3e087a45b75e1`) (Publicly available in `London` Zone) 
+* AMI: `pmbio ami v2` (`ami-05e7748522d05848c`) (Publicly available in `London` Zone) 
 * Based on OS: Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
 * Instance type: r5.2xlarge (8 CPUs, 64 GB RAM, Up to 10 Gigabit network speed, EBS storage only)
 * Volumes: 2. A 500GB "root" ("/") volume, and a 2TB "workspace" volume 

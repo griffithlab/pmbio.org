@@ -9,15 +9,13 @@ date: 0004-01-01
 ---
 
 ### Key concepts
-* Variation, germline mutation, polymorphism, SNPs, variant databases, germline varaint calling
+* Variation, germline mutation, polymorphism, SNPs, variant databases, germline variant calling
 
 
 ### Learning objectives
 * Use of the GATK tool kit for variant calling
 * Perform basic germline variant filtering
 * Compare single sample germline variant calling to cohort based calling
-* Prioritize germline variants to identify putative de novo mutations
-* Identify germline variants for use in somatic LOH analysis
 
 
 

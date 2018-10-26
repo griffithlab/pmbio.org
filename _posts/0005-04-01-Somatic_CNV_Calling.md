@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-04-01
 ---
 
-[Copy number alterations (CNA)](https://en.wikipedia.org/wiki/Copy-number_variation) occur when sections of a genome are duplicated or deleted. This phenomenom can actually be quite usefull from an evolutionary standpoint, an example would be the duplication of opsin genes allowing some vertebrate species to see more colors. These types of events however can have a significant impact in the context of disease with perhaps the most famous being an amplification of chromosome 21 resulting in down sydrome. In this section we will go over identifying these types of alterations with [copycat](https://github.com/chrisamiller/copyCat), [CNVnator](https://github.com/abyzovlab/CNVnator), and [cnvkit](https://github.com/etal/cnvkit). However first let's examine exactly what we mean when the segment of a genome is duplicated or deleted and how these types of events can be identified in sequencing data.
+[Copy number alterations (CNA)](https://en.wikipedia.org/wiki/Copy-number_variation) occur when sections of a genome are duplicated or deleted. This phenomenom can actually be quite usefull from an evolutionary standpoint, an example would be the duplication of opsin genes allowing some vertebrate species to see more colors. These types of events however can have a significant impact in the context of disease with perhaps the most famous being an amplification of chromosome 21 resulting in down sydrome. In this section we will go over identifying these types of alterations with [copycat](https://github.com/chrisamiller/copyCat), and [cnvkit](https://github.com/etal/cnvkit). However first let's examine exactly what we mean when the segment of a genome is duplicated or deleted and how these types of events can be identified in sequencing data.
 
 {% include figure.html image="/assets/module_4/CNA_illustration.png" position="left" width="450" %}
 
@@ -228,6 +228,8 @@ dev.off()
 {% include figure.html image="/assets/module_4/copyCat_final.png" %}
 
 ### cnvkit wgs
+[CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python package for copy number calling specifically designed for hybrid capture and exome sequencing data. It performs the basic bias correction for gc-content and mappability discussed above. The software also will
+
 ```bash
 mkdir -p /workspace/data/results/somatic/cnvkit_wgs
 cd /workspace/data/results/somatic/cnvkit_wgs
@@ -245,6 +247,7 @@ convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdu
 convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.jpg
 ```
 
+### cnvkit exome
 ```bash
 mkdir -p /workspace/data/results/somatic/cnvkit_exome
 cd /workspace/data/results/somatic/cnvkit_exome
@@ -255,7 +258,7 @@ wget http://18.223.213.22/refseq/hglft_genome_304d_b78af0.bed
 
 cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -x /workspace/data/results/somatic/copyCat_annotation/gaps.bed -o /workspace/data/raw_data/references/access-excludes.hg38.bed
 
-cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter
+cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter --drop-low-coverage
 
 source deactivate
 
@@ -264,4 +267,14 @@ convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.
 
 convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.png
 convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.jpg
+
+
+cnvkit.py scatter  --segment Exome_Tumor_sorted_mrkdup.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup.cns
+
+cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup.cnr
+cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.pdf Exome_Tumor_sorted_mrkdup.cns
 ```
+
+        1. testing
+        2. testing
+        3. testing
