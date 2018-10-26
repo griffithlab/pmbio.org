@@ -42,10 +42,10 @@ mkdir germline_variants
 cd germline_variants
 
 #Call variants for exome data
-gatk --java-options '-Xmx64g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.vcf --bam-output /home/ubuntu/data/germline_variants/Exome_Norm_HC_out.bam $GATK_REGIONS
+gatk --java-options '-Xmx64g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -O /workspace/germline/Exome_Norm_HC_calls.vcf --bam-output /workspace/germline/Exome_Norm_HC_out.bam $GATK_REGIONS
 
 #Call variants for WGS data
-gatk --java-options '-Xmx64g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.vcf --bam-output /home/ubuntu/data/germline_variants/WGS_Norm_HC_out.bam $GATK_REGIONS 
+gatk --java-options '-Xmx64g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.vcf --bam-output /workspace/germline/WGS_Norm_HC_out.bam $GATK_REGIONS 
 ```
 
 ### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling (for exomes)
@@ -58,53 +58,56 @@ GATK HaplotypeCaller is run with all of the same options as above, except for on
 
 
 ```bash
-
 #Call variants in GVCF mode for exome data
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /home/ubuntu/data/alignment/Exome_Norm_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.g.vcf --bam-output /home/ubuntu/data/germline_variants/Exome_Norm_HC_GVCF_out.bam $GATK_REGIONS 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -O /workspace/germline/Exome_Norm_HC_calls.g.vcf --bam-output /workspace/germline/Exome_Norm_HC_GVCF_out.bam $GATK_REGIONS 
 
 #Call variants in GVCF mode for WGS data
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /home/ubuntu/data/alignment/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /home/ubuntu/data/germline_variants/WGS_Norm_HC_calls.g.vcf --bam-output /home/ubuntu/data/germline_variants/WGS_Norm_HC_GVCF_out.bam $GATK_REGIONS
-
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.g.vcf --bam-output /workspace/germline/WGS_Norm_HC_GVCF_out.bam $GATK_REGIONS
 ```
 
 
 ### Obtain 1000 genomes exome bam files for joint genotyping and VQSR steps
 
-Recall that the cell line being used in this tutorial ([HCC1395](https://www.atcc.org/Products/All/CRL-2324.aspx)) was derived from a 43 year old caucasian female (by a research group in Dallas Texas). Therefore, for a "matched" set of reference alignments we might limit to those of European descent.    
+As described above, there are several advantages to joint genotype calling. The additional samples and their variants improve the overall accuracy of variant calling and subsequent filtering steps. However, in this case we only have one "normal" sample, our HCC1395BL cell line. Therefore, we will make use of a set of public exome sequencing data to illustrate multi-sample joint calling. The 1000 Genome Project is a large international effort to create a set of publicly available sequence data for a large cohort of ethnically diverse individuals. Recall that the cell line being used in this tutorial ([HCC1395](https://www.atcc.org/Products/All/CRL-2324.aspx)) was derived from a 43 year old caucasian female (by a research group in Dallas Texas). Therefore, for a "matched" set of reference alignments we might limit to those of European descent.    
 
-#### Get a list of 1000 genome GBR samples
+#### Get a list of 1000 Genome samples
 
-- See summary of samples/ethnicities available: http://www.internationalgenome.org/data-portal/population
-- Now, we are guessing, but perhaps GBR (British in England and Scotland) would be the best match
-- Go to: http://www.internationalgenome.org/data-portal/sample
+- First, view a summary of samples/ethnicities available from the [1000 Genomes Populations page](http://www.internationalgenome.org/data-portal/population)
+- Now, we are guessing, but perhaps GBR (British in England and Scotland) would be the best match.
+- Go to the [1000 Genomes Samples page](http://www.internationalgenome.org/data-portal/sample)
 - Filter by population -> GBR
 - Filter by analysis group -> Exome
 - Filter by data collection -> 1000 genomes on GRCh38
-- Download the list to get sample details (igsr_samples_GBR.tsv)
+- Download the list to get sample details (e.g., save as igsr_samples_GBR.tsv)
 
-#### Get a list of data files for GBR samples
+#### Get a list of data files for GBR samples with exome data
 
-- Go to Populations (http://www.internationalgenome.org/data-portal/population)
+- Go to back to the [1000 Genomes Populations page](http://www.internationalgenome.org/data-portal/population)
 - Select GBR
 - Scroll down to 'Data collections for GBR'
 - Choose '1000 Genomes on GRCh38' tab
 - Select 'Data types' -> 'Alignment'
 - Select 'Analysis groups' -> 'Exome'
-- 'Download the list' (igsr_GBR_GRCh38_exome_alignment.tsv). 
+- 'Download the list' (e.g., save as igsr_GBR_GRCh38_exome_alignment.tsv). 
 
-#### Download exome cram and crai files for 30 female GBR cases
+#### Download exome cram and crai files for 5 female GBR cases
+
+Using the information obtained above, we will download the already aligned exome data for several 1KGP individuals.
 
 ```bash
+mkdir -p /workspace/inputs/data/1KGP
+cd /workspace/inputs/data/1KGP
 
-cd /home/ubuntu/data/reference/
-mkdir 1000genomes
-cd 1000genomes
-wget http://genomedata.org/pmbio-workshop/references/igsr_samples_GBR.tsv
-wget http://genomedata.org/pmbio-workshop/references/igsr_GBR_GRCh38_exome_alignment.tsv 
-grep "female" igsr_samples_GBR.tsv | cut -f 1 | head -30 > GBR_female_30_samples.txt
-grep -f GBR_female_30_samples.txt igsr_GBR_GRCh38_exome_alignment.tsv | cut -f 1 | grep ".cra" | perl -ne 'chomp; print "wget $_\n";' > wget_files.sh
+#We have made the above sample and data details files available for download
+wget http://genomedata.org/pmbio-workshop/references/1KGP/igsr_samples_GBR.tsv
+wget http://genomedata.org/pmbio-workshop/references/1KGP/igsr_GBR_GRCh38_exome_alignment.tsv 
+
+#Limit to the first 5, female samples in the file. Use the ids from that file filter for the correct cram/crai files and create download commands
+grep "female" igsr_samples_GBR.tsv | cut -f 1 | head -5 > GBR_female_5_samples.txt
+grep -f GBR_female_5_samples.txt igsr_GBR_GRCh38_exome_alignment.tsv | cut -f 1 | grep ".cra" | perl -ne 'chomp; print "wget $_\n";' > wget_files.sh
+
+#Download the files
 bash wget_files.sh
-
 ```
 
 Note: These cram files were created in a generally compatible way with the anlysis done so far in this tutorial. The were aligned with BWA-mem to GRCh38 with alternative sequences, plus decoys and HLA. This was followed by GATK BAM improvement steps as in the 1000 Genomes phase 3 pipeline (GATK IndelRealigner, BQSR, and Picard MarkDuplicates). Of course, there will be batch effects related to potentially different sample preparation, library construction, exome capture reagent and protocol, sequencing pipeline, etc. For more details see:
@@ -112,30 +115,28 @@ Note: These cram files were created in a generally compatible way with the anlys
 - http://www.internationalgenome.org/analysis
 - https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf
 
-#### Perform germline variant calling on 1KG exomes with GATK in GVCF mode
+#### Perform germline variant calling on 1KGP exomes with GATK in GVCF mode
+
+Run the GATK HaplotypeCaller GVCF workflow commands as above.
 
 ```bash
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /data/reference/1000genomes/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00099_HC_calls.g.vcf $GATK_REGIONS 
-
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /data/reference/1000genomes/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00102_HC_calls.g.vcf $GATK_REGIONS
-
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /data/reference/1000genomes/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00104_HC_calls.g.vcf $GATK_REGIONS
-
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /data/reference/1000genomes/HG00106.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00106_HC_calls.g.vcf $GATK_REGIONS
-
-gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /data/reference/1000genomes/HG00118.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /data/germline_variants/HG00118_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00099_HC_calls.g.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00102_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00104_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00106.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00106_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx64g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00118.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00118_HC_calls.g.vcf $GATK_REGIONS
 ```
 
 ### Perform joint genotype calling
 
-Create joint genotype vcf, combining HCC1395 Exome normal together with a set of 1KG exomes, for use in VQSR filtering.
+Create a joint genotype GVCF, combining HCC1395 Exome normal together with the set of 1KGP exomes, for later use in VQSR filtering.
 
 ```bash
 #Combine gvcfs into a single vcf for use with GenotypeGVCFs
-gatk --java-options '-Xmx64g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /data/germline_variants/Exome_Norm_HC_calls.g.vcf -V /data/germline_variants/HG00099_HC_calls.g.vcf -V /data/germline_variants/HG00102_HC_calls.g.vcf -V /data/germline_variants/HG00104_HC_calls.g.vcf -V /data/germline_variants/HG00106_HC_calls.g.vcf -V /data/germline_variants/HG00118_HC_calls.g.vcf -O /data/germline_variants/Exome_Norm_1KG_HC_calls_combined.g.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx64g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00106_HC_calls.g.vcf -V /workspace/germline/HG00118_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
 
 #Perform joint genotyping
-gatk --java-options '-Xmx64g' GenotypeGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /data/germline_variants/Exome_Norm_1KG_HC_calls_combined.g.vcf -O /data/germline_variants/Exome_GGVCFs_jointcalls.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx64g' GenotypeGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf -O /workspace/germline/Exome_GGVCFs_jointcalls.vcf $GATK_REGIONS 
 ```
 
 

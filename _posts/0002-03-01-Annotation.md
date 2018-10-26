@@ -14,7 +14,8 @@ The reagent used for exome sequencing of the data used in this course was the Se
 
 ```bash
 # change directories
-cd ~/results/all/inputs
+mkdir -p /workspace/inputs/references/exome
+cd /workspace/inputs/references/exome
 
 # download the files
 wget -c https://sequencing.roche.com/content/dam/rochesequence/worldwide/resources/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
@@ -39,7 +40,7 @@ It will also be usefull to have a version of this file without the gene annotati
 
 ```bash
 # change to the appropriate directory
-cd ~/results/inputs
+cd /workspace/inputs/references/exome
 
 # download the chain file
 wget -c http://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz
@@ -52,7 +53,10 @@ cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38
 ```
 
 ### Creating an interval list from bed file
+
+NOTE: The following is broken because our ref_genome.dict now only contains chr6 and chr17. We need to either trim the exome ROI file down to just these chrs as well. Or also download/create a full version of the dict file.
+
 ```bash
-cd /workspace/data/results/inputs
-java -jar /usr/local/bin/picard.jar BedToIntervalList I=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed O=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.interval_list SD=/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.dict
+cd /workspace/inputs/references/exome
+java -jar $PICARD BedToIntervalList I=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed O=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.interval_list SD=/workspace/inputs/references/genome/ref_genome.dict
 ```
