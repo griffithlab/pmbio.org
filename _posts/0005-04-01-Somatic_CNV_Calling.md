@@ -292,7 +292,15 @@ With our running of the pipeline completed you should see the files listed below
 - Exome_Tumor_sorted_mrkdup.cns -> Segmented log2 ratios
 - Exome_Tumor_sorted_mrkdup.targetcoverage.cnn -> target bin coverage for tumor
 
-Finally it might be the case that you want a closer look at the results, perhaps theres a specific region of interest you are interested. Let's go ahead and make both chromosome 6 scatter plot and heatmaps for both the probes and segment calls. We can use `cnvkit.py scatter` and `cnvit.py heatmap` to achieve this.
+Let's take a look at the plots that were produced. Below you will see the cnvkit diagram results for the entire exome region. Your results will look a bit different as you only ran a subset of the data. On the left of each chromosome in the diagram amplifications (red) and deletions (blue) are displayed on the left side of each chromosome. On the right side the individual bins for each CN call are displayed.
+
+{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-diagram.png" %}
+
+The scatter plot shows the same general information as the diagram but in a slightly different fashion. On the y-axis we have the log2 ratio of T/N CN calls. Let's go over this a bit as it can get a bit confusing. In our case we have a typical diploid genome (i.e. each chromosome has 2 copies), so in a signle sample copy-neutral would be 2. The y-axis is displaying the log2 ratio of T/N so copy neutral would be log2(2/2) which is 0. Each grey dot is a binned CN call and orange lines are segments. The x-axis is obviously the coordinate for the CN bin.
+
+{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-scatter.png" %}
+
+Finally it might be the case that you want a closer look at the results, perhaps theres a specific region of interest that you would like to view in detail. Let's go ahead and make both a chromosome 6 scatter plot and heatmaps for both the probes and segment calls. We can use `cnvkit.py scatter` and `cnvit.py heatmap` to achieve this.
 
 ```bash
 # create a scatter plot for just chromosome 6
@@ -306,23 +314,23 @@ cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.p
 source deactivate
 ```
 
-{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-diagram.png" %}
-
-{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-scatter.png" %}
-
-It should be noted that cnvkit.py
+It should be noted that cnvkit.py can also work on whole genome sequencing data. To run we can do the same exact `cnvkit.py batch` command as above with the modification that we will need to change the `--method` to `wgs` and obviously change the input data to be WGS.
 
 ```bash
 # make directory to store results
 mkdir -p /workspace/data/results/somatic/cnvkit_wgs
 cd /workspace/data/results/somatic/cnvkit_wgs
 
+# activate cnvkit environment
 source activate cnvkit
 
+# run the cnvkit pipeline
 cnvkit.py batch /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam --normal /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_wgs/ --method wgs -p 20 --diagram --scatter
 
+# deactivate the cnvkit environment
 source deactivate
 
+# convert the .pdf plots to png/jpg
 convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup-scatter.png
 convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup-scatter.jpg
 
