@@ -230,10 +230,16 @@ tar -cvf fastqs.tar fastqs/
 
 ### Create downsampled data sets to allow faster analysis a teaching setting
 Starting with aligned data, the following steps were used to create down-sampled data files, example shown below for chr6 exome data:
-Our current version of downsampled data hosted on genomedata.org was generated with Exome_Norm_sorted_mrkdup.bam/Exome_Tumor_sorted_mrkdup.bam (without BQSR). This should be changed later such that the Exome_Norm_sorted_mrkdup_bqsr.bam/Exome_Tumor_sorted_mrkdup_bqsr.bam are used for generating the downsized data. 
+Our current version of downsampled data hosted on genomedata.org was generated with Exome_Norm_sorted_mrkdup.bam/Exome_Tumor_sorted_mrkdup.bam (without BQSR). This should be changed later such that the Exome_Norm_sorted_mrkdup_bqsr.bam/Exome_Tumor_sorted_mrkdup_bqsr.bam are used for generating the downsized data.
+Note that if you were to merge data from multiple chromosomes, at the step prior to filtering sam reads, you would need to concat the readname files from all chromosomes and sort and uniq them.
+
 ```bash
 #Starting off with slices of bam file with chr6 as the region specified. This contains all mapped reads that fall/overlap(?) with this region. We want to ensure that if read 1 is in this region that when reconstructing the fastq, we would also like to include read 2, thus we have the following approach.
 cd <directory containing Exome alignment>
+
+sambamba slice -o chr6_Exome_Norm_sorted_mrkdup_bqsr.bam Exome_Norm_sorted_mrkdup_bqsr.bam chr6
+
+sambamba slice -o chr6_Exome_Tumor_sorted_mrkdup_bqsr.bam Exome_Tumor_sorted_mrkdup_bqsr.bam chr6
 
 samtools view chr6_Exome_Norm_sorted_mrkdup_bqsr.bam | cut -d$'\t' -f1 > chr6_Exome_Norm_readnames.txt
 samtools view chr6_Exome_Tumor_sorted_mrkdup_bqsr.bam | cut -d$'\t' -f1 > chr6_Exome_Tumor_readnames.txt
@@ -266,4 +272,33 @@ java -Xmx8g -jar /usr/local/bin/picard.jar SamToFastq I=reverted_bams/Exome_Norm
 # You may want to move all the above data generated into a designated space for that specific chromosome e.g. mkdir chr6_subset_data
 
 #After moving the data you would need to gzip files and tar ball them for uploading
+```
+The following steps are examples shown for chr6+chr17 with whole genome data:
+```bash
+cd <directory containing your WGS data>
+sambamba slice -o chr6_WGS_Norm_merged_sorted_mrkdup.bam WGS_Norm_merged_sorted_mrkdup.bam chr6
+sambamba slice -o chr6_WGS_Tumor_merged_sorted_mrkdup.bam WGS_Tumor_merged_sorted_mrkdup.bam chr6
+sambamba slice -o chr17_WGS_Norm_merged_sorted_mrkdup.bam WGS_Norm_merged_sorted_mrkdup.bam chr17
+sambamba slice -o chr17_WGS_Tumor_merged_sorted_mrkdup.bam WGS_Tumor_merged_sorted_mrkdup.bam chr17
+
+# move all generated files to a subset directory such as chr6+chr17
+# cd into that Directory
+
+samtools view chr6_WGS_Norm_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr6_WGS_Norm_readnames.txt
+samtools view chr6_WGS_Tumor_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr6_WGS_Tumor_readnames.txt
+samtools view chr17_WGS_Norm_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr17_WGS_Norm_readnames.txt
+samtools view chr17_WGS_Tumor_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr17_WGS_Tumor_readnames.txt
+
+cat chr6_WGS_Tumor_readnames.txt chr17_WGS_Tumor_readnames.txt | sort | uniq > chr6_chr17_WGS_Tumor_readnames.txt
+cat chr6_WGS_Norm_readnames.txt chr17_WGS_Norm_readnames.txt | sort | uniq > chr6_chr17_WGS_Norm_readnames.txt
+
+java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=../all/WGS_Norm_merged_sorted_mrkdup.bam O=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_WGS_Norm_readnames.txt FILTER=includeReadList
+java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=../all/WGS_Tumor_merged_sorted_mrkdup.bam O=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_WGS_Tumor_readnames.txt FILTER=includeReadList
+
+#reverting bams
+mkdir -p reverted_bams
+mkdir -p reverted_bams/WGS_Norm reverted_bams/WGS_Tumor
+
+java -Xmx24g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
+java -Xmx24g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
 ```
