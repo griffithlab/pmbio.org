@@ -83,7 +83,8 @@ cd ~/workspace/data/results/somatic/mutect
 /usr/local/bin/gatk Mutect2 -R ~/workspace/data/raw_data/references/ref_genome.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/data/raw_data/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/data/results/somatic/mutect/Exome_Norm_PON.vcf.gz -O ~/workspace/data/results/somatic/mutect/exome.vcf.gz -L chr6 -L chr17
 
 echo ~/workspace/data/results/somatic/mutect/exome.vcf.gz > ~/workspace/data/results/somatic/mutect/exome_vcf.fof
-bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/data/results/somatic/mutect/exome_vcf.fof --output-type z --output ~/workspace/data/results/somatic/mutect/exome.vcf.gz
+bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/data/results/somatic/mutect/exome_vcf.fof --output-type z --output ~/workspace/data/results/somatic/mutect/mutect_exome.vcf.gz
+mv mutect_exome.vcf.gz exome.vcf.gz
 tabix ~/workspace/data/results/somatic/mutect/exome.vcf.gz
 ```
 

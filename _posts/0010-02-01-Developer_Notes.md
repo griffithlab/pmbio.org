@@ -97,7 +97,7 @@ gunzip Homo_sapiens.GRCh38.93.gtf.gz
 # create a version of the GTF with the chr names fixed for our reference genome (i.e. with chr names, etc.)
 # in order to do this we need a .dict file for the whole reference genome
 wget http://genomedata.org/pmbio-workshop/references/genome/all/ref_genome.dict
-convertEnsemblGTF.pl ref_genome.dict /opt/vep_cache/homo_sapiens/93_GRCh38/chr_synonyms.txt Homo_sapiens.GRCh38.93.gtf > Homo_sapiens.GRCh38.93.namefixed.gtf 
+convertEnsemblGTF.pl ref_genome.dict /opt/vep_cache/homo_sapiens/93_GRCh38/chr_synonyms.txt Homo_sapiens.GRCh38.93.gtf > Homo_sapiens.GRCh38.93.namefixed.gtf
 rm -f ref_genome.dict
 
 # produce GTF files of various subsets
@@ -301,4 +301,12 @@ mkdir -p reverted_bams/WGS_Norm reverted_bams/WGS_Tumor
 
 java -Xmx24g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
 java -Xmx24g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
+
+#Bam to Fastq: STILL NEEDS ADJUSTMENT DEPENDING ON IDs 
+mkdir -p fastqs
+mkdir -p fastqs/WGS_Norm fastq/WGS_Tumor
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=reverted_bams/WGS_Norm/2891351068.bam F=fastqs/WGS_Norm/2891351068_1.fastq F2=fastqs/WGS_Norm/2891351068_2.fastq
+java -Xmx24g -jar /data/bin/picard.jar SamToFastq I=reverted_bams/WGS_Tumor/2891351066.bam F=fastqs/WGS_Tumor/2891351066_1.fastq F2=fastqs/WGS_Tumor/2891351066_2.fastq
+
 ```
