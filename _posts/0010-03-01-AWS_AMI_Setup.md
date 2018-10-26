@@ -987,6 +987,24 @@ exit
 
 ```
 
+#### svviz
+Installation of svviz, used in the course to visualize structural variation
+```bash
+# start sudo shell
+sudo bash
+
+# install the tool
+pip install -U svviz
+
+# test installation
+svviz
+
+# exit sudo shell
+exit
+
+```
+
+
 #### Install any custom scripts we need
 We try to avoid it as much as possible but in some cases we need custom scripts to accomplish certain tasks. In those cases we make these scripts available in the course github site and intall them in /usr/local/bin.
 
@@ -1006,7 +1024,6 @@ chmod +x /usr/local/bin/convertEnsemblGTF.pl
 exit
 
 ```
-
 
 #### some extra R packages that we might need
 There are a few more R packages that don't happen to be captured by the tools dependencies above that we might need
@@ -1100,4 +1117,5 @@ exit
 ### TO ADD
 - Add custom script to fix GTF chr naming: https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/convertEnsemblGTF.pl
 - TopHat so that we have gtf_to_fasta tool. 
+- svviz
 

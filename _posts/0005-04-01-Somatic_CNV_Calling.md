@@ -306,6 +306,10 @@ cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.p
 source deactivate
 ```
 
+{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-diagram.png" %}
+
+{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-scatter.png" %}
+
 It should be noted that cnvkit.py
 
 ```bash
