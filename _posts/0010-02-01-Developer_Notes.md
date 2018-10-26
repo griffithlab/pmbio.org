@@ -221,7 +221,9 @@ tar -cvf fastqs.tar fastqs/
 
 ### Create downsampled data sets to allow faster analysis a teaching setting
 Starting with aligned data, the following steps were used to create down-sampled data files, example shown below for chr6 exome data:
-Our current version of downsampled data hosted on genomedata.org was generated with Exome_Norm_sorted_mrkdup.bam/Exome_Tumor_sorted_mrkdup.bam (without BQSR). This should be changed later such that the Exome_Norm_sorted_mrkdup_bqsr.bam/Exome_Tumor_sorted_mrkdup_bqsr.bam are used for generating the downsized data. 
+Our current version of downsampled data hosted on genomedata.org was generated with Exome_Norm_sorted_mrkdup.bam/Exome_Tumor_sorted_mrkdup.bam (without BQSR). This should be changed later such that the Exome_Norm_sorted_mrkdup_bqsr.bam/Exome_Tumor_sorted_mrkdup_bqsr.bam are used for generating the downsized data.
+Note that if you were to merge data from multiple chromosomes, at the step prior to filtering sam reads, you would need to concat the readname files from all chromosomes and sort and uniq them.
+
 ```bash
 #Starting off with slices of bam file with chr6 as the region specified. This contains all mapped reads that fall/overlap(?) with this region. We want to ensure that if read 1 is in this region that when reconstructing the fastq, we would also like to include read 2, thus we have the following approach.
 cd <directory containing Exome alignment>
