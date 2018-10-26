@@ -63,20 +63,24 @@ gzip chr17/ref_genome.fa
 gzip chr6_and_chr17/ref_genome.fa
 
 # create tarballs for convenient downloading
-tar -cf all/ref_genome.tar all/*
-rm -f all/README.txt all/location_of_centromeres_and_other_regions.txt all/ref_genome-extra.fa all/ref_genome.dict all/ref_genome.fa.gz all/ref_genome.fa.fai
+cd /workspace/references/genome/all
+tar -cf ref_genome.tar *
+rm -f README.txt location_of_centromeres_and_other_regions.txt ref_genome-extra.fa ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
-tar -cf chr6/ref_genome.tar chr6/*
-rm -f chr6/ref_genome.dict chr6/ref_genome.fa.gz chr6/ref_genome.fa.fai
+cd /workspace/references/genome/chr6
+tar -cf ref_genome.tar *
+rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
-tar -cf chr17/ref_genome.tar chr17/*
-rm -f chr17/ref_genome.dict chr17/ref_genome.fa.gz chr17/ref_genome.fa.fai
+cd /workspace/references/genome/chr17
+tar -cf ref_genome.tar *
+rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
-tar -cf chr6_and_chr17/ref_genome.tar chr6_and_chr17/*
-rm -f chr6_and_chr17/ref_genome.dict chr6_and_chr17/ref_genome.fa.gz chr6_and_chr17/ref_genome.fa.fai
-
+cd /workspace/references/genome/chr6_and_chr17
+tar -cf ref_genome.tar *
+rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
 ```
+
 
 
 ### Prepare original starting data
