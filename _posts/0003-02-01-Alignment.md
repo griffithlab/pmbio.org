@@ -8,11 +8,11 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0003-02-01
 ---
 
-WGS and Exome fastq data will be aligned with BWA MEM using the following options:
+WGS and Exome raw sequence (fastq) data for our tumor and normal samples will be aligned with BWA MEM using the following options:
 
 - t: number of threads
 - Y: use soft clipping for supplementary alignments
-- R: read group header line info. See table in [Data Module](/module 1/0001/09/01/Data/) sample details.
+- R: read group header line info. See table in [Data Module](/module-02-inputs/0002/05/01/Data/) for sample details.
 
 ### Run bwa mem using the above information
 
