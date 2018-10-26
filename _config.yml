@@ -17,6 +17,7 @@ exclude:
 - Gemfile.lock
 - alembic-jekyll-theme.gemspec
 - lectures
+- assets/course_scripts
 
 # 2. Installed Gems
 plugins:

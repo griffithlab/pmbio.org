@@ -63,20 +63,48 @@ gzip chr17/ref_genome.fa
 gzip chr6_and_chr17/ref_genome.fa
 
 # create tarballs for convenient downloading
-tar -cf all/ref_genome.tar all/*
-rm -f all/README.txt all/location_of_centromeres_and_other_regions.txt all/ref_genome-extra.fa all/ref_genome.dict all/ref_genome.fa.gz all/ref_genome.fa.fai
+cd /workspace/references/genome/all
+tar -cf ref_genome.tar *
+rm -f README.txt location_of_centromeres_and_other_regions.txt ref_genome-extra.fa ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
-tar -cf chr6/ref_genome.tar chr6/*
-rm -f chr6/ref_genome.dict chr6/ref_genome.fa.gz chr6/ref_genome.fa.fai
+cd /workspace/references/genome/chr6
+tar -cf ref_genome.tar *
+rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
-tar -cf chr17/ref_genome.tar chr17/*
-rm -f chr17/ref_genome.dict chr17/ref_genome.fa.gz chr17/ref_genome.fa.fai
+cd /workspace/references/genome/chr17
+tar -cf ref_genome.tar *
+rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
-tar -cf chr6_and_chr17/ref_genome.tar chr6_and_chr17/*
-rm -f chr6_and_chr17/ref_genome.dict chr6_and_chr17/ref_genome.fa.gz chr6_and_chr17/ref_genome.fa.fai
+cd /workspace/references/genome/chr6_and_chr17
+tar -cf ref_genome.tar *
+rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
+
+```
+
+### Create reference transcriptome files and store on genomedata.org for use in the course
+Download transcriptome annotations (GTF files) from Ensembl. Make sure the version used matches the version of VEP installed on the AMI! Be sure to fix the chromosome names in the GTF to be compatible with our reference genome. Finally create sub-setted GTF files for the regions of interest used in the course.
+
+```bash
+# create dir for these annotation files
+cd /home/ubuntu/workspace/inputs/references/
+mkdir transcriptome
+cd transcriptome
+
+# download the GTF and Fasta file for the desired version of Ensembl
+wget ftp://ftp.ensembl.org/pub/release-93/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-93/gtf/homo_sapiens/Homo_sapiens.GRCh38.93.gtf.gz
+gunzip *
+
+# produce GTF files of various subsets
+
+
+
+# produce transcriptome (cDNA) fasta files of various subsets
 
 
 ```
+
+
 
 
 ### Prepare original starting data

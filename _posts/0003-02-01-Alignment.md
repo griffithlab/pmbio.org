@@ -8,71 +8,69 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0003-02-01
 ---
 
-WGS and Exome fastq data will be aligned with BWA MEM using the following options:
+WGS and Exome raw sequence (fastq) data for our tumor and normal samples will be aligned with BWA MEM using the following options:
 
 - t: number of threads
 - Y: use soft clipping for supplementary alignments
-- R: read group header line info. See table in [Data Module](/module 1/0001/09/01/Data/) sample details.
+- R: read group header line info. See table in [Data Module](/module-02-inputs/0002/05/01/Data/) for sample details.
 
 ### Run bwa mem using the above information
 
-Runtimes: Exome, 20 - 25min (32 cores); WGS, 89-95min (32 cores); WGS, 196-223min (16 cores)
-
 ```bash
 cd /workspace/align
-bwa mem -t 32 -Y -R "@RG\tID:2891351068\tPL:ILLUMINA\tPU:C1TD1ACXX-CGATGT.7\tLB:exome_norm_lib1\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/Exome_Norm.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/Exome_Norm/2891351068_1.fastq.gz /home/ubuntu/data/fastqs/Exome_Norm/2891351068_2.fastq.gz
-bwa mem -t 32 -Y -R "@RG\tID:2891351066\tPL:ILLUMINA\tPU:C1TD1ACXX-ATCACG.7\tLB:exome_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/Exome_Tumor.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/Exome_Tumor/2891351066_1.fastq.gz /home/ubuntu/data/fastqs/Exome_Tumor/2891351066_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323123\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane1.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323123_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323123_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323124\tPL:ILLUMINA\tPU:D1VCPACXX.7\tLB:wgs_norm_lib2\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane2.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323124_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323124_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323125\tPL:ILLUMINA\tPU:D1VCPACXX.8\tLB:wgs_norm_lib3\tSM:HCC1395BL_DNA" -o /home/ubuntu/data/alignment/WGS_Norm_Lane3.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Norm/2891323125_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Norm/2891323125_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891322951\tPL:ILLUMINA\tPU:D1VCPACXX.1\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane1.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891322951_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891322951_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323174\tPL:ILLUMINA\tPU:D1VCPACXX.2\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane2.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323174_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323174_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323175\tPL:ILLUMINA\tPU:D1VCPACXX.3\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane3.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323175_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323175_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323150\tPL:ILLUMINA\tPU:D1VCPACXX.4\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane4.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323150_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323150_2.fastq.gz
-bwa mem -t 16 -Y -R "@RG\tID:2891323147\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tumor_lib3\tSM:HCC1395_DNA" -o /home/ubuntu/data/alignment/WGS_Tumor_Lane5.sam /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa /home/ubuntu/data/fastqs/WGS_Tumor/2891323147_1.fastq.gz /home/ubuntu/data/fastqs/WGS_Tumor/2891323147_2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:Exome_Norm\tPL:ILLUMINA\tPU:C1TD1ACXX-CGATGT.7\tLB:exome_norm_lib1\tSM:HCC1395BL_DNA" -o /workspace/align/Exome_Norm.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/Exome_Norm/Exome_Norm_R1.fastq.gz /workspace/inputs/data/fastq/Exome_Norm/Exome_Norm_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:Exome_Tumor\tPL:ILLUMINA\tPU:C1TD1ACXX-ATCACG.7\tLB:exome_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/Exome_Tumor.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/Exome_Tumor/Exome_Tumor_R1.fastq.gz /workspace/inputs/data/fastq/Exome_Tumor/Exome_Tumor_R2.fastq.gz
+
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane2\tPL:ILLUMINA\tPU:D1VCPACXX.7\tLB:wgs_norm_lib2\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane2.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane2_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane2_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane3\tPL:ILLUMINA\tPU:D1VCPACXX.8\tLB:wgs_norm_lib3\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane3.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane3_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane3_R2.fastq.gz
+
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.1\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane1_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane2\tPL:ILLUMINA\tPU:D1VCPACXX.2\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane2.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane2_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane2_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane3\tPL:ILLUMINA\tPU:D1VCPACXX.3\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane3.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane3_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane3_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane4\tPL:ILLUMINA\tPU:D1VCPACXX.4\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane4.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane4_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane4_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane5\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tumor_lib3\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane5.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane5_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane5_R2.fastq.gz
 ```
 
 ### Convert sam to bam format
 
 ```bash
 cd /workspace/align
-samtools view -h -b -o Exome_Norm.bam Exome_Norm.sam
-samtools view -h -b -o Exome_Tumor.bam Exome_Tumor.sam
-samtools view -h -b -o WGS_Norm_Lane1.bam WGS_Norm_Lane1.sam
-samtools view -h -b -o WGS_Norm_Lane2.bam WGS_Norm_Lane2.sam
-samtools view -h -b -o WGS_Norm_Lane3.bam WGS_Norm_Lane3.sam
-samtools view -h -b -o WGS_Tumor_Lane1.bam WGS_Tumor_Lane1.sam
-samtools view -h -b -o WGS_Tumor_Lane2.bam WGS_Tumor_Lane2.sam
-samtools view -h -b -o WGS_Tumor_Lane3.bam WGS_Tumor_Lane3.sam
-samtools view -h -b -o WGS_Tumor_Lane4.bam WGS_Tumor_Lane4.sam
-samtools view -h -b -o WGS_Tumor_Lane5.bam WGS_Tumor_Lane5.sam
+samtools view -@ 8 -h -b -o Exome_Norm.bam Exome_Norm.sam
+samtools view -@ 8 -h -b -o Exome_Tumor.bam Exome_Tumor.sam
+samtools view -@ 8 -h -b -o WGS_Norm_Lane1.bam WGS_Norm_Lane1.sam
+samtools view -@ 8 -h -b -o WGS_Norm_Lane2.bam WGS_Norm_Lane2.sam
+samtools view -@ 8 -h -b -o WGS_Norm_Lane3.bam WGS_Norm_Lane3.sam
+samtools view -@ 8 -h -b -o WGS_Tumor_Lane1.bam WGS_Tumor_Lane1.sam
+samtools view -@ 8 -h -b -o WGS_Tumor_Lane2.bam WGS_Tumor_Lane2.sam
+samtools view -@ 8 -h -b -o WGS_Tumor_Lane3.bam WGS_Tumor_Lane3.sam
+samtools view -@ 8 -h -b -o WGS_Tumor_Lane4.bam WGS_Tumor_Lane4.sam
+samtools view -@ 8 -h -b -o WGS_Tumor_Lane5.bam WGS_Tumor_Lane5.sam
 ```
 
 ### Merge bam files
 
+For the WGS data, we have multiple separate bams for each lane of data. Let's take this opportunity to merge them into a single bam for tumor and normal respectively.
+
 ```bash
 cd /workspace/align
-samtools merge -@ 4 WGS_Norm_merged.bam WGS_Norm_Lane1.bam WGS_Norm_Lane2.bam WGS_Norm_Lane3.bam
-samtools merge -@ 4 WGS_Tumor_merged.bam WGS_Tumor_Lane1.bam WGS_Tumor_Lane2.bam WGS_Tumor_Lane3.bam WGS_Tumor_Lane4.bam WGS_Tumor_Lane5.bam
+samtools merge -@ 8 WGS_Norm_merged.bam WGS_Norm_Lane1.bam WGS_Norm_Lane2.bam WGS_Norm_Lane3.bam
+samtools merge -@ 8 WGS_Tumor_merged.bam WGS_Tumor_Lane1.bam WGS_Tumor_Lane2.bam WGS_Tumor_Lane3.bam WGS_Tumor_Lane4.bam WGS_Tumor_Lane5.bam
 ```
 
 
 ### Query name sort bam files
 
-Runtimes: Exome, 57min; WGS, 311-563min
-
 ```bash
 cd /workspace/align
-java -Xmx64g -jar $PICARD SortSam I=Exome_Norm.bam O=Exome_Norm_namesorted.bam SO=queryname
-java -Xmx64g -jar $PICARD SortSam I=Exome_Tumor.bam O=Exome_Tumor_namesorted.bam SO=queryname
-java -Xmx64g -jar $PICARD SortSam I=WGS_Norm_merged.bam O=WGS_Norm_merged_namesorted.bam SO=queryname
-java -Xmx64g -jar $PICARD SortSam I=WGS_Tumor_merged.bam O=WGS_Tumor_merged_namesorted.bam SO=queryname
+java -Xmx60g -jar $PICARD SortSam I=Exome_Norm.bam O=Exome_Norm_namesorted.bam SO=queryname
+java -Xmx60g -jar $PICARD SortSam I=Exome_Tumor.bam O=Exome_Tumor_namesorted.bam SO=queryname
+java -Xmx60g -jar $PICARD SortSam I=WGS_Norm_merged.bam O=WGS_Norm_merged_namesorted.bam SO=queryname
+java -Xmx60g -jar $PICARD SortSam I=WGS_Tumor_merged.bam O=WGS_Tumor_merged_namesorted.bam SO=queryname
 ```
 
 
 ### Mark duplicates
-
-Runtimes: Exome, XXX; WGS 386min,
 
 ```bash
 cd /workspace/align
@@ -84,8 +82,6 @@ java -Xmx64g -jar $PICARD MarkDuplicates I=WGS_Tumor_merged_namesorted.bam O=WGS
 
 
 ### Position sort bam file
-
-Runtimes: Exome, 43-56min; WGS XXX
 
 ```bash
 cd /workspace/align
@@ -119,6 +115,11 @@ See [here](https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5Os
 
 Questions about GATK step.
 Why that the BQSR commands below limit the modeling step to chr1-22. This is where the majority of known variants are located and the autosomes are expected to have more even coverage than sex chromosomes. However, once the model is built, we apply to all bases on all contigs.
+
+
+
+
+
 
 #### Calculate BQSR Table
 

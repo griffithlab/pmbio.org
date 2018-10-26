@@ -53,7 +53,7 @@ chr6_normal_calls <- subset.data.frame(normal_calls, CHROM == "chr6"); chr17_nor
 normal_calls <- subset.data.frame(normal_calls, DP >= 20)
 
 # Split GT_AD column, make three new columns with one allele depth per column
-normal_calls <- normal_calls %>% separate(GT_AD, c(AD_1, AD_2, AD_3), remove = FALSE)
+normal_calls <- normal_calls %>% separate(GT_AD, c("AD_1", "AD_2", "AD_3"), remove = FALSE, fill = "right")
 
 # Make sure allele depth columns are numeric so they can be used to calculate VAFs
 normal_calls$AD_1 <- as.numeric(normal_calls$AD_1); normal_calls$AD_2 <- as.numeric(normal_calls$AD_2); normal_calls$AD_3 <- as.numeric(normal_calls$AD_3) 
@@ -67,7 +67,7 @@ colnames(VAF_1) <- c("CHROM", "POS", "GT", "AD", "DP", "VAF"); colnames(VAF_2) <
 normal_calls <- merge(VAF_1, VAF_2, all = TRUE); normal_calls <- merge(normal_calls, VAF_3, all = TRUE)
 
 # Filter for heterozygous posistions, i.e. positions with VAF between .4 and .6
-normal_calls <- subset.data.frame(normal_calls, VAF >= .4); normal_calls <- subset.data.frame(normal_calls, VAF >= .6)
+normal_calls <- subset.data.frame(normal_calls, VAF >= .4); normal_calls <- subset.data.frame(normal_calls, VAF <= .6)
 
 # Create table containing info for heterozygous SNPs, will use later to plot results
 write.table(normal_calls, file="heterozygous.snps.table", sep = "\t", col.names = TRUE, row.names = FALSE, quote = FALSE)
@@ -96,7 +96,7 @@ setwd("")
 library(dplyr); library(tidyr); library(ggplot2)
 
 # Read bam-readcount output into R
-tumor_VAFS <- read.delim("tumor.readcounts", header = FALSE, fill = TRUE, col.names = c("CHROM", "POS", "REF", "TUMOR_DP", "5", "count_A", "count_C", "count_G", "count_T", "11", "12", "13", "14"))
+tumor_VAFs <- read.delim("tumor.readcounts", header = FALSE, fill = TRUE, col.names = c("CHROM", "POS", "REF", "TUMOR_DP", "5", "count_A", "count_C", "count_G", "count_T", "11", "12", "13", "14"))
 
 # Select columns relevant to our calculation
 tumor_VAFs <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, count_A, count_C, count_G, count_T)
@@ -128,16 +128,18 @@ tumor_VAFs <- subset.data.frame(tumor_VAFs, VAF > 0)
 write.table(tumor_VAFs, file="tumor.VAFs.table", sep = "\t", col.names = TRUE, row.names = FALSE, quote = FALSE)
 
 # Read in previously made table with germline VAFs
-germline_VAFs <- read.delim("heterozygous.snps.table", header = TRUE, col.names("CHROM", "POS", "GT", "AD", "DP", "VAF"))
+germline_VAFs <- read.delim("heterozygous.snps.table", header = TRUE, col.names = c("CHROM", "POS", "GT", "AD", "DP", "VAF"))
 
 # Plot VAFs for chromosome 6
 png("chr6_normal_vs_tumor_VAFs.png", width = 1340, height = 300)
 chr6_VAF_plot <- ggplot() + geom_point(data = germline_VAFs[germline_VAFs$CHROM == "chr6", ], aes(POS,VAF), color="blue") + geom_point(data = tumor_VAFs[tumor_VAFs$CHROM == "chr6", ], aes(POS,VAF), color="green") + xlab("Chr6 Position") + ylab("VAF")
+plot(chr6_VAF_plot)
 dev.off()
 
 # Plot VAFs for chromosome 17
 png("chr17_normal_vs_tumor_VAFs.png", width = 1340, height = 300)
 chr17_VAF_plot <- ggplot() + geom_point(data = germline_VAFs[germline_VAFs$CHROM == "chr17", ], aes(POS,VAF), color="blue") + geom_point(data = tumor_VAFs[tumor_VAFs$CHROM == "chr17", ], aes(POS,VAF), color="green") + xlab("Chr17 Position") + ylab("VAF")
+plot(chr17_VAF_plot)
 dev.off()
 ```
 To-do: add normal_vs_tumor images

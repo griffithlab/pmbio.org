@@ -227,10 +227,89 @@ dev.off()
 
 {% include figure.html image="/assets/module_4/copyCat_final.png" %}
 
-### cnvkit wgs
-[CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python package for copy number calling specifically designed for hybrid capture and exome sequencing data. It performs the basic bias correction for gc-content and mappability discussed above. The software also will
+### Somatic CNA for exome
+[CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python package for copy number calling specifically designed for hybrid capture and exome sequencing data. During a typical hybrid capture sequencing experiment the probes capture DNA from the sequencing library, however the probes don't always bind perfectly. This results in not only the "on-target" regions being pulled from the library for later sequencing but "off-target" as well where the probes didn't perfectly bind and essentially pulled the wrong region. The effect provides very low read coverage across the entire genome which [CNVkit](https://cnvkit.readthedocs.io/en/stable/) takes advantage of to make CN calls. Further the software performs the basic bias correction for gc-content and mappability discussed above and will also correct for the typically normal distrubtion of reads for a given target region and the spacing between them.
+
+To start lets for make a directory to store our results and then activate the conda environemnt which has CNVkit.
 
 ```bash
+# make directory to store results
+mkdir -p /workspace/data/results/somatic/cnvkit_exome
+cd /workspace/data/results/somatic/cnvkit_exome
+
+# activate the cnvkit conda environment
+source activate cnvkit
+```
+
+Our next step is to calculate the regions of the genome which are inaccessible to sequencing, typically this includes telomeres, centromeres and other highly repetitive regions. We will use the command `cnvkit.py access` for this and give it specific regions to exclude as well which we know are problematic. The arguments cnvkit.py takes for this are as follows:
+
+1. Path to fasta file containing the reference
+2. -x: Path to bed file containing specific regions to exclude
+3. -o: output file
+
+```bash
+# Calculate the regions of the genome which are inaccessible to sequencing
+cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -x /workspace/data/results/somatic/copyCat_annotation/gaps.bed -o /workspace/data/raw_data/references/access-excludes.hg38.bed
+```
+
+With our accessibility file created we can run `cnvkit.py batch' which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
+
+1. Path to tumor bam file
+2. --normal: Path to normal bam file (to run in paired mode)
+3. --targets: Target file corresponding to the exome probes, we created this in [module 2](/module-02-inputs/0002/03/01/Annotation/)
+4. --fasta: fasta file corresponding to the reference
+5. --access: the accessibility file created above
+6. --output-reference: where to store the output reference file the pipeline creates/uses
+7. --output-dir: where to store the results from the pipeline
+8. --method hybrid: specifies what mode to run in, hybrid capture for our exome reagent
+9. -p 20: Number of threads to use
+10. --diagram: specifies to create a diagram of the results
+11. --scatter: specifies to create a scatter plot of the results
+12. --drop-low-coverage: specifies to drop low coverage bins (don't use in germline mode!)
+
+We will also convert the pdf diagram and scatter plots to png so that they load faster.
+
+```bash
+# run the entire cnvkit workflow for the exome data
+cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter --drop-low-coverage
+
+# convert the pdf generated from the workflow to png/jpg
+convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.png
+convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.jpg
+
+convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.png
+convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.jpg
+```
+
+With our running of the pipeline completed you should see the files listed below in your output directory. For a complete description of the files and the specific columns please see the CNVkit file format help documentation available [here](https://cnvkit.readthedocs.io/en/stable/fileformats.html).
+
+- Exome_Norm_sorted_mrkdup.antitargetcoverage.cnn -> antitarget bin coverage for normal
+- Exome_Norm_sorted_mrkdup.targetcoverage.cnn -> target bin coverage for normal
+- Exome_Tumor_sorted_mrkdup-diagram.pdf -> diagram of CN calls
+- Exome_Tumor_sorted_mrkdup-scatter.pdf -> scatter plot of CN calls
+- Exome_Tumor_sorted_mrkdup.antitargetcoverage.cnn -> antitarget bin coverage for tumor
+- Exome_Tumor_sorted_mrkdup.cnr -> Bin-level log2 ratios
+- Exome_Tumor_sorted_mrkdup.cns -> Segmented log2 ratios
+- Exome_Tumor_sorted_mrkdup.targetcoverage.cnn -> target bin coverage for tumor
+
+Finally it might be the case that you want a closer look at the results, perhaps theres a specific region of interest you are interested. Let's go ahead and make both chromosome 6 scatter plot and heatmaps for both the probes and segment calls. We can use `cnvkit.py scatter` and `cnvit.py heatmap` to achieve this.
+
+```bash
+# create a scatter plot for just chromosome 6
+cnvkit.py scatter  --segment Exome_Tumor_sorted_mrkdup.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup.cns
+
+# create a heatmap for just chromosome 6
+cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup.cnr
+cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.pdf Exome_Tumor_sorted_mrkdup.cns
+
+# deactivate conda environment
+source deactivate
+```
+
+It should be noted that cnvkit.py
+
+```bash
+# make directory to store results
 mkdir -p /workspace/data/results/somatic/cnvkit_wgs
 cd /workspace/data/results/somatic/cnvkit_wgs
 
@@ -246,35 +325,3 @@ convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdu
 convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.png
 convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.jpg
 ```
-
-### cnvkit exome
-```bash
-mkdir -p /workspace/data/results/somatic/cnvkit_exome
-cd /workspace/data/results/somatic/cnvkit_exome
-
-source activate cnvkit
-
-wget http://18.223.213.22/refseq/hglft_genome_304d_b78af0.bed
-
-cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -x /workspace/data/results/somatic/copyCat_annotation/gaps.bed -o /workspace/data/raw_data/references/access-excludes.hg38.bed
-
-cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter --drop-low-coverage
-
-source deactivate
-
-convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.png
-convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.jpg
-
-convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.png
-convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.jpg
-
-
-cnvkit.py scatter  --segment Exome_Tumor_sorted_mrkdup.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup.cns
-
-cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup.cnr
-cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.pdf Exome_Tumor_sorted_mrkdup.cns
-```
-
-        1. testing
-        2. testing
-        3. testing
