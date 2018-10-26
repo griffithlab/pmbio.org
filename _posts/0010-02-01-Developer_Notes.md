@@ -81,6 +81,28 @@ rm -f ref_genome.dict ref_genome.fa.gz ref_genome.fa.fai
 
 ```
 
+### Create reference transcriptome files and store on genomedata.org for use in the course
+Download transcriptome annotations (GTF files) from Ensembl. Make sure the version used matches the version of VEP installed on the AMI! Be sure to fix the chromosome names in the GTF to be compatible with our reference genome. Finally create sub-setted GTF files for the regions of interest used in the course.
+
+```bash
+# create dir for these annotation files
+cd /home/ubuntu/workspace/inputs/references/
+mkdir transcriptome
+cd transcriptome
+
+# download the GTF and Fasta file for the desired version of Ensembl
+wget ftp://ftp.ensembl.org/pub/release-93/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-93/gtf/homo_sapiens/Homo_sapiens.GRCh38.93.gtf.gz
+gunzip *
+
+# produce GTF files of various subsets
+
+# produce transcriptome (cDNA) fasta files of various subsets
+
+
+```
+
+
 
 
 ### Prepare original starting data

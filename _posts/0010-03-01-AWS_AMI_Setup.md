@@ -1040,7 +1040,7 @@ export LD_LIBRARY_PATH=$YEPPPLIBDIR:$LD_LIBRARY_PATH
 ```
 
 ### Final Cleanup
-To finnish up clean out the downloaded compressed binary files
+To finish up clean out the downloaded compressed binary files
 ```bash
 # start sudo shell
 sudo bash
@@ -1056,5 +1056,6 @@ exit
 ```
 
 ### TO ADD
-- nothing known at this time
+- Add custom script to fix GTF chr naming: https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/convertEnsemblGTF.pl
+
 
