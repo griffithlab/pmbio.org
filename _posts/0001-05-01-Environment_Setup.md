@@ -18,15 +18,21 @@ After you change your `.bashrc` you need to either source it (`source ~/.bashrc`
 # create shortcuts to some long files paths that we will use frequently (e.g. reference file location, etc.)
 
 # create shortcuts to some frequently used JAR files
-export PICARD='/home/ubuntu/bin/picard.jar'
+export PICARD='/usr/local/bin/picard.jar'
 
-# specify a custom temp dir for java processes
-export _JAVA_OPTIONS=-Djava.io.tmpdir=/workspace/tmp/ #Consider changing this to separate volume for performance
+# Depending on the instance configuration (i.e., small root volume) it may be necessary to specify a custom temp dir for java processes
+# We might also Consider changing this to separate volume for performance
+# export _JAVA_OPTIONS=-Djava.io.tmpdir=/workspace/tmp/
 
-# add some locally installed tools to our path
-export PATH=/home/ubuntu/bin/samtools-1.7/bin:/home/ubuntu/bin/bwa-0.7.17:/home/ubuntu/bin/gatk-4.0.2.1:$PATH
+# If student wish to use versions of tools the installed, add to path 
+# export PATH=/home/ubuntu/workspace/bin:$PATH
 
 # the data subset we will use in this course
 export CHRS='chr6_and_chr17'
+
+# GATK regions string for many gatk commands that require it
+# export GATK_REGIONS='-L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM'
+
+export GATK_REGIONS='-L chr6 -L chr17' 
 
 ```

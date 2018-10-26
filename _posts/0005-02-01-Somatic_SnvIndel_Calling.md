@@ -23,43 +23,43 @@ __________________________
 
 The first variant caller that we will use here is [VARSCAN](http://varscan.sourceforge.net/), VarScan is a platform-independent mutation caller for targeted, exome, and whole-genome resequencing data and employs a robust heuristic/statistic approach to call variants that meet desired thresholds for read depth, base quality, variant allele frequency, and statistical significance:
 ```bash
-java -Xmx4g -jar VarScan.v2.4.2.jar somatic <(samtools mpileup -l ~/workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --no-BAQ -f ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa ~/workspace/data/DNA_alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/data/DNA_alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) /data/varscan/exome --mpileup 1 --output-vcf
-cd /data/varscan/
-java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.snp.vcf exome.snp
-java -Xmx4g -jar VarScan.v2.4.2.jar processSomatic exome.indel.vcf exome.indel
-find /data/varscan -name '*.vcf' -exec bgzip -f {} \;
-find /data/varscan -name '*.vcf.gz' -exec tabix -f {} \;
+mkdir -p ~/workspace/results/somatic/varscan
+
+java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup -l ~/workspace/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --no-BAQ -f ~/workspace/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa ~/workspace/results/align/final/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/results/align/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) ~/workspace/results/somatic/varscan/exome --mpileup 1 --output-vcf
+
+cd ~/workspace/results/somatic/varscan/
+
+java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic exome.snp.vcf exome.snp
+java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic exome.indel.vcf exome.indel
+find ~/workspace/data/results/somatic/varscan -name '*.vcf' -exec bgzip -f {} \;
+find ~/workspace/data/results/somatic/varscan -name '*.vcf.gz' -exec tabix -f {} \;
+
+/usr/local/bin/gatk VariantFiltration -R ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -V exome.snp.Somatic.vcf.gz --mask exome.snp.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O exome.snp.Somatic.hc.filter.vcf.gz
+/usr/local/bin/gatk VariantFiltration -R ~/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -V exome.indel.Somatic.vcf.gz --mask exome.indel.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O exome.indel.Somatic.hc.filter.vcf.gz
+
+bcftools concat -a -o exome.vcf.gz -O z exome.snp.Somatic.hc.filter.vcf.gz exome.indel.Somatic.hc.filter.vcf.gz
+tabix -f ~/workspace/data/results/somatic/varscan/exome.vcf.gz
 ```
-
-In order to continue to the next step, you may need to redownload GATK if you run into errors with your current installation:
-1. Manually download GATK after accepting the license : `https://www.broadinstitute.org/gatk/download/auth?package=GATK`
-2. Copy the download to your instance:
-`scp -i <your pem file> Downloads/GenomeAnalysisTK-3.6.tar.bz2 ubuntu@<IP address of your instance>:/data/bin`.
-3. Inside the instance, unzip the archive : `tar --bzip2 -xvf GenomeAnalysisTK-3.6.tar.bz2`
-4. Test with JAVA8 : `java -jar GenomeAnalysisTK.jar -h`
-
-Next steps:
-* `java -Xmx4g -jar GenomeAnalysisTK.jar -T VariantFiltration -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --variant exome.snp.Somatic.vcf.gz --mask exome.snp.Somatic.hc.vcf.gz --maskName "processSomatic" --filterNotInMask -o exome.snp.Somatic.hc.filter.vcf.gz`
-* `java -Xmx4g -jar GenomeAnalysisTK.jar -T VariantFiltration -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --variant exome.indel.Somatic.vcf.gz --mask exome.indel.Somatic.hc.vcf.gz --maskName "processSomatic" --filterNotInMask -o exome.indel.Somatic.hc.filter.vcf.gz`
-
-To continue, you will need to have bcftools installed, please refer to the installation section above if needed.
-
-* `bcftools concat -a -o exome.vcf.gz -O z exome.snp.Somatic.hc.filter.vcf.gz exome.indel.Somatic.hc.filter.vcf.gz`
-* `tabix -f /data/varscan/exome.vcf.gz`
 
 #### **Running STRELKA**
 __________________________  
-Given that you have STRELKA properly installed, here are the commands for running STRELKA in order, you may need to adjust according to how you have named and placed your directories:
-* `/data/strelka/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/data/alignment/final/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/data/alignment/final/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=../reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --exome --runDir=/data/strelka/exome`
-* `/data/strelka/exome/runWorkflow.py -m local -j 4` (Please specify according to the number of cpus avaliable. In this case I have 4 for my instance)
-*	`zcat exome/results/variants/somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.snvs.gt.vcf`
-* `zcat exome/results/variants/somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.indels.gt.vcf`
-* `find exome/results/variants -name *.vcf -exec bgzip -f {} \;`
-* `find exome/results/variants -name *.vcf.gz -exec tabix -f {}`
+The second variant caller that we will use is [STRELKA](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). Strelka calls germline and somatic small variants from mapped sequencing reads and is optimized for rapid clinical analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. Both germline and somatic callers include a final empirical variant rescoring step using a random forest model to reflect numerous features indicative of call reliability which may not be represented in the core variant calling probability model.
 
-After installing BCFtools:
-* `bcftools concat -a -o exome.vcf.gz -O z exome/results/variants/somatic.snvs.gt.vcf.gz exome/results/variants/somatic.indels.gt.vcf.gz`
-* `tabix exome.vcf.gz`
+```bash
+mkdir -p ~/workspace/data/results/somatic/strelka
+cd ~
+
+python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --exome --runDir=/workspace/data/results/somatic/strelka
+
+/data/strelka/exome/runWorkflow.py -m local -j 4 (Please specify according to the number of cpus avaliable. In this case I have 4 for my instance)
+zcat exome/results/variants/somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.snvs.gt.vcf
+zcat exome/results/variants/somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > exome/results/variants/somatic.indels.gt.vcf
+find exome/results/variants -name *.vcf -exec bgzip -f {} \;
+find exome/results/variants -name *.vcf.gz -exec tabix -f {} \;
+
+bcftools concat -a -o exome.vcf.gz -O z exome/results/variants/somatic.snvs.gt.vcf.gz exome/results/variants/somatic.indels.gt.vcf.gz
+tabix exome.vcf.gz
+```
 
 #### **Running MuTect2**
 __________________________
