@@ -271,7 +271,7 @@ We will also convert the pdf diagram and scatter plots to png so that they load 
 
 ```bash
 # run the entire cnvkit workflow for the exome data
-cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 20 --diagram --scatter --drop-low-coverage
+cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 8 --diagram --scatter --drop-low-coverage
 
 # convert the pdf generated from the workflow to png/jpg
 convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.png
@@ -325,7 +325,7 @@ cd /workspace/data/results/somatic/cnvkit_wgs
 source activate cnvkit
 
 # run the cnvkit pipeline
-cnvkit.py batch /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam --normal /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_wgs/ --method wgs -p 20 --diagram --scatter
+cnvkit.py batch /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam --normal /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_wgs/ --method wgs -p 8 --diagram --scatter
 
 # deactivate the cnvkit environment
 source deactivate
