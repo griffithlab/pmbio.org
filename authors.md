@@ -49,16 +49,3 @@ Dr. Malachi Griffith is an Assistant Director of the McDonnell Genome Institute 
 Zachary Skidmore is a staff scientist at the McDonell Genome Institute at Washington University in Saint Louis. His undergraduate work was completed at the Ohio State University where he obtained a B.Sc. in molecular biology. Graduate work was performed at the University of Illinois where he obtained a M.eng in bioinformatics. His research focus is in the realm of cancer biology where he uses and develops tools and techniques to aid in the analysis and interpretation of cancer sequencing data. He have worked on several large sequencing projects across many cancer types and has expertise in a variety of languages (perl, R, bash, python, typescript, angular2). He is the creator and maintainer of the bioconductor package GenVisR, a graphics program designed to help visualize cohort level genomic data.
 
 ***
-
-### Erica K. Barnell
-<nav class="nav  nav--social">
-{% for link in site.contact_erica %}
-   {% assign id = link[0] | downcase %}
-   {% capture refer %}{{link[1]}}{% endcapture %}
-<a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
-{% endfor %}
-</nav>
-{% include figure.html image="/assets/Authors/Erica_Barnell.png"position="right" class="rounded-circle" %}
-Erica Barnell is an MD/PhD candidate at the Washington University School of Medicine and is completing her PhD at the McDonnell Genome Institute in the Griffith lab. Her thesis research surrounds building tools to improve the annotation bottleneck within precision oncology. She has worked on several research project including: assisting with building the Clinical Interpretation of Cancer Variant (CIViC) database, implementing a deep learning approach to automate somatic variant refinement (DeepSVR), and creating a standard operating procedure for manual review of sequencing data. Her undergraduate work was completed at Cornell University where she obtained a B.S. in Biological Sciences and Applied Economics and Management.
-
-***
