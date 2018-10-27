@@ -60,3 +60,5 @@ Zachary Skidmore is a staff scientist at the McDonell Genome Institute at Washin
 </nav>
 {% include figure.html image="/assets/Authors/Erica_Barnell.png" position="right" class="rounded-circle" %}
 Erica Barnell is an MD/PhD candidate at the Washington University School of Medicine and is completing her PhD at the McDonnell Genome Institute in the Griffith lab. Her thesis research surrounds building tools to improve the annotation bottleneck within precision oncology. She has worked on several research project including: assisting with building the Clinical Interpretation of Cancer Variant (CIViC) database, implementing a deep learning approach to automate somatic variant refinement (DeepSVR), and creating a standard operating procedure for manual review of sequencing data. Her undergraduate work was completed at Cornell University where she obtained a B.S. in Biological Sciences and Applied Economics and Management.
+
+***
