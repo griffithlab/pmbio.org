@@ -52,7 +52,7 @@ Zachary Skidmore is a staff scientist at the McDonell Genome Institute at Washin
 
 ### Erica K. Barnell
 <nav class="nav  nav--social">
-{% for link in site.contact_erica %}
+{% for link in site.contact_zach %}
    {% assign id = link[0] | downcase %}
    {% capture refer %}{{link[1]}}{% endcapture %}
 <a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
