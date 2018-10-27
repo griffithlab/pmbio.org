@@ -102,8 +102,8 @@ Note that the following assumes the existence of a particular version of Perl. W
 When prompted by the install step below use these answers:
 1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 2. Do you want to continue installing the API (y/n)? y [ENTER]
-3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
-4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
+3. Do you want to install any cache files (y/n)? y [ENTER] (select number for homo_sapiens_vep_93_GRCh38.tar.gz) [ENTER]
+4. Do you want to install any FASTA files (y/n)? y [ENTER] (select number for homo_sapiens) [ENTER]
 5. Do you want to install any plugins (y/n)? n [ENTER]
 
 ```bash
@@ -119,7 +119,7 @@ cd ensembl-vep-release-93.5/
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 #2. Do you want to continue installing the API (y/n)? y [ENTER] (if asked)
 #3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
-#4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
+#4. Do you want to install any FASTA files (y/n)? y [ENTER] 42 [ENTER]
 #5. Do you want to install any plugins (y/n)? n [ENTER]
 
 # make a symlink
