@@ -78,6 +78,30 @@ liftOver SeqCapEZ_Exome_v3.0_Design_Annotation_files/SeqCap_EZ_Exome_v3_hg19_pri
 
 # create a version in standard bed format (chr, start, stop)
 cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
+
+# take a quick look at the format of this file
+head SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
+
+# a very common question in exome (or any capture based approach) is: how big is my capture space?
+# use bedtools to determine the size of the capture space represented by this bed file
+
+# first sort the bedfile and store the sorted version
+bedtools sort -i SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed
+
+# now merge the bed file to collapse any overlapping regions so they are not double counted.
+bedtools merge -i SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed
+
+# finally use a Perl one liner to determine the size of each non-overlapping region and determine the cumulative sum
+perl -ne 'chomp; @l=split("\t",$_); $size += $l[2]-$l[1]; print "$size\n"' SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed
+
+# note that the size of the space targeted by the exome reagent is ~63 Mbp. Does that sound reasonable?
+
+# now create a subset of this bed file
+grep -w -P "^chr6|^chr17" SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed > exome_regions.bed
+
+# clean up intermediate files
+rm -fr SeqCapEZ_Exome_v3.0_Design_Annotation_files/ SeqCap_EZ_Exome_v3_hg38_primary_targets.bed SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed unMapped.bed
+
 ```
 
 ### Obtaining an interval list for the exome bed file
@@ -85,8 +109,19 @@ cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38
 NOTE: The following interval list is being created for an annotation file the corresponds to the whole genome.  The `ref_genome.dict` we downloaded in the previous section only contains chr6 and chr17. We need to either trim the exome ROI file down to just these chrs as well. Or also download/create a full version of the dict file.
 
 ```bash
+# first for the complete exome bed file
+cd /workspace/inputs/references/
+mkdir temp
+cd temp
+wget http://genomedata.org/pmbio-workshop/references/genome/all/ref_genome.dict
 cd /workspace/inputs/references/exome
-java -jar $PICARD BedToIntervalList I=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed O=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.interval_list SD=/workspace/inputs/references/genome/ref_genome.dict
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed O=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.interval_list SD=/workspace/inputs/references/temp/ref_genome.dict
+rm -fr /workspace/inputs/references/temp/
+
+# next for our subset exome regions file
+cd /workspace/inputs/references/exome
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=exome_regions.bed O=exome_regions.bed.interval_list SD=/workspace/inputs/references/genome/ref_genome.dict
+
 ```
 
 ### Obtaining transcriptome reference files

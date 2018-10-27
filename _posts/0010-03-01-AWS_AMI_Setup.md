@@ -895,6 +895,7 @@ Installation of the sleuth tool, used in this course for differential expression
 sudo bash
 
 # install sleuth
+R --vanilla -e 'BiocManager::install(c("rhdf5"))'
 R --vanilla -e 'devtools::install_github("pachterlab/sleuth")'
 
 # exit sudo shell
