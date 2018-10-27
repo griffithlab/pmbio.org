@@ -126,6 +126,48 @@ gtf_to_fasta transcriptome/chr6_and_chr17/ref_transcriptome.gtf temp/ref_genome.
 
 ```
 
+### Create exome target region .bed and interval files for various subsets starting with the manufacturer file
+```bash
+
+# get exome file from nimblegen
+mkdir -p /workspace/inputs/references/exome
+cd /workspace/inputs/references/exome
+wget -c https://sequencing.roche.com/content/dam/rochesequence/worldwide/resources/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
+unzip SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
+rm -f SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
+
+# perform liftover, sort, and merge
+wget -c http://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz
+liftOver SeqCapEZ_Exome_v3.0_Design_Annotation_files/SeqCap_EZ_Exome_v3_hg19_primary_targets.bed  hg19ToHg38.over.chain.gz SeqCap_EZ_Exome_v3_hg38_primary_targets.bed unMapped.bed
+cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
+bedtools sort -i SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed
+bedtools merge -i SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed
+
+# create the subsets
+mkdir all chr6 chr17 chr6_and_chr17
+cp SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed all/exome_regions.bed
+grep -w -P "^chr6" SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed > chr6/exome_regions.bed
+grep -w -P "^chr17" SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed > chr17/exome_regions.bed
+grep -w -P "^chr6|^chr17" SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed > chr6_and_chr17/exome_regions.bed
+
+# get the .dict files for each subset
+wget http://genomedata.org/pmbio-workshop/references/genome/all/ref_genome.dict -O all/ref_genome.dict
+wget http://genomedata.org/pmbio-workshop/references/genome/chr6/ref_genome.dict -O chr6/ref_genome.dict
+wget http://genomedata.org/pmbio-workshop/references/genome/chr17/ref_genome.dict -O chr17/ref_genome.dict
+wget http://genomedata.org/pmbio-workshop/references/genome/chr6_and_chr17/ref_genome.dict -O chr6_and_chr17/ref_genome.dict
+
+# create the matching interval lists
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=all/exome_regions.bed O=all/exome_regions.bed.interval_list SD=all/ref_genome.dict
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=chr6/exome_regions.bed O=chr6/exome_regions.bed.interval_list SD=chr6/ref_genome.dict
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=chr17/exome_regions.bed O=chr17/exome_regions.bed.interval_list SD=chr17/ref_genome.dict
+java -jar /usr/local/bin/picard.jar BedToIntervalList I=chr6_and_chr17/exome_regions.bed O=chr6_and_chr17/exome_regions.bed.interval_list SD=chr6_and_chr17/ref_genome.dict
+
+# clean up and store files on genomedata.org
+rm -fr SeqCap* unMapped.bed
+
+
+```
+
 ### Prepare original starting data
 
 The plan is to provide students with raw down-sampled fastq files as starting point. These notes document our original source of data files and any transformations needed.
