@@ -14,6 +14,9 @@ WGS and Exome raw sequence (fastq) data for our tumor and normal samples will be
 - Y: use soft clipping for supplementary alignments
 - R: read group header line info. See table in [Data Module](/module-02-inputs/0002/05/01/Data/) for sample details.
 
+#TO DO - use a single dataset (e.g., Exome Norm) to demonstrate individual commands. Then process the rest with more efficient piped commands.
+
+
 ### Run bwa mem using the above information
 
 ```bash

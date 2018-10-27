@@ -48,6 +48,10 @@ gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/ge
 gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.vcf --bam-output /workspace/germline/WGS_Norm_HC_out.bam $GATK_REGIONS 
 ```
 
+TO DO: Add exercise to compare alignments from bwa-mem alignment to HaplotypeCaller local realignment
+
+
+
 ### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling (for exomes)
 
 An alternate (and GATK recommended) method is to use the GVCF workflow. In this mode, HaplotypeCaller runs per-sample to generate an intermediate GVCF, which can then be used with the GenotypeGVCF command for joint genotyping of multiple samples in a very efficient way. Joint genotyping has several advantages. In joint genotyping, variants are analyzed across all samples simultaneously. This ensures that if any sample in the study population has variation at a specific site then the genotype for all samples will be determined at that site. It allows more sensitive detection of genotype calls at sites where one sample might have lower coverage but other samples have a confident variant at that position. Joint calling is also necessary to produce data needed for VQSR filtering (see [next module]({{ site.baseurl }}{% link _posts/0004-02-02-Germline_SnvIndel_FilteringAnnotationReview.md %})). While joint genotyping can be performed directly with HaplotypeCaller (by specifying multiple -I paramters) it is less efficient, and less scalable. Each time a new sample is acquired the entire (progressively slower) variant calling analysis must be repeated. With the GVCF workflow, new samples can be run individually and then more quickly joint genotyped using the GenotypeGVCFs command.    
@@ -115,23 +119,114 @@ Note: These cram files were created in a generally compatible way with the anlys
 - http://www.internationalgenome.org/analysis
 - https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf
 
+#### Convert 1KGP cram files to bam file - this was necessary to subset the data to chr6/17 with sambamba for which I could not get sambamba slice to work on cram (no way to specify reference genome?)
+
+```bash
+#Download complete version of genome for cram to bam conversion
+cd /workspace/inputs/references/genome/
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.dict
+
+#Convert cram to bam
+cd /workspace/inputs/data/1KGP
+samtools view -@ 16 -b -T /workspace/inputs/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram > HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools view -@ 16 -b -T /workspace/inputs/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram > HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools view -@ 16 -b -T /workspace/inputs/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram > HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools view -@ 16 -b -T /workspace/inputs/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram > HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools view -@ 16 -b -T /workspace/inputs/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram > HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+
+#Index bam files - necessary for sambamba slice
+samtools index -@ 16 HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools index -@ 16 HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools index -@ 16 HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools index -@ 16 HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+samtools index -@ 16 HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam
+
+#Slice files down to just chr6 and chr17 - apparently this can only be done one chr at a time?
+sambamba slice -o HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr6
+sambamba slice -o HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr6
+sambamba slice -o HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr6
+sambamba slice -o HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr6
+sambamba slice -o HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr6
+
+sambamba slice -o HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr17
+sambamba slice -o HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr17
+sambamba slice -o HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr17
+sambamba slice -o HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr17
+sambamba slice -o HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.bam chr17
+
+#Merge chr6 and chr7 subsets
+samtools merge -@ 16 HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools merge -@ 16 HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools merge -@ 16 HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools merge -@ 16 HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools merge -@ 16 HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+
+#Index subsetted bam files - necessary for gatk
+samtools index -@ 8 HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam
+samtools index -@ 8 HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam
+samtools index -@ 8 HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam
+samtools index -@ 8 HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam
+samtools index -@ 8 HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam
+
+samtools index -@ 8 HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam
+samtools index -@ 8 HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam
+samtools index -@ 8 HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam
+samtools index -@ 8 HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam
+samtools index -@ 8 HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6.bam
+
+samtools index -@ 8 HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools index -@ 8 HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools index -@ 8 HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools index -@ 8 HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+samtools index -@ 8 HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam
+
+#Host bam/bai files on genomedata.org for student use. Note - converting back to cram files is problematic. If done, then subsequence GATK steps will fail unless provided with the full reference genome. Simpler to just leave as bam files. 
+
+```
+
+
 #### Perform germline variant calling on 1KGP exomes with GATK in GVCF mode
 
 Run the GATK HaplotypeCaller GVCF workflow commands as above.
 
 ```bash
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00099_HC_calls.g.vcf $GATK_REGIONS 
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00102_HC_calls.g.vcf $GATK_REGIONS
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00104_HC_calls.g.vcf $GATK_REGIONS
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00150_HC_calls.g.vcf $GATK_REGIONS
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -O /workspace/germline/HG00158_HC_calls.g.vcf $GATK_REGIONS
+mkdir -p /workspace/germline/1KGP/chr6_chr17
+cd /workspace/germline/1KGP/chr6_chr17
+
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam -O /workspace/germline/1KGP/chr6_chr17/HG00099_HC_calls.g.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam -O /workspace/germline/1KGP/chr6_chr17/HG00102_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam -O /workspace/germline/1KGP/chr6_chr17/HG00104_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam -O /workspace/germline/1KGP/chr6_chr17/HG00150_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr6_chr17.bam -O /workspace/germline/1KGP/chr6_chr17/HG00158_HC_calls.g.vcf $GATK_REGIONS
+
+mkdir -p /workspace/germline/1KGP/chr17
+cd /workspace/germline/1KGP/chr17
+
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00099.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam -O /workspace/germline/1KGP/chr17/HG00099_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00102.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam -O /workspace/germline/1KGP/chr17/HG00102_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00104.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam -O /workspace/germline/1KGP/chr17/HG00104_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00150.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam -O /workspace/germline/1KGP/chr17/HG00150_HC_calls.g.vcf $GATK_REGIONS
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/inputs/data/1KGP/HG00158.alt_bwamem_GRCh38DH.20150826.GBR.exome.chr17.bam -O /workspace/germline/1KGP/chr17/HG00158_HC_calls.g.vcf $GATK_REGIONS
+
 ```
 
 ### Perform joint genotype calling
 
+TO DO: Download pre-computed gvcf files to save time.
+
 Create a joint genotype GVCF, combining HCC1395 Exome normal together with the set of 1KGP exomes, for later use in VQSR filtering.
 
 ```bash
+/workspace/germline/
+
+wget http://genomedata.org/pmbio-workshop/references/1KGP/gvcfs/chr17/HG00099_HC_calls.g.vcf
+wget http://genomedata.org/pmbio-workshop/references/1KGP/gvcfs/chr17/HG00102_HC_calls.g.vcf
+wget http://genomedata.org/pmbio-workshop/references/1KGP/gvcfs/chr17/HG00104_HC_calls.g.vcf
+wget http://genomedata.org/pmbio-workshop/references/1KGP/gvcfs/chr17/HG00150_HC_calls.g.vcf
+wget http://genomedata.org/pmbio-workshop/references/1KGP/gvcfs/chr17/HG00158_HC_calls.g.vcf
+
+
 #Combine gvcfs into a single vcf for use with GenotypeGVCFs
 gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00150_HC_calls.g.vcf -V /workspace/germline/HG00158_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
 
