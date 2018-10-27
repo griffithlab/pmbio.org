@@ -124,15 +124,19 @@ __________________________
 Reference for explaining left align and trim:
 https://genome.sph.umich.edu/wiki/Variant_Normalization#Left_alignment
 ```bash
-java -Xmx24g -jar /data/bin/gatk-4.0.10.1/gatk-package-4.0.10.1-local.jar LeftAlignAndTrimVariants -V /data/exome_chr6.merged.vcf -O exome_chr6.merged.leftalignandtrim.vcf -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa
+cd ~/workspace/somatic/
+
+/usr/local/bin/gatk --java-options "-Xmx24G" LeftAlignAndTrimVariants -V ~/workspace/somatic/exome.merged.vcf.gz -O exome.merged.leftalignandtrim.vcf -R ~/workspace/inputs/references/genome/ref_genome.fa
 ```
 
-Note that when running on chromosome 6 merged variants file, this gave 0 variants aligned.
+Note that when running on chromosome 6 and 17 merged variants file, this gave 0 variants aligned.
 
 ### **Splitting Multi-allelic Variant**
 __________________________
 ```bash
-/data/bin/vt/vt decompose -s exome_chr6.merged.leftalignandtrim.vcf -o exome_chr6.merged.leftalignandtrim.decomposed.vcf
+cd ~/workspace/somatic/
+
+/usr/local/bin/vt decompose -s exome.merged.leftalignandtrim.vcf -o exome.merged.leftalignandtrim.decomposed.vcf
 ```
 
 **Please continue to the next section for instructions on how to filter, annotation and review variants**
