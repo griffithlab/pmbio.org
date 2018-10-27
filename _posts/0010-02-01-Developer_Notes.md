@@ -341,7 +341,7 @@ samtools view chr6_WGS_Tumor_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr6_W
 samtools view chr17_WGS_Norm_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr17_WGS_Norm_readnames.txt
 samtools view chr17_WGS_Tumor_merged_sorted_mrkdup.bam | cut -d$'\t' -f1 > chr17_WGS_Tumor_readnames.txt
 
-cat chr6_WGS_Tumor_readnames.txt chr17_WGS_Tumor_readnames.txt | sort | uniq > chr6_chr17_WGS_Tumor_readnames.txt
+cat chr17_WGS_Tumor_readnames.txt chr6_WGS_Tumor_readnames.txt | sort | uniq > chr17_chr6_WGS_Tumor_readnames.txt
 cat chr6_WGS_Norm_readnames.txt chr17_WGS_Norm_readnames.txt | sort | uniq > chr6_chr17_WGS_Norm_readnames.txt
 
 java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=../all/WGS_Norm_merged_sorted_mrkdup.bam O=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_WGS_Norm_readnames.txt FILTER=includeReadList
@@ -352,13 +352,22 @@ mkdir -p reverted_bams
 mkdir -p reverted_bams/WGS_Norm reverted_bams/WGS_Tumor
 
 java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
+
 java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
+mv 2891323123.bam WGS_Norm_Lane1.bam
+mv 2891323124.bam WGS_Norm_Lane2.bam
+mv 2891323125.bam WGS_Norm_Lane3.bam
 
-#Bam to Fastq: STILL NEEDS ADJUSTMENT DEPENDING ON IDs
+#Bam to Fastq:
 mkdir -p fastqs
-mkdir -p fastqs/WGS_Norm fastq/WGS_Tumor
+mkdir -p fastqs/WGS_Norm fastqs/WGS_Tumor
 
-java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=reverted_bams/WGS_Norm/2891351068.bam F=fastqs/WGS_Norm/2891351068_1.fastq F2=fastqs/WGS_Norm/2891351068_2.fastq
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Norm/WGS_Norm_Lane1.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane1_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane1_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Norm/WGS_Norm_Lane2.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane2_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane2_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Norm/WGS_Norm_Lane3.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane3_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane3_R2.fastq
+
 java -Xmx24g -jar /data/bin/picard.jar SamToFastq I=reverted_bams/WGS_Tumor/2891351066.bam F=fastqs/WGS_Tumor/2891351066_1.fastq F2=fastqs/WGS_Tumor/2891351066_2.fastq
 
 ```

@@ -23,7 +23,7 @@ __________________________
 
 The first variant caller that we will use here is [VARSCAN](http://varscan.sourceforge.net/), VarScan is a platform-independent mutation caller for targeted, exome, and whole-genome resequencing data and employs a robust heuristic/statistic approach to call variants that meet desired thresholds for read depth, base quality, variant allele frequency, and statistical significance:
 ```bash
-mkdir -p ~/workspace/results/somatic/varscan
+mkdir -p ~/workspace/somatic/varscan
 
 java -Xmx4g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup -l ~/workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --no-BAQ -f ~/workspace/data/raw_data/references/ref_genome.fa ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) ~/workspace/data/results/somatic/varscan/exome --mpileup 1 --output-vcf
 
