@@ -109,22 +109,22 @@ cat all/ref_transcriptome.gtf | grep --color=never -w "^chr17" > chr17/ref_trans
 cat chr6/ref_transcriptome.gtf chr17/ref_transcriptome.gtf > chr6_and_chr17/ref_transcriptome.gtf
 
 # get the reference genome files we will need at least temporarily
-wget ...
-tar -xvf ...
+cd ~/workspace/inputs/references/
+mkdir temp
+cd temp
+wget http://genomedata.org/pmbio-workshop/references/genome/all/ref_genome.tar
+tar -xvf ref_genome.tar
+gunzip ref_genome.fa.gz
+
 
 # produce transcriptome (cDNA) fasta files of various subsets using our GTF and genome Fasta files
 cd ~/workspace/inputs/references/
-gtf_to_fasta transcriptome/all/ref_transcriptome.gtf genome/all/ref_genome.fa transcriptome/all/ref_transcriptome.fa
-gtf_to_fasta transcriptome/chr6/ref_transcriptome.gtf genome/all/ref_genome.fa transcriptome/chr6/ref_transcriptome.fa
-gtf_to_fasta transcriptome/chr17/ref_transcriptome.gtf genome/all/ref_genome.fa transcriptome/chr17/ref_transcriptome.fa
-gtf_to_fasta transcriptome/chr6_and_chr17/ref_transcriptome.gtf genome/all/ref_genome.fa transcriptome/chr6_and_chr17/ref_transcriptome.fa
-
-
+gtf_to_fasta transcriptome/all/ref_transcriptome.gtf temp/ref_genome.fa transcriptome/all/ref_transcriptome.fa
+gtf_to_fasta transcriptome/chr6/ref_transcriptome.gtf temp/ref_genome.fa transcriptome/chr6/ref_transcriptome.fa
+gtf_to_fasta transcriptome/chr17/ref_transcriptome.gtf temp/ref_genome.fa transcriptome/chr17/ref_transcriptome.fa
+gtf_to_fasta transcriptome/chr6_and_chr17/ref_transcriptome.gtf temp/ref_genome.fa transcriptome/chr6_and_chr17/ref_transcriptome.fa
 
 ```
-
-
-
 
 ### Prepare original starting data
 
