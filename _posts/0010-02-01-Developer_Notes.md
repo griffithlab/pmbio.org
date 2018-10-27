@@ -299,10 +299,10 @@ java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=../all/WGS_Tumor_me
 mkdir -p reverted_bams
 mkdir -p reverted_bams/WGS_Norm reverted_bams/WGS_Tumor
 
-java -Xmx24g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
-java -Xmx24g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
+java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
+java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
 
-#Bam to Fastq: STILL NEEDS ADJUSTMENT DEPENDING ON IDs 
+#Bam to Fastq: STILL NEEDS ADJUSTMENT DEPENDING ON IDs
 mkdir -p fastqs
 mkdir -p fastqs/WGS_Norm fastq/WGS_Tumor
 

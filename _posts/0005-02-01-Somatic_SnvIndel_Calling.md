@@ -25,7 +25,7 @@ The first variant caller that we will use here is [VARSCAN](http://varscan.sourc
 ```bash
 mkdir -p ~/workspace/results/somatic/varscan
 
-java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup -l ~/workspace/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --no-BAQ -f ~/workspace/references/genome/GRCh38_full_analysis_set_plus_decoy_hla.fa ~/workspace/results/align/final/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/results/align/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) ~/workspace/results/somatic/varscan/exome --mpileup 1 --output-vcf
+java -Xmx4g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup -l ~/workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --no-BAQ -f ~/workspace/data/raw_data/references/ref_genome.fa ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam) ~/workspace/data/results/somatic/varscan/exome --mpileup 1 --output-vcf
 
 cd ~/workspace/results/somatic/varscan/
 
@@ -79,8 +79,10 @@ cd ~/workspace/data/results/somatic/mutect
 #Creating a panel of normals
 /usr/local/bin/gatk Mutect2 -R ~/workspace/data/raw_data/references/ref_genome.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam -tumor-sample HCC1395BL_DNA -O Exome_Norm_PON.vcf.gz
 
-#Running Mutect2
+#Running Mutect2 Using latest version of GATK
 /usr/local/bin/gatk Mutect2 -R ~/workspace/data/raw_data/references/ref_genome.fa -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/data/raw_data/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/data/results/somatic/mutect/Exome_Norm_PON.vcf.gz -O ~/workspace/data/results/somatic/mutect/exome.vcf.gz -L chr6 -L chr17
+#Running mutect2 using gatk version 3.6
+#java -Xmx12g -jar /usr/local/bin/GenomeAnalysisTK.jar -T MuTect2 --disable_auto_index_creation_and_locking_when_reading_rods -R ~/workspace/data/raw_data/references/ref_genome.fa -I:tumor ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Tumor_sorted_mrkdup_bqsr.bam -I:Normal ~/workspace/data/DNA_alignments/chr6+chr17/final/Exome_Norm_sorted_mrkdup_bqsr.bam --dbsnp ~/workspace/data/raw_data/references/Homo_sapiens_assembly38.dbsnp138.vcf.gz --cosmic ~/workspace/data/raw_data/references/Cosmic_v79.dictsorted.vcf.gz -o ~/workspace/data/results/somatic/mutect/exome.vcf.gz -L ~/workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.interval_list
 
 echo ~/workspace/data/results/somatic/mutect/exome.vcf.gz > ~/workspace/data/results/somatic/mutect/exome_vcf.fof
 bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/data/results/somatic/mutect/exome_vcf.fof --output-type z --output ~/workspace/data/results/somatic/mutect/mutect_exome.vcf.gz
@@ -91,9 +93,28 @@ tabix ~/workspace/data/results/somatic/mutect/exome.vcf.gz
 #### **Merge Variants**
 __________________________
 With outputs from all three algorithms, we can now merge the variants to generate a comprehensive list of detected variants:
+Installation of GATK version 3.6 is need for the further processing of our variants.
+
 ```bash
-* java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions UNIQUIFY --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka /data/strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.unique.vcf.gz
-* java -Xmx4g -jar GenomeAnalysisTK.jar -T CombineVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan /data/varscan/exome.vcf.gz --variant:strelka strelka/exome.vcf.gz --variant:mutect /data/mutect/exome.vcf.gz -o /data/exome.merged.vcf
+# Installing gatk 3.6
+cd /usr/local/bin/
+wget http://genomedata.org/pmbio-workshop/references/gatk/GenomeAnalysisTK-3.6-0-g89b7209.tar.bz2
+tar --bzip2 -xvf GenomeAnalysisTK-3.6-0-g89b7209.tar.bz2
+
+# Testing the installation
+java -jar GenomeAnalysisTK.jar -h
+
+```
+
+```bash
+#java -jar /usr/local/bin/picard.jar MergeVcfs I=~/workspace/data/results/somatic/varscan/exome.vcf.gz I=~/workspace/data/results/somatic/strelka/results/variants/exome.vcf.gz I=~/workspace/data/results/somatic/mutect/exome.vcf.gz O=~/workspace/data/results/somatic/exome.merged.vcf
+# Unzip the vcf.gz files before combining Variants
+gunzip ~/workspace/data/results/somatic/varscan/exome.vcf.gz
+gunzip ~/workspace/data/results/somatic/strelka/results/variants/exome.vcf.gz
+gunzip ~/workspace/data/results/somatic/mutect/new_gatk_files/exome.vcf.gz
+
+# (UNIQUIFY command) java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T CombineVariants -R ~/workspace/data/raw_data/references/ref_genome.fa -genotypeMergeOptions UNIQUIFY --variant:varscan ~/workspace/data/results/somatic/varscan/exome.vcf --variant:strelka ~/workspace/data/results/somatic/strelka/results/variants/exome.vcf --variant:mutect ~/workspace/data/results/somatic/mutect/new_gatk_files/exome.vcf -o ~/workspace/data/results/somatic/exome.unique.vcf.gz
+java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T CombineVariants -R ~/workspace/data/raw_data/references/ref_genome.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan ~/workspace/data/results/somatic/varscan/exome.vcf --variant:strelka ~/workspace/data/results/somatic/strelka/results/variants/exome.vcf --variant:mutect ~/workspace/data/results/somatic/mutect/new_gatk_files/exome.vcf -o ~/workspace/data/results/somatic/exome.merged.vcf.gz
 ```
 
 ### **Left Align and Trim**
