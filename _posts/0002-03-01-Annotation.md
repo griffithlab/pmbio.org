@@ -125,7 +125,7 @@ java -jar /usr/local/bin/picard.jar BedToIntervalList I=exome_regions.bed O=exom
 ```
 
 ### Obtaining transcriptome reference files
-In this section we will download some reference transcriptome annotations in the mostly widely used formats (.fa and .gtf). As with the other annotation files, we have created a subsetted version of them to make downstream analysis more practical for a live tutorial demonstration.  To create these annotation we followed these basic steps
+In this section we will download some reference transcriptome annotations in the mostly widely used formats (.fa and .gtf). As with the other annotation files, we have created a subsetted version of them to make downstream analysis more practical for a live tutorial demonstration.  To create these annotation files we followed these basic steps:
 
 * Download complete GTF files from Ensembl represent all gene/transcript annotations (e.g. `Homo_sapiens.GRCh38.94.gtf.gz`) from Ensembl's [FTP site](http://www.ensembl.org/info/data/ftp/index.html/).
 * Fix the chromosome names in this GTF. Remember that Ensembl uses names like `1`, `2`, etc. but our reference genome uses names like `chr1`, `chr2`, etc. We perform this conversion using chromosome synonym mappings from Ensembl and a simple script `convertEnsemblGTF.pl`. 
@@ -136,11 +136,45 @@ Complete details of how these files were created can be found in the [Developer 
 
 Now lets actually download these files and examine them...
 ```bash
+# make sure CHRS environment variable is set.  If this command doesn't give a value, please return to the Environment section of the course
+echo $CHRS
 
-...
+# create a directory for transcriptome input files
+mkdir -p /workspace/inputs/references/transcriptome
+cd /workspace/inputs/references/transcriptome
 
+# download the files
+wget http://genomedata.org/pmbio-workshop/references/transcriptome/$CHRS/ref_transcriptome.gtf
+wget http://genomedata.org/pmbio-workshop/references/transcriptome/$CHRS/ref_transcriptome.fa
+
+# take a look at the contents of the gtf file. Press 'q' to exit the 'less' display.
+less -p start_codon -S ref_transcriptome.gtf
+
+# How many unique gene IDs are in the .gtf file?
+# We can use a perl command-line command to find out:
+perl -ne 'if ($_ =~ /(gene_id\s\"ENSG\w+\")/){print "$1\n"}' ref_transcriptome.gtf | sort | uniq | wc -l
 
 ```
+
+* Using perl -ne '' will execute the code between single quotes, on the .gtf file, line-by-line.
+* The $_ variable holds the contents of each line.
+* The 'if ($_ =~//)' is a pattern-matching command which will look for the pattern "gene_id" followed by a space followed by "ENSG" and one or more word characters (indicated by \w+) surrounded by double quotes.
+* The pattern to be matched is enclosed in parentheses. This allows us to print it out from the special variable $1.
+* The output of this perl command will be a long list of ENSG Ids.
+* By piping to sort, then uniq, then word count we can count the unique number of genes in the file.
+
+```bash
+# what are all the feature types listed in the third column of the GTF?
+# how does the following command (3 commands piped together) answer that question?
+cut -f 3 ref_transcriptome.gtf | sort | uniq -c
+
+```
+
+#### Review key definitions for this section
+
+* Reference genome - The nucleotide sequence of the chromosomes of a species. Genes are the functional units of a reference genome and gene annotations describe the structure of transcripts expressed from those gene loci.
+* Gene annotations - Descriptions of gene/transcript models for a genome. A transcript model consists of the coordinates of the exons of a transcript on a reference genome. Additional information such as the strand the transcript is generated from, gene name, coding portion of the transcript, alternate transcript start sites, and other information may be provided.
+* GTF (.gtf) file - A common file format referred to as Gene Transfer Format used to store gene and transcript annotation information. You can learn more about this format here: http://genome.ucsc.edu/FAQ/FAQformat#format4
 
 
 
