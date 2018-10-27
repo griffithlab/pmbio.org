@@ -15,7 +15,7 @@ This module is primarily for the course developers to document how the AWS AMI w
 ### Current published version of this course AMI
 The AMI has already been built using the following intructions and is available as:
 
-`pmbio ami v2` (`ami-05e7748522d05848c`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
+`pmbio ami v3` (`ami-08d777ebd086b116f`) (Publicly available in `London` Zone or under `My AMIs` in the MGriffithLab account)
 
 ### Initial AWS setup for development and testing purposes
 
@@ -282,9 +282,9 @@ Describes dependencies for VEP 93.4, used in this course for variant annotation.
 
 1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 2. Do you want to continue installing the API (y/n)? y [ENTER]
-3. Do you want to install any cache files (y/n)? y [ENTER] 186 [ENTER]
-4. Do you want to install any FASTA files (y/n)? y [ENTER] 42 [ENTER]
-5. Do you want to install any plugins (y/n)? y [ENTER] 0 [ENTER]
+3. Do you want to install any cache files (y/n)? y [ENTER] (select number for homo_sapiens_vep_93_GRCh38.tar.gz) [ENTER]
+4. Do you want to install any FASTA files (y/n)? y [ENTER] (select number for homo_sapiens) [ENTER]
+5. Do you want to install any plugins (y/n)? n [ENTER]
 
 - Note: VEP natively supports gnomad allele frequencies but it is unclear if this works for all variants or only for dbSNP subset of variants.
 See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_other.html#assembly
@@ -1115,7 +1115,5 @@ exit
 ```
 
 ### TO ADD
-- Add custom script to fix GTF chr naming: https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/convertEnsemblGTF.pl
-- TopHat so that we have gtf_to_fasta tool. 
-- svviz
+- nothing known at present
 

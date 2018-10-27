@@ -8,7 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0002-03-01
 ---
 
-### Obtain Additional GATK resources needed
+### Obtain Additional GATK resource files needed
 Use Google’s gsutil to download various annotation files that will be used by GATK and other resources. gsutil will be used to download these file from Google cloud storage. They could also be downloaded using wget from the course file server from here: http://genomedata.org/pmbio-workshop/references/gatk/.
 
 ```bash
@@ -27,6 +27,7 @@ gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.hi
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz .
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz .
 
+# Interval lists that can be used to parallelize certain GATK tasks
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list .
 gsutil cp -r gs://genomics-public-data/resources/broad/hg38/v0/scattered_calling_intervals/ .
 
@@ -35,8 +36,8 @@ ls -lh
 
 ```
 
-### SeqCapEZ_Exome_v3.0
-The reagent used for exome sequencing of the data used in this course was the SeqCapEZ_Exome_v3.0 from Roche Nimblegen. Nimblegen provides a set of files describing this reagent which can be downloaded from their site
+### Download coordinates describing the Exome Reagent used to generate our exome data (SeqCapEZ_Exome_v3.0)
+The reagent used to produce the exome sequenced data for this course was the SeqCapEZ_Exome_v3.0 from Roche Nimblegen. Nimblegen provides a set of files describing this reagent which can be downloaded from their site
 [here](https://sequencing.roche.com/en/products-solutions/by-category/target-enrichment/hybridization/seqcap-ez-exome-v3-kit.html). We are most interested in the file named `SeqCap_EZ_Exome_v3_hg19_primary_targets.bed` which contains the chromosome, start, stop, and gene annotation for each probe used in the reagent. Let's go ahead and downlod these files for later use.
 
 ```bash
@@ -54,16 +55,16 @@ rm -f SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
 
 ### Convert SeqCapEZ_Exome_v3.0
 
-You might have noticed that these annotation files from Nimblegen are all from the hg19 genome assembly. Obviously this presents a problem as the analysis we're performing is using the newer hg38 assembly. This issue is actually not an uncommon situation and a variety of tools exist designed to make converting from one assembly to another easier. In the next section we will be using [UCSC liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to perform this task.
+You might have noticed that these annotation files from Nimblegen are all from the hg19 genome assembly. Obviously this presents a problem as the analysis we're performing is using the newer hg38 assembly. This issue is actually not an uncommon situation and a variety of tools exist that are designed to make converting from one assembly to another easier. In the next section we will be using [UCSC liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to perform this task.
 
 To start we first need to download a chain file specific to the assembly conversion we want to perform (in our case hg19 -> hg38). These files provide a mapping between the two assemblies and can be downloaded from the [UCSC site](http://hgdownload.cse.ucsc.edu/downloads.html#liftover). Once we have our chain file we can run `liftOver` which will take following positional arguments.
 
 1. Path to bed file to convert
-2. Path to chain file downloaded from UCSC
-3. Path to output file containing the new coordinates
-4. Path to output file containing any coordinates that did not convert successfully
+2. Path to chain file for the desired conversion (downloaded from UCSC)
+3. Path to output file that will contain the new coordinates
+4. Path to output file containing any coordinates that do not convert successfully
 
-It will also be usefull to have a version of this file without the gene annotations lets go ahead and do that here has well.
+It will also be usefull to have a version of this file without the gene annotations lets go ahead and create that here as well.
 
 ```bash
 # change to the appropriate directory
@@ -79,11 +80,32 @@ liftOver SeqCapEZ_Exome_v3.0_Design_Annotation_files/SeqCap_EZ_Exome_v3_hg19_pri
 cut -f 1-3 SeqCap_EZ_Exome_v3_hg38_primary_targets.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
 ```
 
-### Creating an interval list from bed file
+### Obtaining an interval list for the exome bed file
 
-NOTE: The following is broken because our ref_genome.dict now only contains chr6 and chr17. We need to either trim the exome ROI file down to just these chrs as well. Or also download/create a full version of the dict file.
+NOTE: The following interval list is being created for an annotation file the corresponds to the whole genome.  The `ref_genome.dict` we downloaded in the previous section only contains chr6 and chr17. We need to either trim the exome ROI file down to just these chrs as well. Or also download/create a full version of the dict file.
 
 ```bash
 cd /workspace/inputs/references/exome
 java -jar $PICARD BedToIntervalList I=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed O=SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.interval_list SD=/workspace/inputs/references/genome/ref_genome.dict
 ```
+
+### Obtaining transcriptome reference files
+In this section we will download some reference transcriptome annotations in the mostly widely used formats (.fa and .gtf). As with the other annotation files, we have created a subsetted version of them to make downstream analysis more practical for a live tutorial demonstration.  To create these annotation we followed these basic steps
+
+* Download complete GTF files from Ensembl represent all gene/transcript annotations (e.g. `Homo_sapiens.GRCh38.94.gtf.gz`) from Ensembl's [FTP site](http://www.ensembl.org/info/data/ftp/index.html/).
+* Fix the chromosome names in this GTF. Remember that Ensembl uses names like `1`, `2`, etc. but our reference genome uses names like `chr1`, `chr2`, etc. We perform this conversion using chromosome synonym mappings from Ensembl and a simple script `convertEnsemblGTF.pl`. 
+* Next we use a simple grep to pull out the subset of chromosomes we care about
+* Finally we use the resulting subsetted GTF to create FASTA sequences for each transcript using the `gtf_to_fasta` tool.  This tools takes exon coordinates in a GTF file and a reference genome sequence and creates the reference transcript sequences.
+
+Complete details of how these files were created can be found in the [Developer Notes](/module-10-appendix/0010/02/01/Developer_Notes/).
+
+Now lets actually download these files and examine them...
+```bash
+
+...
+
+
+```
+
+
+

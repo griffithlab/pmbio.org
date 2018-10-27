@@ -103,7 +103,7 @@ When prompted by the install step below use these answers:
 1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 2. Do you want to continue installing the API (y/n)? y [ENTER]
 3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
-4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
+4. Do you want to install any FASTA files (y/n)? y [ENTER] 42 [ENTER]
 5. Do you want to install any plugins (y/n)? n [ENTER]
 
 ```bash
@@ -119,7 +119,7 @@ cd ensembl-vep-release-93.5/
 #1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
 #2. Do you want to continue installing the API (y/n)? y [ENTER] (if asked)
 #3. Do you want to install any cache files (y/n)? y [ENTER] 147 [ENTER]
-#4. Do you want to install any FASTA files (y/n)? y [ENTER] 96 [ENTER]
+#4. Do you want to install any FASTA files (y/n)? y [ENTER] 42 [ENTER]
 #5. Do you want to install any plugins (y/n)? n [ENTER]
 
 # make a symlink
@@ -228,7 +228,7 @@ ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/g
 ~/workspace/bin/gffcompare
 ```
 ### Install R
-[R](https://www.r-project.org/) is a feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a severalminutes to compile so we'll use one which has already been setup. If we were to install R, we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R framework will go, this includes the additional R libraries we'll download later. From there we'd do `make` and `make install` to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below, however it is exactly what was run to set up the R we will be using, except the installation location.
+[R](https://www.r-project.org/) is a feature rich interpretive programming language originally released in 1995. It is heavily used in the bioinformatics community largely due to numerous R libraries available on [bioconductor](https://www.bioconductor.org/). It takes a several minutes to compile so we'll use one which has already been setup. If we were to install R, we first would need to download and extract the source code. Next we'd configure the installation with `--with-x=no` which tells R to install without X11, a windowing system for displays. We'd also specify `--prefix` which is where the R framework will go, this includes the additional R libraries we'll download later. From there we'd do `make` and `make install` to build the software and copy the files to their proper location and create symlinks for the executables. Finally we'd install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [Biocmanager](https://cran.r-project.org/web/packages/BiocManager/index.html) packages from the command line to make installing additional packages easier. We've commented out the code below, however it is exactly what was run to set up the R we will be using, except the installation location.
 ```bash
 ## download and extract
 #cd ~/workspace/bin
@@ -250,7 +250,7 @@ ln -s ~/workspace/bin/gffcompare-0.9.8.Linux_x86_64/gffcompare ~/workspace/bin/g
 #~/workspace/bin/Rscript --version
 
 ## install additional packages
-#~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
+#~/workspace/bin/R --vanilla -e 'install.packages(c("devtools", "BiocManager", "dplyr", "tidyr", "ggplot2"), repos="http://cran.us.r-project.org")'
 ```
 
 ### Install copyCat
