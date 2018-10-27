@@ -8,6 +8,12 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0006-05-01
 ---
 
+DEV NOTES
+- bam -> fastq process not documented, assuming using output from https://pmbio.org/module-10-appendix/0010/02/01/Developer_Notes/ 
+- need to update paths the chr 6 and 17 alignment BAMs
+
+---
+
 # Introduction
 
 In addition to providing information about gene expression, RNA-seq data can be used to discover transcripts which result from chromosomal translocations. Translocations and their resultant chimeric (AKA fusion) transcripts are important driver mutations in many cancers. A [variety of specialized alignment and filtering strategies](https://www.ncbi.nlm.nih.gov/pubmed/27485475) have been developed to identify fusion transcripts from RNA, but these programs suffer from low specificity (i.e. many false-positives) and poor correlation across methods.
@@ -19,7 +25,7 @@ This tutorial uses the [kallisto](https://pachterlab.github.io/kallisto/about) a
 
 **Prerequisites- This module assumes you have completed prior modules
 including:**
-- From [Installation](http://pmbio.org/module-01-setup/0001/04/01/Software_Installation/), installed Conda package manager, conda-forge and bioconda channels, samtools, sambamba, pizzly, and kallisto.
+- From [Installation](http://pmbio.org/module-01-setup/0001/04/01/Software_Installation/), installed samtools, Conda package manager, sambamba, R, pizzly, and kallisto.
 - From [RNAseq Expression Estimation](http://pmbio.org/module-06-rnaseq/0006/02/01/RNAseq_Expression/), have alignments of normal and tumor RNA as .bam files. 
 
 **Additional setup:**
