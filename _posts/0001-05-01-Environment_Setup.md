@@ -32,7 +32,7 @@ export CHRS='chr6_and_chr17'
 
 # GATK regions string for many gatk commands that require it
 # export GATK_REGIONS='-L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 -L chr20 -L chr21 -L chr22 -L chrX -L chrY -L chrM'
-
-export GATK_REGIONS='-L chr6 -L chr17' 
+#export GATK_REGIONS='-L chr6 -L chr17'
+export GATK_REGIONS='-L chr17' 
 
 ```
