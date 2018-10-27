@@ -164,7 +164,8 @@ java -jar /usr/local/bin/picard.jar BedToIntervalList I=chr6_and_chr17/exome_reg
 
 # clean up and store files on genomedata.org
 rm -fr SeqCap* unMapped.bed
-
+rm -f */ref_genome.dict
+tar -cf transfer.tar *
 
 ```
 
