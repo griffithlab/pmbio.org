@@ -9,7 +9,7 @@ date: 0002-01-01
 ---
 
 ### Key concepts
-* Central dogma (chromosomes, genes, transcripts, proteins), reference genome assemblies, reference genome versions, FASTA file format, gene/transcript annotation pipelines (Refseq, Ensembl, UCSC, Gencode), GTF file format, sequence data generation, NGS reads, FASTQ file format, raw data QC.
+* Central dogma (chromosomes, genes, transcripts, proteins), reference genome assemblies, reference genome versions, FASTA file format, gene/transcript annotation pipelines (Refseq, Ensembl, UCSC, Gencode), GTF file format, sequence data generation, NGS reads, FASTQ file format, raw data QC. [Lecture File: PMBIO_Module02_Inputs.pdf](/assets/lectures/PMBIO_Module02_Inputs.pdf)
 
 ### Learning objectives
 * Obtain reference genome and annotation files and understand the standard formats used to represent them
