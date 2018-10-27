@@ -49,3 +49,16 @@ Dr. Malachi Griffith is an Assistant Director of the McDonnell Genome Institute 
 Zachary Skidmore is a staff scientist at the McDonell Genome Institute at Washington University in Saint Louis. His undergraduate work was completed at the Ohio State University where he obtained a B.Sc. in molecular biology. Graduate work was performed at the University of Illinois where he obtained a M.eng in bioinformatics. His research focus is in the realm of cancer biology where he uses and develops tools and techniques to aid in the analysis and interpretation of cancer sequencing data. He have worked on several large sequencing projects across many cancer types and has expertise in a variety of languages (perl, R, bash, python, typescript, angular2). He is the creator and maintainer of the bioconductor package GenVisR, a graphics program designed to help visualize cohort level genomic data.
 
 ***
+
+### Huiming Xia
+<nav class="nav  nav--social">
+{% for link in site.contact_zach %}
+    {% assign id = link[0] | downcase %}
+    {% capture refer %}{{link[1]}}{% endcapture %}
+<a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
+{% endfor %}
+</nav>
+{% include figure.html image="/assets/Authors/HuimingXia.JPG" position="right" class="rounded-circle" %}
+Huiming Xia is a graduate student in the Computational Systems & Biology program at Washington University in St. Louis. She graduated from Carnegie Mellon University in 2017 with a dual degree in Computational Biology and Chemistry. She is interested in developing machine learning models for improving current strategies of neoantigen design for cancer immunotherapy.
+
+***
