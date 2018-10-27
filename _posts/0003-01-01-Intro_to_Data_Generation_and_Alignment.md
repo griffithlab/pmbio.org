@@ -1,7 +1,7 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Intro to Data Generation and Alignment
+title: Intro to Alignment Algorithms, Visualization, and QC 
 categories:
     - Module-03-Align
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"

@@ -8,7 +8,13 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0009-01-01
 ---
 
-# Introduction to the Common Workflow Language
+### Key concepts
+* ...
+
+### Learning objectives
+* ...
+
+### Background and Rationale for a Common Workflow Language
 
 Often in data analysis a collection of programmatic tools and resources are required to perform a specific task. This can take the form of bash scripts linking tools together, however bash scripts offer no standardization and often need to be tweaked from one project to the next. The Common Workflow Language (CWL) is a specification for designing portable and scalable workflows. It is open source and available on [github](https://github.com/common-workflow-language/common-workflow-language) under an Apache 2.0 license. Using CWL instead of bash offers a number of advantages, these include:
 
@@ -20,7 +26,7 @@ Often in data analysis a collection of programmatic tools and resources are requ
 
 In this module we will use CWL with Docker to build an analysis pipeline to perform a simple DNA alignment.
 
-# Installing CWL, Docker, and data prerequisites
+### Installing CWL, Docker, and data prerequisites
 
 In order to begin we will need to have both CWL and docker installed. Instructions for installing both are available here:
 
@@ -32,7 +38,7 @@ Further we will need reads to perform the alignment on and a reference file to a
 1. [HCC1395 data from a single lane](https://xfer.genome.wustl.edu/gxfer1/project/gms/testdata/bams/hcc1395_1tenth_percent/gerald_C1TD1ACXX_7_ATCACG.bam)
 2. [Chromosome 22 Fasta](ftp://ftp.ensembl.org/pub/release-93/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.22.fa.gz)
 
-# CWL Workflow Pieces
+### CWL Workflow Pieces
 
 A typical CWL workflow consists of three main pieces. The first piece is a yaml file specifying the inputs to the workflow. In this tutorial the inputs are simply the bam file containing reads to align and a fasta file to align the reads to. The second piece is a cwl file containing the workflow, in other words how things are run, what the outputs should be, etc. The last piece is a set of cwl files specifying how the tools will be run. Don't worry if this all doesn't make sense; things should clear up as we go along. For our example as mentioned we will be constructing a workflow to perform DNA alignment. Go ahead and download the yml and cwl files and put them all in the same directory. You can do so by clicking on the links below:
 
@@ -56,7 +62,7 @@ A typical CWL workflow consists of three main pieces. The first piece is a yaml 
     7. [sort_bam.cwl](https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/CWL/sort_bam.cwl)
     8. [bam_index.cwl](https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/CWL/bam_index.cwl)
 
-# The inputs.yml file
+### The inputs.yml file
 
 Okay let's start by going over what the input.yml file is. Simply put, as it sounds it is specifying the inputs given to the workflow. In our workflow we only have two inputs, a bam file and a reference file. The inputs.yml is specifying what the input is (i.e. files), where the inputs exist (i.e. file paths), and the identifier the cwl workflow will use to refer to the inputs.
 
@@ -68,7 +74,7 @@ Okay let's start by going over what the input.yml file is. Simply put, as it sou
   <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field indicating where the file is located">path</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="path to the fasta file">/Users/zskidmor/Desktop/lab_meeting/Homo_sapiens.GRCh38.dna.chromosome.22.fa.gz</span>
 </code></pre></div>
 
-# The workflow.cwl files
+### The workflow.cwl files
 
 The workflow file specifies how things should be run: the inputs, outputs, and steps corresponding to the specific workflow.
 
@@ -139,7 +145,7 @@ The workflow file specifies how things should be run: the inputs, outputs, and s
     <span class="na">out</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">bam_index</span> <span class="pi">]</span>
 </code></pre></div></div>
 
-# Command.cwl files
+### Command.cwl files
 
 The command.cwl files specify how to run a given command for a step in the workflow. In the example below we go over how the file is structured for the gnu_unzip step specified in the workflow.cwl.
 
@@ -170,7 +176,7 @@ The command.cwl files specify how to run a given command for a step in the workf
 <span class="na" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="field for capturing output in stdout">stdout</span><span class="pi">:</span> <span class="s" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="indicates that stdout should go to a file named reference.fa">reference.fa</span>
 </code></pre></div></div>
 
-# Putting it all together
+### Putting it all together
 
 Now that we've gone over the basics let's go ahead and run this workflow. On a typical computer the workflow should run in approx. 7-10 minutes depending on if docker images need to be pulled down from the web.
 

@@ -1,7 +1,7 @@
 ---
 feature_text: |
   ## Precision Medicine
-title: Intro to Clinical Application
+title: Intro to Clinical Applications
 categories:
     - Module-07-Clinical
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
