@@ -38,4 +38,28 @@ ssh -i pmbio.pem ubuntu@18.220.123.159
 
 In this command, 'pmbio.pem' is the AWS key file used to authenticate SSH access to the machine, 'ubuntu' is the name of the user account on the machine (a common default user name for the Ubuntu linux operating system), and '18.220.123.159' is the IP address of the machine.  This last part will need to replace with your instance's unique IP address.
 
+#### Use of a terminal multiplexer
+
+Throughout this course we will be logged into an AWS terminal session via SSH connection from your laptop to the remote cloud instance. Some points on this:
+
+* Your terminal connection relies on your laptop's WiFI connection (which could reset periodically)
+* Your terminal connection also relies on your laptop being on. Run out of power or close the lid and it dies
+* If your terminal connection dies and you haven't taken precautions, any command currently running will likely fail
+
+There are various ways to get around this problem, but the most robust approach is to use a "terminal multiplexer". The purpose of these programs is to make your session persist regardless of your SSH connection.  If your connection gets killed, you can just log into the AWS instance again, attach the multiplexer session and it will be as if nothing happened.
+
+If you are already familiar with `screen`, `tmux`, `byobu`, etc. you can use on of those. If you are not already familiar, we recommend `screen` for its simplicity.  
+
+To use it, simply type `screen` when you login. If you have already logged in previously and left a `screen` session running you may have to use `screen -r` or `screen -r -d`. When you want to leave your session, you can just close the window or use `screen -d` to detach your session.
+
+Basic screen commands:
+* `screen`. Start a new session.
+* `screen -r`. Resume a session that was properly detachead.
+* `screen -r -d`. Resume a session that was NOT properly detached.
+* `screen -d`. Detach a session so that later you can resume.
+* `<ctrl> <c>`. Create an additional tab in your current session. 
+* `<ctrl> <space>`. Cycle through existing tabs.
+* `<ctrl> <a> <ctrl> <a>`. Flip between two tabs.
+* `<ctrl> <a> <">` View a list of tabs.
+
 
