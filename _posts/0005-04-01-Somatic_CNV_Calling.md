@@ -113,8 +113,11 @@ The script will create a directory called `copyCat_annotation` with annotations 
 
 ## download the gaps.bed file
 # cd /workspace/somatic/copycat_wgs/copyCat_annotation
-# https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
+# wget -c https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
 # cat gaps.bed | awk '{print "chr"$0}' > tmp && mv tmp gaps.bed
+
+## rename the entrypoints file
+# mv hg38entrypoints.female entrypoints.female
 
 # as mentioned the above takes some time so we'll just download the result for HG38
 cd /workspace/somatic/copycat_wgs
@@ -293,7 +296,7 @@ Finally it might be the case that you want a closer look at the results, perhaps
 
 ```bash
 # create a scatter plot for just chromosome 6
-cnvkit.py scatter  --segment Exome_Tumor_sorted_mrkdup.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup.cns
+cnvkit.py scatter --segment Exome_Tumor_sorted_mrkdup.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup.cns
 
 # create a heatmap for just chromosome 6
 cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup.cnr
