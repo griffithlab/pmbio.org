@@ -8,3 +8,5 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-04-02
 ---
 
+* filter to focal amplifications/deletions?
+* annotate with genes? bedtools intersect?
