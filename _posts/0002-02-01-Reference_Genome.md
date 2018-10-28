@@ -51,11 +51,11 @@ tree
 
 ```
 
-Occasionally some tools might expects our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/inputs/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
+Occasionally some tools might expects our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/inputs/references/genome/ref_genome_split/` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
 
 - byname: tells the program to split the fasta by each record name (i.e. chromosome)
-- GRCh38_full_analysis_set_plus_decoy_hla.fa: location of the multi-record fasta
-- GRCh38_full_analysis_set_plus_decoy_hla_split/: directory to output the results
+- ref_genome.fa: location of the multi-record fasta
+- ref_genome_split/: directory to output the results
 
 We also need to make sure we create an index for our new fasta with `samtools faidx`.
 
