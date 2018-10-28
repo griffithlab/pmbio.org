@@ -75,7 +75,7 @@ java -Xmx60g -jar $PICARD SortSam I=WGS_Tumor_merged.bam O=WGS_Tumor_merged_name
 
 ### Mark duplicates
 
-Use picard MarkDuplicates to mark duplicate reads. These are typically defined as read pairs with identical start and stop alignment positions. Note, MarkDuplicates works on read name sorted alignments. 
+Use picard MarkDuplicates to mark duplicate reads. These are typically defined as read pairs with identical start and stop alignment positions. Note, MarkDuplicates works on read name sorted alignments.
 
 ```bash
 cd /workspace/align
@@ -127,12 +127,12 @@ Why that the BQSR commands below limit the modeling step to chr1-22. This is whe
 
 #### Calculate BQSR Table
 
-First, calculate the BQSR table. 
+First, calculate the BQSR table.
 
 ```bash
 cd /workspace/align
 gatk --java-options '-Xmx60g' BaseRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup.bam -O /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /workspace/inputs/references/gatk/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching $GATK_REGIONS
-gatk --java-options '-Xmx60g' BaseRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Tumor_sorted_mrkdup.bam -O /workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.table --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /workspace/inputs/references/gatk/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching $GATK_REGIONS  
+gatk --java-options '-Xmx60g' BaseRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Tumor_sorted_mrkdup.bam -O /workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.table --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /workspace/inputs/references/gatk/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching $GATK_REGIONS
 gatk --java-options '-Xmx60g' BaseRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup.bam -O /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.table --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /workspace/inputs/references/gatk/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching $GATK_REGIONS
 gatk --java-options '-Xmx60g' BaseRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam -O /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.table --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /workspace/inputs/references/gatk/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching $GATK_REGIONS
 
@@ -150,6 +150,15 @@ gatk --java-options '-Xmx60g' ApplyBQSR -R /workspace/inputs/references/genome/r
 gatk --java-options '-Xmx60g' ApplyBQSR -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam -O /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --bqsr-recal-file /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.table --preserve-qscores-less-than 6 --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
 ```
 
+create an index for these new bams
+
+```bash
+cd /workspace/align
+java -Xmx60g -jar $PICARD BuildBamIndex I=Exome_Norm_merged_sorted_mrkdup_bqsr.bam
+java -Xmx60g -jar $PICARD BuildBamIndex I=Exome_Tumor_merged_sorted_mrkdup_bqsr.bam
+java -Xmx60g -jar $PICARD BuildBamIndex I=WGS_Norm_merged_sorted_mrkdup_bqsr.bam
+java -Xmx60g -jar $PICARD BuildBamIndex I=WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
+```
 
 ### Clean up un-needed sam/bam files
 
