@@ -48,7 +48,11 @@ gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/ge
 gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.vcf --bam-output /workspace/germline/WGS_Norm_HC_out.bam $GATK_REGIONS 
 ```
 
+### Explore the performance/benefits of local realignment
+
 TO DO: Add exercise to compare alignments from bwa-mem alignment to HaplotypeCaller local realignment
+Potential example: chr17:76,286,974-76,287,203
+Should this go in next section when we have variants as starting point?
 
 
 ### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling (for exomes)
@@ -94,8 +98,8 @@ As described above, there are several advantages to joint genotype calling. The 
 
 Using the information obtained above, we could download the already aligned exome data for several 1KGP individuals in cram format. These cram files were created in a generally compatible way with the anlysis done so far in this tutorial. The were aligned with BWA-mem to GRCh38 with alternative sequences, plus decoys and HLA. This was followed by GATK BAM improvement steps as in the 1000 Genomes phase 3 pipeline (GATK IndelRealigner, BQSR, and Picard MarkDuplicates). Of course, there will be batch effects related to potentially different sample preparation, library construction, exome capture reagent and protocol, sequencing pipeline, etc. For more details see:
 
-- http://www.internationalgenome.org/analysis
-- https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf
+- [http://www.internationalgenome.org/analysis](http://www.internationalgenome.org/analysis)
+- [https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf](https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf)
 
 For expediency, in preparation for this course, we downloaded exome alignments for 5 females, of GBR descent. We limited that data to just chr6 and/or chr17 and then performed germline variant calling using the GATK HaplotypeCaller GVCF workflow commands as above. The details for this can be found on the [Developer's Notes](/module-10-appendix/0010/02/01/Data/) page.  
 
