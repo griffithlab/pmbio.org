@@ -353,6 +353,11 @@ mkdir -p reverted_bams
 mkdir -p reverted_bams/WGS_Norm reverted_bams/WGS_Tumor
 
 java -Xmx24g -Djava.io.tmpdir='/workspace/tmp/' -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
+mv 2891322951.bam WGS_Tumor_Lane1.bam
+mv 2891323147.bam WGS_Tumor_Lane5.bam
+mv 2891323150.bam WGS_Tumor_Lane4.bam
+mv 2891323174.bam WGS_Tumor_Lane2.bam
+mv 2891323175.bam WGS_Tumor_Lane3.bam
 
 java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
 mv 2891323123.bam WGS_Norm_Lane1.bam
@@ -369,7 +374,79 @@ java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_al
 
 java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Norm/WGS_Norm_Lane3.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane3_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Norm/WGS_Norm_Lane3_R2.fastq
 
-java -Xmx24g -jar /data/bin/picard.jar SamToFastq I=reverted_bams/WGS_Tumor/2891351066.bam F=fastqs/WGS_Tumor/2891351066_1.fastq F2=fastqs/WGS_Tumor/2891351066_2.fastq
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Tumor/WGS_Tumor_Lane1.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane1_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane1_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Tumor/WGS_Tumor_Lane2.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane2_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane2_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Tumor/WGS_Tumor_Lane3.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane3_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane3_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Tumor/WGS_Tumor_Lane4.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane4_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane4_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/data/DNA_alignments/chr6+chr17/reverted_bams/WGS_Tumor/WGS_Tumor_Lane5.bam F=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane5_R1.fastq F2=~/workspace/data/DNA_alignments/chr6+chr17/fastqs/WGS_Tumor/WGS_Tumor_Lane5_R2.fastq
+```
+### Creating the subset data from RNAseq alignments
+```bash
+cd <directory containing your WGS data>
+sambamba slice -o chr6_RNAseq_Norm_lane1.bam HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam chr6
+sambamba slice -o chr6_RNAseq_Norm_lane2.bam HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam chr6
+sambamba slice -o chr17_RNAseq_Norm_lane1.bam HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam chr17
+sambamba slice -o chr17_RNAseq_Norm_lane2.bam HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam chr17
+
+sambamba slice -o chr6_RNAseq_Tumor_lane1.bam HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam chr6
+sambamba slice -o chr6_RNAseq_Tumor_lane2.bam HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam chr6
+sambamba slice -o chr17_RNAseq_Tumor_lane1.bam HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam chr17
+sambamba slice -o chr17_RNAseq_Tumor_lane2.bam HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam chr17
+
+
+# move all generated files to a subset directory such as chr6+chr17
+# cd into that Directory
+
+samtools view chr6_RNAseq_Norm_lane1.bam | cut -d$'\t' -f1 > chr6_RNA_Norm_lane1_readnames.txt
+samtools view chr6_RNAseq_Norm_lane2.bam | cut -d$'\t' -f1 > chr6_RNA_Norm_lane2_readnames.txt
+samtools view chr17_RNAseq_Norm_lane1.bam | cut -d$'\t' -f1 > chr17_RNA_Norm_lane1_readnames.txt
+samtools view chr17_RNAseq_Norm_lane2.bam | cut -d$'\t' -f1 > chr17_RNA_Norm_lane2_readnames.txt
+
+samtools view chr6_RNAseq_Tumor_lane1.bam | cut -d$'\t' -f1 > chr6_RNA_Tumor_lane1_readnames.txt
+samtools view chr6_RNAseq_Tumor_lane2.bam | cut -d$'\t' -f1 > chr6_RNA_Tumor_lane2_readnames.txt
+samtools view chr17_RNAseq_Tumor_lane1.bam | cut -d$'\t' -f1 > chr17_RNA_Tumor_lane1_readnames.txt
+samtools view chr17_RNAseq_Tumor_lane2.bam | cut -d$'\t' -f1 > chr17_RNA_Tumor_lane2_readnames.txt
+
+cat chr6_RNA_Norm_lane1_readnames.txt chr17_RNA_Norm_lane1_readnames.txt | sort | uniq > chr6_chr17_RNA_Norm_lane1_readnames.txt
+cat chr6_RNA_Norm_lane2_readnames.txt chr17_RNA_Norm_lane2_readnames.txt | sort | uniq > chr6_chr17_RNA_Norm_lane2_readnames.txt
+cat chr6_RNA_Tumor_lane1_readnames.txt chr17_RNA_Tumor_lane1_readnames.txt | sort | uniq > chr6_chr17_RNA_Tumor_lane1_readnames.txt
+cat chr6_RNA_Tumor_lane2_readnames.txt chr17_RNA_Tumor_lane2_readnames.txt | sort | uniq > chr6_chr17_RNA_Tumor_lane2_readnames.txt
+
+java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam O=chr6_chr17_RNA_Norm_lane1_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_RNA_Norm_lane1_readnames.txt FILTER=includeReadList
+java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam O=chr6_chr17_RNA_Norm_lane2_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_RNA_Norm_lane2_readnames.txt FILTER=includeReadList
+java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam O=chr6_chr17_RNA_Tumor_lane1_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_RNA_Tumor_lane1_readnames.txt FILTER=includeReadList
+java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam O=chr6_chr17_RNA_Tumor_lane2_all_read_pairs.bam READ_LIST_FILE=chr6_chr17_RNA_Tumor_lane2_readnames.txt FILTER=includeReadList
+
+#reverting bams
+mkdir -p reverted_bams
+mkdir -p reverted_bams/RNA_Norm reverted_bams/RNA_Tumor
+
+java -Xmx12g -Djava.io.tmpdir='/workspace/tmp/' -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_RNA_Norm_lane1_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/RNA_Norm/
+java -Xmx12g -Djava.io.tmpdir='/workspace/tmp/' -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_RNA_Norm_lane2_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/RNA_Norm/
+
+java -Xmx12g -Djava.io.tmpdir='/workspace/tmp/' -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_RNA_Tumor_lane1_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/RNA_Tumor/
+java -Xmx12g -Djava.io.tmpdir='/workspace/tmp/' -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_RNA_Tumor_lane2_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/RNA_Tumor/
+
+mv 2895625992.bam RNAseq_Norm_Lane1.bam
+mv 2895626097.bam RNAseq_Norm_Lane2.bam
+mv 2895626107.bam RNAseq_Tumor_Lane1.bam
+mv 2895626112.bam RNAseq_Tumor_Lane2.bam
+
+#Bam to Fastq:
+mkdir -p fastqs
+mkdir -p fastqs/RNAseq_Norm fastqs/RNAseq_Tumor
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/rnaseq/alignments/reverted_bams/RNA_Norm/RNAseq_Norm_Lane1.bam F=~/workspace/rnaseq/alignments/fastqs/RNAseq_Norm/RNAseq_Norm_Lane1_R1.fastq F2=~/workspace/rnaseq/alignments/fastqs/RNAseq_Norm/RNAseq_Norm_Lane1_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/rnaseq/alignments/reverted_bams/RNA_Norm/RNAseq_Norm_Lane2.bam F=~/workspace/rnaseq/alignments/fastqs/RNAseq_Norm/RNAseq_Norm_Lane2_R1.fastq F2=~/workspace/rnaseq/alignments/fastqs/RNAseq_Norm/RNAseq_Norm_Lane2_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/rnaseq/alignments/reverted_bams/RNA_Tumor/RNAseq_Tumor_Lane1.bam F=~/workspace/rnaseq/alignments/fastqs/RNAseq_Tumor/RNAseq_Tumor_Lane1_R1.fastq F2=~/workspace/rnaseq/alignments/fastqs/RNAseq_Tumor/RNAseq_Tumor_Lane1_R2.fastq
+
+java -Xmx24g -jar /usr/local/bin/picard.jar SamToFastq I=~/workspace/rnaseq/alignments/reverted_bams/RNA_Tumor/RNAseq_Tumor_Lane2.bam F=~/workspace/rnaseq/alignments/fastqs/RNAseq_Tumor/RNAseq_Tumor_Lane2_R1.fastq F2=~/workspace/rnaseq/alignments/fastqs/RNAseq_Tumor/RNAseq_Tumor_Lane2_R2.fastq
 
 ```
 

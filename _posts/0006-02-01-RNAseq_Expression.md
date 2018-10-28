@@ -44,20 +44,20 @@ Optional: rmdir $TUMOR_DATA_1_TEMP/* $TUMOR_DATA_1_TEMP
 
 Optional: rmdir $TUMOR_DATA_2_TEMP/* $TUMOR_DATA_2_TEMP
 
-~/bin/hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895625992 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.4 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895625992_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895625992_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | /data/RNA_seq/software/sambamba_v0.6.4 sort -t 4 -m 8G --tmpdir $NORMAL_DATA_1_TEMP -o /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam /dev/stdin
+hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895625992 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.4 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895625992_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895625992_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | /data/RNA_seq/software/sambamba_v0.6.4 sort -t 4 -m 8G --tmpdir $NORMAL_DATA_1_TEMP -o /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam /dev/stdin
 
 Optional: rmdir $NORMAL_DATA_1_TEMP/* $NORMAL_DATA_1_TEMP
 
-~/bin/hisat2-2.0.4/hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895626097 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.5 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895626097_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895626097_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | ~/bin/sambamba sort -t 4 -m 8G --tmpdir $NORMAL_DATA_2_TEMP -o /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam /dev/stdin
+hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895626097 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.5 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895626097_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895626097_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | ~/bin/sambamba sort -t 4 -m 8G --tmpdir $NORMAL_DATA_2_TEMP -o /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam /dev/stdin
 
 Optional: rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
 ```
 #### **Merging Bams**
 
 ```bash
-~/bin/sambamba merge -t 4 /data/RNA_seq/alignments/HCC1395BL_RNA.bam /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam
+sambamba merge -t 4 /workspace/rnaseq/alignments/HCC1395BL_RNA.bam /workspace/rnaseq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam /workspace/rnaseq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam
 
-~/bin/sambamba merge -t 4 /data/RNA_seq/alignments/HCC1395_RNA.bam /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam
+sambamba merge -t 4 /workspace/rnaseq/alignments/HCC1395_RNA.bam /workspace/rnaseq/alignments/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam /workspace/rnaseq/alignments/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam
 ```
 #### **Assembling transcript from merged bams**
 
