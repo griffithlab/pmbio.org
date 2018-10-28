@@ -18,7 +18,7 @@ cd gatk
 
 # SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf . 
-gzip Homo_sapiens_assembly38.dbsnp138.vcf
+bgzip Homo_sapiens_assembly38.dbsnp138.vcf
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz .
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz .
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz .
