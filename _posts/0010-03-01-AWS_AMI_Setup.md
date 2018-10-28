@@ -944,7 +944,7 @@ exit
 ```
 
 #### gsutil
-A google utility used to download annotation files stored in the Google cloud 
+A google utility used to download annotation files stored in the Google cloud
 ```bash
 cd /usr/local/bin
 
@@ -983,7 +983,7 @@ ln -s /usr/local/bin/tophat-2.1.1.Linux_x86_64/gtf_to_fasta /usr/local/bin/gtf_t
 # test gtf_to_fasta tool
 /usr/local/bin/gtf_to_fasta
 
-#exit sudo shell 
+#exit sudo shell
 exit
 
 ```
@@ -1116,5 +1116,16 @@ exit
 ```
 
 ### TO ADD
-- nothing known at present
-
+- bam_readcount_helper.py for adding bam readcounts to somatic vcf files:
+```bash
+sudo bash
+cd /usr/local/bin
+wget https://raw.githubusercontent.com/genome/docker-cle/master/bam_readcount_helper.py
+conda create -y --name bam-readcount python=2.7
+conda install --name bam-readcount cyvcf2
+# when needing to use this script, activate environment as following:
+source activate bam-readcount
+# when done 
+source deactivate
+exit
+```

@@ -48,8 +48,8 @@ The second variant caller that we will use is [STRELKA](https://github.com/Illum
 mkdir -p ~/workspace/somatic/strelka
 cd ~
 
-python2 /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --exome --runDir=/workspace/somatic/strelka
-
+source activate strelka /usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --exome --runDir=/workspace/somatic/strelka
+source deactivate
 #Please specify according to the number of cpus available or how many you would like to allocate to this job. In this case, four were given.
 python2 /workspace/somatic/strelka/runWorkflow.py -m local -j 8
 cd ~/workspace/somatic/strelka/results/variants

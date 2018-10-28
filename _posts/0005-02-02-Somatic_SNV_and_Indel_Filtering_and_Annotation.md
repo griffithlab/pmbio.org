@@ -9,20 +9,20 @@ date: 0005-02-02
 ---
 
 ### **Basic Filtering on Somatic Variants**
-Here, we are first doing a basic filtering for `PASS` only variants on our merged vcf file:
-
-`java -Xmx4g -jar /data/bin/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar -T SelectVariants -R /data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa --excludeFiltered --variant /data/exome_chr6.merged.vcf.gz -o /data/exome_chr6.merged.pass.vcf.gz`
-
+First, let's do a basic filtering for `PASS` only variants on our merged and normalized vcf file:
+```bash
+cd /workspace/somatic
+java -Xmx24g -jar /usr/local/bin/GenomeAnalysisTK.jar -T SelectVariants -R ~/workspace/inputs/references/genome/ref_genome.fa --excludeFiltered --variant ~/workspace/somatic/exome.merged.leftalignandtrim.decomposed.vcf -o ~/workspace/somatic/exome.merged.norm.pass_only.vcf
+```
 
 #### **VEP Annotation**
 - `cd /data/bin/ensembl-vep` (previously installed if following tutorial)
 - `unset PERL5LIB`
-- `wget -O /data/vep_cache/Plugins/Wildtype.pm https://raw.githubusercontent.com/griffithlab/pVAC-Seq/master/pvacseq/VEP_plugins/Wildtype.pm --no-check-certificate`
-- Need to make sure cache files installed: all build38 related (41, 43, 45)
-- Fasta -> option 28 Homo Saipiens
-- Plugins -> downstream option 14
 
-`/usr/bin/perl /data/bin/ensembl-vep/vep.pl -i /data/exome_chr6.merged.pass.vcf.gz --cache --dir /data/vep_cache/ --format vcf --vcf --plugin Downstream --plugin Wildtype --symbol --terms SO --flag_pick -o /data/exome_chr6.merged.pass.annotated.vcf.gz`
+```bash
+cd /workspace/somatic
+vep -i ~/workspace/somatic/exome.merged.norm.pass_only.vcf --cache --dir /opt/vep_cache/ --format vcf --vcf --plugin Downstream --plugin Wildtype --symbol --terms SO --flag_pick --transcript_version -o ~/workspace/somatic/exome.merged.norm.annotated.vcf
+```
 
 ### **Adding Bam-readcounts to VCF file**
 We have added a python helper script that will take your vcf and DNA bam files and generates twp bam-readcount output files, one for snv and one for indel.
