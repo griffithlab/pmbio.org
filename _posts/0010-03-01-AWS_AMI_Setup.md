@@ -653,6 +653,8 @@ source activate manta
 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/runMantaWorkflowDemo.py
 source deactivate
 
+ln -s /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py /usr/local/bin/configManta.py
+
 # exit sudo shell
 exit
 ```
@@ -699,6 +701,34 @@ ln -s /usr/local/bin/bam-readcount-latest/bin/bam-readcount /usr/local/bin/bam-r
 exit
 
 ```
+
+#### bam-readcount helper script
+A python script used to run bam-readcount on a VCF file
+```bash
+# start sudo shell
+sudo bash
+
+# install the script and needed conda environment
+cd /usr/local/bin
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/scripts/bam_readcount_helper.py
+chmod +x bam_readcount_helper.py
+
+conda create -y --name bam-readcount python=3.6
+conda install -y --name bam-readcount cyvcf2
+
+# test installation
+# when needing to use this script, activate environment as following:
+source activate bam-readcount
+/usr/local/bin/bam_readcount_helper.py
+
+# when done
+source deactivate
+
+#exit sudo shell
+exit
+
+```
+
 #### vt
 vt is a variant tool set that discovers short variants from Next Generation Sequencing data. We will use this for the purpose of splitting multi-allelic variants.
 ```bash
@@ -1116,16 +1146,4 @@ exit
 ```
 
 ### TO ADD
-- bam_readcount_helper.py for adding bam readcounts to somatic vcf files:
-```bash
-sudo bash
-cd /usr/local/bin
-wget https://github.com/griffithlab/pmbio.org/blob/master/assets/scripts/bam_readcount_helper.py
-conda create -y --name bam-readcount python=3.6
-conda install --name bam-readcount cyvcf2
-# when needing to use this script, activate environment as following:
-source activate bam-readcount
-# when done
-source deactivate
-exit
-```
+- nothing known at this time
