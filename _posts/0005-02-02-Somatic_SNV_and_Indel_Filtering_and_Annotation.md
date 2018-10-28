@@ -8,23 +8,21 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-02-02
 ---
 
-### **Basic Filtering on Somatic Variants**
+### Basic Filtering on Somatic Variants
 First, let's do a basic filtering for `PASS` only variants on our merged and normalized vcf file:
 ```bash
 cd /workspace/somatic
 java -Xmx24g -jar /usr/local/bin/GenomeAnalysisTK.jar -T SelectVariants -R ~/workspace/inputs/references/genome/ref_genome.fa --excludeFiltered --variant ~/workspace/somatic/exome.merged.leftalignandtrim.decomposed.vcf -o ~/workspace/somatic/exome.merged.norm.pass_only.vcf
 ```
 
-#### **VEP Annotation**
-- `cd /data/bin/ensembl-vep` (previously installed if following tutorial)
-- `unset PERL5LIB`
+#### VEP Annotation
 
 ```bash
 cd /workspace/somatic
 vep -i ~/workspace/somatic/exome.merged.norm.pass_only.vcf --cache --dir /opt/vep_cache/ --format vcf --vcf --plugin Downstream --plugin Wildtype --symbol --terms SO --flag_pick --transcript_version -o ~/workspace/somatic/exome.merged.norm.annotated.vcf
 ```
 
-### **Adding Bam-readcounts to VCF file**
+### Adding Bam-readcounts to VCF file
 We have added a python helper script that will take your vcf and DNA bam files and generates two bam-readcount output files, one for snv and one for indel.
 
 ```bash
@@ -44,12 +42,21 @@ cat NORMAL_bam_readcount_snv.tsv NORMAL_bam_readcount_indel.tsv > NORMAL_bam_rea
 
 mkdir -p ~/workspace/somatic/final/
 cd ~/workspace/somatic/final/
-vcf-readcount-annotator ~/workspace/somatic/exome.merged.norm.annotated.vcf ~/workspace/somatic/bam_readcounts/TUMOR_bam_readcount_combined.tsv DNA -s TUMOR -o ~/workspace/somatic/final/exome.final.vcf
-
+vcf-readcount-annotator ~/workspace/somatic/exome.merged.norm.annotated.vcf ~/workspace/somatic/bam_readcounts/TUMOR_bam_readcount_combined.tsv DNA -s TUMOR -o ~/workspace/somatic/final/exome.tumordna_annotated.vcf.gz
+vcf-readcount-annotator ~/workspace/somatic/final/exome.tumordna_annotated.vcf.gz ~/workspace/somatic/bam_readcounts/NORMAL_bam_readcount_combined.tsv DNA -s NORMAL -o ~/workspace/somatic/final/exome.annotated.vcf.gz
+# Remove the intermediate file
+rm exome.tumordna_annotated.vcf.gz
+tabix -p vcf exome.annotated.vcf.gz
 ```
-### **Generating Table from VCF file**
+### Generating Table from VCF file
 
-
-### **Additional Filters **
+```bash
+# Adjust the output fields accordingly
+cd ~/workspace/somatic/final/
+gunzip exome.annotated.vcf.gz
+java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T VariantsToTable -R ~/workspace/inputs/references/genome/ref_genome.fa --variant ~/workspace/somatic/final/exome.annotated.vcf -F CHROM -F POS -F ID -F REF -F ALT -F set -F AC -F AF -o variants.tsv
+```
+### Additional Filters
+Filter vcf allele frequency
 
 **Please continue to the next section for instructions on how to perform manual review on these somatic variant results*

@@ -22,24 +22,33 @@ It is strongly recommended to read the following documentation from GATK:
 
 ```
 # Extract the SNPs from the call set
-gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.vcf -select-type SNP -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.snps.vcf
+cd /workspace/germline/
+gatk --java-options '-Xmx60g' SelectVariants -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.vcf -select-type SNP -O /workspace/germline/Exome_Norm_HC_calls.snps.vcf
 
 # Extract the indels from the call set
-gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.vcf -select-type INDEL -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.indels.vcf
+gatk --java-options '-Xmx60g' SelectVariants -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.vcf -select-type INDEL -O /workspace/germline/Exome_Norm_HC_calls.indels.vcf
 
 # Apply basic filters to the SNP call set
-gatk --java-options '-Xmx64g' VariantFiltration -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.snps.vcf --filter-expression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" --filter-name "basic_snp_filter" -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.snps.filtered.vcf
+gatk --java-options '-Xmx64g' VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.snps.vcf --filter-expression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" --filter-name "basic_snp_filter" -O /workspace/germline/Exome_Norm_HC_calls.snps.filtered.vcf
 
 # Apply basic filters to the INDEL call set
-gatk --java-options '-Xmx64g' VariantFiltration -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.indels.vcf --filter-expression "QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0 || SOR > 10.0" --filter-name "basic_indel_filter" -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.indels.filtered.vcf
+gatk --java-options '-Xmx64g' VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.indels.vcf --filter-expression "QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0 || SOR > 10.0" --filter-name "basic_indel_filter" -O /workspace/germline/Exome_Norm_HC_calls.indels.filtered.vcf
 
 # Merge filtered SNP and INDEL vcfs back together
-gatk --java-options '-Xmx64g' MergeVcfs -I /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.snps.filtered.vcf -I /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.indels.filtered.vcf -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf
+gatk --java-options '-Xmx64g' MergeVcfs -I /workspace/germline/Exome_Norm_HC_calls.snps.filtered.vcf -I /workspace/germline/Exome_Norm_HC_calls.indels.filtered.vcf -O /workspace/germline/Exome_Norm_HC_calls.filtered.vcf
 
 # Extract PASS variants only
-gatk --java-options '-Xmx64g' SelectVariants -R /home/ubuntu/data/reference/GRCh38_full_analysis_set_plus_decoy_hla.fa -V /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.vcf -O /home/ubuntu/data/germline_variants/Exome_Norm_HC_calls.filtered.PASS.vcf --exclude-filtered
+gatk --java-options '-Xmx64g' SelectVariants -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.filtered.vcf -O /workspace/germline/Exome_Norm_HC_calls.filtered.PASS.vcf --exclude-filtered
 
 ```
+
+
+
+
+
+
+
+
 
 ### Perform hard-filtering on WGS data
 
