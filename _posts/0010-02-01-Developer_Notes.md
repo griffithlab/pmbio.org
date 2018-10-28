@@ -352,7 +352,7 @@ java -Xmx12g -jar /usr/local/bin/picard.jar FilterSamReads I=../all/WGS_Tumor_me
 mkdir -p reverted_bams
 mkdir -p reverted_bams/WGS_Norm reverted_bams/WGS_Tumor
 
-java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
+java -Xmx24g -Djava.io.tmpdir='/workspace/tmp/' -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Tumor_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Tumor/
 
 java -Xmx12g -jar /usr/local/bin/picard.jar RevertSam I=chr6_chr17_WGS_Norm_merged_all_read_pairs.bam OUTPUT_BY_READGROUP=true O=reverted_bams/WGS_Norm/
 mv 2891323123.bam WGS_Norm_Lane1.bam
@@ -519,4 +519,3 @@ gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/ref
 ```
 
 Host g.vcf and idx files on genomedata.org as well
-

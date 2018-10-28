@@ -1120,12 +1120,12 @@ exit
 ```bash
 sudo bash
 cd /usr/local/bin
-wget https://raw.githubusercontent.com/genome/docker-cle/master/bam_readcount_helper.py
-conda create -y --name bam-readcount python=2.7
+wget https://github.com/griffithlab/pmbio.org/blob/master/assets/scripts/bam_readcount_helper.py
+conda create -y --name bam-readcount python=3.6
 conda install --name bam-readcount cyvcf2
 # when needing to use this script, activate environment as following:
 source activate bam-readcount
-# when done 
+# when done
 source deactivate
 exit
 ```

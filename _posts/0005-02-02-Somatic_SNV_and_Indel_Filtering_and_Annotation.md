@@ -25,16 +25,28 @@ vep -i ~/workspace/somatic/exome.merged.norm.pass_only.vcf --cache --dir /opt/ve
 ```
 
 ### **Adding Bam-readcounts to VCF file**
-We have added a python helper script that will take your vcf and DNA bam files and generates twp bam-readcount output files, one for snv and one for indel.
+We have added a python helper script that will take your vcf and DNA bam files and generates two bam-readcount output files, one for snv and one for indel.
 
-`python -u /usr/bin/bam_readcount_helper.py <vcf_file> 'TUMOR' <reference fasta> <bam file> <output_dir>`
-
+```bash
+cd /workspace/somatic
+mkdir -p /workspace/somatic/bam_readcounts
+# First activate the bam-readcount conda enironment
+source activate bam-readcount
+# Running bam-readcount on annotated vcf file, once using tumor bam and another time for normal bam file
+python -u /usr/local/bin/bam_readcount_helper.py ~/workspace/somatic/exome.merged.norm.annotated.vcf 'TUMOR' ~/workspace/inputs/references/genome/ref_genome.fa /workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam ~/workspace/somatic/bam_readcounts/
+python -u /usr/local/bin/bam_readcount_helper.py ~/workspace/somatic/exome.merged.norm.annotated.vcf 'NORMAL' ~/workspace/inputs/references/genome/ref_genome.fa /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/somatic/bam_readcounts/
+```
 Once we concatenate the snv readcount file as well as the indel readcount file, we can then run the vcf-annotation-tool to add these bam-readcounts to our vcf output.
+```bash
+cd ~/workspace/somatic/bam_readcounts/
+cat TUMOR_bam_readcount_snv.tsv TUMOR_bam_readcount_indel.tsv > TUMOR_bam_readcount_combined.tsv
+cat NORMAL_bam_readcount_snv.tsv NORMAL_bam_readcount_indel.tsv > NORMAL_bam_readcount_combined.tsv
 
-`head -1 <snv_readcount_file> > <combined_readcount_file>; tail -n +2 -q <indel_readcount_file> >> <combined_readcount_file>`
+mkdir -p ~/workspace/somatic/final/
+cd ~/workspace/somatic/final/
+vcf-readcount-annotator ~/workspace/somatic/exome.merged.norm.annotated.vcf ~/workspace/somatic/bam_readcounts/TUMOR_bam_readcount_combined.tsv DNA -s TUMOR -o ~/workspace/somatic/final/exome.final.vcf
 
-`vcf-readcount-annotator <vcf_file> <readcount_file_combined> DNA -s TUMOR -o <output_dir>`
-
+```
 ### **Generating Table from VCF file**
 
 
