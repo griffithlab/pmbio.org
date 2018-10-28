@@ -8,9 +8,17 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-03-01
 ---
 
-### Manta
-```bash
-python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --normalBam=/workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam --tumorBam=/workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam --referenceFasta=/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --runDir=/workspace/data/results/somatic/manta/
+[Manta](https://github.com/Illumina/manta) is a structural variant caller maintained by Illumina and optimized for calling somatic variation in tumor/normal pairs. In this section we will use [Manta](https://github.com/Illumina/manta) to call structural variants in our data but first let's go over what a structural variant actually is. Structural variants are rearrangements in DNA involving a breakpoint(s). Generally speaking structural variants can fall into four categories:
 
-python2 /workspace/data/results/somatic/manta/runWorkflow.py
+1. Insertions: a region is inserted into the DNA
+2. Deletions: a region is deleted in the DNA
+3. Inversions: a section of DNA is reversed
+4. Translocations: a section of DNA is remved and re-inserted in a new region
+
+```bash
+# run the manta config script
+python2 /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --normalBam=/workspace/align/WGS_Norm_merged_sorted_mrkdup.bam --tumorBam=/workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --runDir=/workspace/somatic/manta/
+
+# run manta
+python2 /workspace/somatic/manta/runWorkflow.py
 ```
