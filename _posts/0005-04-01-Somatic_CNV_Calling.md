@@ -26,14 +26,18 @@ To begin, the concept of a CNA is fairly straight forward, in the figure to the 
 5. bam file
 
 ```bash
-# run mosdepth for tumor/normal
-mosdepth --no-per-base -t 4 -b 10000 /workspace/data/results/somatic/WGS_Norm.mosdepth /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam
-bgzip -d WGS_Norm.mosdepth.regions.bed.gz
-cat /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed
+# make directory to store copycat results
+mkdir -p ~/workspace/somatic/copycat_wgs
+cd ~/workspace/somatic/copycat_wgs
 
-mosdepth --no-per-base -t 4 -b 10000 /workspace/data/results/somatic/WGS_Tumor.mosdepth /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam
+# run mosdepth for tumor/normal
+mosdepth --no-per-base -t 4 -b 10000 ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth ~/workspace/align/WGS_Norm_merged_sorted_mrkdup.bam
+bgzip -d WGS_Norm.mosdepth.regions.bed.gz
+cat ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth.regions.2.bed
+
+mosdepth --no-per-base -t 4 -b 10000 ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam
 bgzip -d WGS_Tumor.mosdepth.regions.bed.gz
-cat /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > /workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed
+cat ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth.regions.2.bed
 ```
 
 Having run [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630) we have the core data we need to determine copy number. Let's go ahead and quickly examine a chromosome to get an idea of what we're looking at. The below code will make a crude adjustment to normalize the data based on the number of reads present in the samples and plot the result for chromosome 6.
@@ -43,7 +47,7 @@ Having run [mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4
 R
 
 # set working directory
-setwd("/workspace/data/results/somatic/")
+setwd("~/workspace/somatic/copycat_wgs")
 
 # load libraries
 library(ggplot2)
@@ -70,6 +74,9 @@ pdf(file="tumor_depth_cn.chr1.pdf", height=5, width=10)
 ggplot(all_depth[all_depth$Chr == "chr6",], aes(x=Start, y=diff, color=diff)) + geom_point() + scale_color_viridis("Depth", option = "plasma") + theme_bw() +
     ylab("Relative Depth Difference") + xlab("Position")
 dev.off()
+
+# quit R
+q() # don't save workspace image: n [ENTER]
 ```
 
 you should see something like the plot below where there is a fairly clear indication of a copy number amplification on the p arm of the chromosome, and a copy deletion twoards the center of the chromosome. Keep in mind that what's plotted is the Tumor depth relative to the normal and not the actual copy number.
@@ -82,29 +89,9 @@ Nice job, that was pretty easy! But not so fast, there are two obvious biases wh
 The [copyCat](https://github.com/chrisamiller/copyCat) package is able to adjust for these biases in WGS data and is what we'll start with. To start with [copyCat](https://github.com/chrisamiller/copyCat) we need to obtain GC content and mapability scores for our data. Fortunately the author of copyCat has a script to create these annotation files. As our first step let's go ahead and download the script into the `workspace/bin` directory and extract the contents.
 
 ```bash
-cd /workspace/bin
-wget http://genomedata.org/pmbio-workshop/misc/createCustomAnnotations.v1.zip
-unzip createCustomAnnotations.v1.tar.gz
-```
-
-The script expects our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
-
-- byname: tells the program to split the fasta by each record name (i.e. chromosome)
-- GRCh38_full_analysis_set_plus_decoy_hla.fa: location of the multi-record fasta
-- GRCh38_full_analysis_set_plus_decoy_hla_split/: directory to output the results
-
-We also need to make sure we create an index for our new fasta with `samtools faidx`.
-
-```bash
-# make new directory and change directories
-mkdir -p /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split
-cd /workspace/data/raw_data/references/
-
-# split the long fasta by chromosome
-faSplit byname GRCh38_full_analysis_set_plus_decoy_hla.fa GRCh38_full_analysis_set_plus_decoy_hla_split/
-
-# index the fasta
-samtools faidx /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa
+cd /workspace/setup/bin
+wget -c http://genomedata.org/pmbio-workshop/misc/createCustomAnnotations.zip
+unzip createCustomAnnotations.zip
 ```
 
 Now that we've got everything set up we can run the script `runEachChr.sh` to create these mapability and gc content annotations, but first lets talk about what the script is actually doing. To create the mapability annotations it first takes the a single record fasta (i.e. for a single chromosome) and generates all possible combination of reads for a given read length (in our case the read length is 100 bp). It then takes these reads and aligns them to the multi record fasta (i.e. the whole genome) to determine which of these reads map uniquely to where they belong. If a read were to be mapped anywhere else from where it originally came from in the single record fasta that would be indicitive of a lower mapability at the region where that read was originally derived. The gc content annotation is the proportion of bases which are either a guanine or cytosine for a given region. The instructions for running this script can be found in the README however to sumarize the script will take the following positional arguments:
@@ -119,32 +106,34 @@ The script will create a directory called `copyCat_annotation` with annotations 
 
 ```bash
 ## run the script to create the annotation dir
-# cd /workspace/bin/createCustomAnnotations.v1
-# bash runEachChr.sh /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split/chr6.fa /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa 100 hg38entrypoints.female /workspace/data/results/somatic/
-
-# as mentioned the above takes some time so we'll just download the result for HG38
-cd /workspace/data/results/somatic/
-wget http://genomedata.org/pmbio-workshop/misc/copyCat_annotation.zip
-unzip copyCat_annotation.zip
+# cd /workspace/setup/bin/createCustomAnnotations.v1
+# grep "chr6\|chr17" hg38entrypoints.female > hg38entrypoints.2.female
+# bash runEachChr.sh /workspace/inputs/references/genome/ref_genome_split/chr6.fa /workspace/inputs/references/genome/ref_genome.fa 100 hg38entrypoints.female /workspace/somatic/copycat_wgs
+# bash runEachChr.sh /workspace/inputs/references/genome/ref_genome_split/chr17.fa /workspace/inputs/references/genome/ref_genome.fa 100 hg38entrypoints.female /workspace/somatic/copycat_wgs
 
 ## download the gaps.bed file
-# cd /workspace/data/results/somatic/copyCat_annotation
+# cd /workspace/somatic/copycat_wgs/copyCat_annotation
 # https://xfer.genome.wustl.edu/gxfer1/project/cancer-genomics/copyCat/GRCh38/gaps.bed
 # cat gaps.bed | awk '{print "chr"$0}' > tmp && mv tmp gaps.bed
+
+# as mentioned the above takes some time so we'll just download the result for HG38
+cd /workspace/somatic/copycat_wgs
+wget -c http://genomedata.org/pmbio-workshop/misc/copyCat_annotation.zip
+unzip copyCat_annotation.zip
 ```
 
-At the end your directory structure should look something like this but with more chromosomes:
+At the end your directory structure should look something like this:
 
 ```bash
 ├── entrypoints.female
 ├── gaps.bed
 └── readlength.100
     ├── gcWinds
-    │   ├── chr10.gc.gz
-    │   ├── chr11.gc.gz
+    │   ├── chr6.gc.gz
+    │   ├── chr17.gc.gz
     └── mapability
-        ├── chr10.dat.gz
-        ├── chr11.dat.gz
+        ├── chr6.dat.gz
+        ├── chr17.dat.gz
 ```
 
 With Everything now set up we can start `R` and load the copyCat library. From there we can run the `runPairedSampleAnalysis()` function to perform the analysis. Most of the parameters in the function are the defaults and are only provided for the sake of completeness, the parameters changed are as follows:
@@ -163,10 +152,10 @@ R
 library(copyCat)
 
 # run copyCat in paired mode
-runPairedSampleAnalysis(annotationDirectory="/workspace/data/results/somatic/copyCat_annotation",
-                        outputDirectory="/workspace/data/results/somatic/",
-                        normal="/workspace/data/results/somatic/WGS_Norm.mosdepth.regions.2.bed",
-                        tumor="/workspace/data/results/somatic/WGS_Tumor.mosdepth.regions.2.bed",
+runPairedSampleAnalysis(annotationDirectory="/workspace/somatic/copycat_wgs/copyCat_annotation",
+                        outputDirectory="/workspace/somatic/copycat_wgs",
+                        normal="/workspace/copycat_wgs/somatic/WGS_Norm.mosdepth.regions.2.bed",
+                        tumor="/workspace/copycat_wgs/somatic/WGS_Tumor.mosdepth.regions.2.bed",
                         inputType="bins",
                         maxCores=0,
                         binSize=0,
@@ -183,7 +172,7 @@ runPairedSampleAnalysis(annotationDirectory="/workspace/data/results/somatic/cop
                         tumorSamtoolsFile=NULL)
 ```
 
-The analysis will take a few minutes to complete however once it's done there are a few files that we care about. First you'll notice there is now a plots directory at `/workspace/data/results/somatic/plots`, inside we can view the graphs [copyCat](https://github.com/chrisamiller/copyCat) created to visualize the gc bias correction, they should look something like this:
+The analysis will take a few minutes to complete however once it's done there are a few files that we care about. First you'll notice there is now a plots directory at `/workspace/somatic/copycat_wgs/plots`, inside we can view the graphs [copyCat](https://github.com/chrisamiller/copyCat) created to visualize the gc bias correction, they should look something like this:
 
 {% include figure.html image="/assets/module_4/normal.gccontent.lib1.readLength100.png" %}
 
@@ -202,7 +191,7 @@ As a final step lets load R and plot the results for chromosome 6.
 R
 
 # set working directory
-setwd("/workspace/data/results/somatic/")
+setwd("/workspace/somatic/copycat_wgs")
 
 # load libraries
 library(ggplot2)
@@ -234,8 +223,8 @@ To start lets for make a directory to store our results and then activate the co
 
 ```bash
 # make directory to store results
-mkdir -p /workspace/data/results/somatic/cnvkit_exome
-cd /workspace/data/results/somatic/cnvkit_exome
+mkdir -p ~/workspace/somatic/cnvkit_exome
+cd ~/workspace/somatic/cnvkit_exome
 
 # activate the cnvkit conda environment
 source activate cnvkit
@@ -249,7 +238,7 @@ Our next step is to calculate the regions of the genome which are inaccessible t
 
 ```bash
 # Calculate the regions of the genome which are inaccessible to sequencing
-cnvkit.py access /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa -x /workspace/data/results/somatic/copyCat_annotation/gaps.bed -o /workspace/data/raw_data/references/access-excludes.hg38.bed
+cnvkit.py access ~/references/genome/ref_genome.fa -x ~/workspace/somatic/copyCat_annotation/gaps.bed -o ~/workspace/inputs/references/genome/access-excludes.hg38.bed
 ```
 
 With our accessibility file created we can run `cnvkit.py batch' which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
@@ -271,7 +260,7 @@ We will also convert the pdf diagram and scatter plots to png so that they load 
 
 ```bash
 # run the entire cnvkit workflow for the exome data
-cnvkit.py batch /workspace/data/results/align/Exome_Tumor_sorted_mrkdup.bam --normal /workspace/data/results/align/Exome_Norm_sorted_mrkdup.bam --targets /workspace/data/results/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_exome/ --method hybrid -p 8 --diagram --scatter --drop-low-coverage
+cnvkit.py batch ~/workspace/align/Exome_Tumor_sorted_mrkdup.bam --normal ~/workspace/align/Exome_Norm_sorted_mrkdup.bam --targets ~/workspace/inputs/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta ~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir ~/workspace/somatic/cnvkit_exome/ --method hybrid -p 8 --diagram --scatter --drop-low-coverage
 
 # convert the pdf generated from the workflow to png/jpg
 convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.png
@@ -325,7 +314,7 @@ cd /workspace/data/results/somatic/cnvkit_wgs
 source activate cnvkit
 
 # run the cnvkit pipeline
-cnvkit.py batch /workspace/data/results/align/WGS_Tumor_merged_sorted_mrkdup.bam --normal /workspace/data/results/align/WGS_Norm_merged_sorted_mrkdup.bam --fasta /workspace/data/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla.fa --access /workspace/data/raw_data/references/access-excludes.hg38.bed --output-reference /workspace/data/raw_data/references/my_reference.cnn --output-dir /workspace/data/results/somatic/cnvkit_wgs/ --method wgs -p 8 --diagram --scatter
+cnvkit.py batch ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam --normal ~/workspace/align/WGS_Norm_merged_sorted_mrkdup.bam --fasta /~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir /workspace/somatic/cnvkit_wgs/ --method wgs -p 8 --diagram --scatter
 
 # deactivate the cnvkit environment
 source deactivate
