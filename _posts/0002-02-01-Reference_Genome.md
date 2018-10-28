@@ -34,7 +34,7 @@ cd /workspace/inputs/references/genome
 # dowload human reference genome files from the course data server
 wget http://genomedata.org/pmbio-workshop/references/genome/$CHRS/ref_genome.tar
 
-# unpack the archive using `tar -xvf` (`x` for extract, `v` for verbose, `f` for file) 
+# unpack the archive using `tar -xvf` (`x` for extract, `v` for verbose, `f` for file)
 tar -xvf ref_genome.tar
 
 # view contents
@@ -51,6 +51,27 @@ tree
 
 ```
 
+Occasionally some tools might expects our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/inputs/raw_data/references/GRCh38_full_analysis_set_plus_decoy_hla_split` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
+
+- byname: tells the program to split the fasta by each record name (i.e. chromosome)
+- GRCh38_full_analysis_set_plus_decoy_hla.fa: location of the multi-record fasta
+- GRCh38_full_analysis_set_plus_decoy_hla_split/: directory to output the results
+
+We also need to make sure we create an index for our new fasta with `samtools faidx`.
+
+```bash
+# make new directory and change directories
+mkdir -p /workspace/inputs/references/genome/ref_genome_split/
+cd /workspace/inputs/references/genome/
+
+# split the long fasta by chromosome
+faSplit byname ref_genome.fa ./ref_genome_split/
+
+# index the fasta
+samtools faidx ./ref_genome_split/chr6.fa
+samtools faidx ./ref_genome_split/chr17.fa
+```
+
 ### Explore the contents of the reference genome file
 ```bash
 cd /workspace/inputs/references/genome
@@ -61,11 +82,11 @@ head ref_genome.fa
 # Pull out only the header lines
 grep ">" ref_genome.fa
 
-# How many lines and characters are in this file? 
+# How many lines and characters are in this file?
 wc ref_genome.fa
 
 # How long are to two chromosomes combined (in bases and Mbp)? Use grep to skip the header lines for each chromosome.
-grep -v ">" ref_genome.fa | wc 
+grep -v ">" ref_genome.fa | wc
 
 # How long does that command take to run?
 time grep -v ">" ref_genome.fa | wc
@@ -127,7 +148,7 @@ For more details on each version of the reference, look for a README file in the
 
 <br>
 
-Note that throughout this course there are places where we obtain annotation files that may not be perfectly compatible with the reference genome we have chosen. This is a common (almost unavoidable problem). For some analyses we may have to adjust chromosome names or take other measures to work around the differences that result from the lack of a clear standard reference genome. 
+Note that throughout this course there are places where we obtain annotation files that may not be perfectly compatible with the reference genome we have chosen. This is a common (almost unavoidable problem). For some analyses we may have to adjust chromosome names or take other measures to work around the differences that result from the lack of a clear standard reference genome.
 
 ### EXERCISE ANSWERS
 How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
@@ -137,4 +158,3 @@ How many occurences of the EcoRI restriction site are present in the chromosome 
 cd /workspace/inputs/references/genome/
 cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $s = uc($_); print $_;' | perl -ne '$c += $_ =~ s/GAATTC/XXXXXX/g; if (eof){print "\nEcoRI site (GAATTC) count = $c\n\n";}'
 ```
-
