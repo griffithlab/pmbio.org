@@ -57,7 +57,7 @@ Basic screen commands:
 * `screen -r`. Resume a session that was properly detachead.
 * `screen -r -d`. Resume a session that was NOT properly detached.
 * `screen -d`. Detach a session so that later you can resume.
-* `<ctrl> <c>`. Create an additional tab in your current session.
+* `<ctrl> <a> <ctrl> <c>`. Create an additional tab in your current session.
 * `<ctrl> <space>`. Cycle through existing tabs.
 * `<ctrl> <a> <ctrl> <a>`. Flip between two tabs.
 * `<ctrl> <a> <">` View a list of tabs.
