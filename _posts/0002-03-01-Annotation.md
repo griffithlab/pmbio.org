@@ -17,7 +17,9 @@ mkdir -p gatk
 cd gatk
 
 # SNP calibration call sets - dbsnp, hapmap, omni, and 1000G
-gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf . 
+# Runtime: < 2min
+gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf .
+# Runtime: ~ 2min
 bgzip Homo_sapiens_assembly38.dbsnp138.vcf
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz .
 gsutil cp gs://genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz .
@@ -128,7 +130,7 @@ java -jar /usr/local/bin/picard.jar BedToIntervalList I=exome_regions.bed O=exom
 In this section we will download some reference transcriptome annotations in the mostly widely used formats (.fa and .gtf). As with the other annotation files, we have created a subsetted version of them to make downstream analysis more practical for a live tutorial demonstration.  To create these annotation files we followed these basic steps:
 
 * Download complete GTF files from Ensembl represent all gene/transcript annotations (e.g. `Homo_sapiens.GRCh38.94.gtf.gz`) from Ensembl's [FTP site](http://www.ensembl.org/info/data/ftp/index.html/).
-* Fix the chromosome names in this GTF. Remember that Ensembl uses names like `1`, `2`, etc. but our reference genome uses names like `chr1`, `chr2`, etc. We perform this conversion using chromosome synonym mappings from Ensembl and a simple script `convertEnsemblGTF.pl`. 
+* Fix the chromosome names in this GTF. Remember that Ensembl uses names like `1`, `2`, etc. but our reference genome uses names like `chr1`, `chr2`, etc. We perform this conversion using chromosome synonym mappings from Ensembl and a simple script `convertEnsemblGTF.pl`.
 * Next we use a simple grep to pull out the subset of chromosomes we care about
 * Finally we use the resulting subsetted GTF to create FASTA sequences for each transcript using the `gtf_to_fasta` tool.  This tools takes exon coordinates in a GTF file and a reference genome sequence and creates the reference transcript sequences.
 
@@ -175,6 +177,3 @@ cut -f 3 ref_transcriptome.gtf | sort | uniq -c
 * Reference genome - The nucleotide sequence of the chromosomes of a species. Genes are the functional units of a reference genome and gene annotations describe the structure of transcripts expressed from those gene loci.
 * Gene annotations - Descriptions of gene/transcript models for a genome. A transcript model consists of the coordinates of the exons of a transcript on a reference genome. Additional information such as the strand the transcript is generated from, gene name, coding portion of the transcript, alternate transcript start sites, and other information may be provided.
 * GTF (.gtf) file - A common file format referred to as Gene Transfer Format used to store gene and transcript annotation information. You can learn more about this format here: http://genome.ucsc.edu/FAQ/FAQformat#format4
-
-
-
