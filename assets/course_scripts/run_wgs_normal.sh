@@ -2,9 +2,10 @@
 cd /workspace/align
 
 # run per lane alignments
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R2.fastq.gz
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane2\tPL:ILLUMINA\tPU:D1VCPACXX.7\tLB:wgs_norm_lib2\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane2.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane2_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane2_R2.fastq.gz
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane3\tPL:ILLUMINA\tPU:D1VCPACXX.8\tLB:wgs_norm_lib3\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane3.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane3_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane3_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R2.fastq.gz &
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane2\tPL:ILLUMINA\tPU:D1VCPACXX.7\tLB:wgs_norm_lib2\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane2.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane2_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane2_R2.fastq.gz &
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane3\tPL:ILLUMINA\tPU:D1VCPACXX.8\tLB:wgs_norm_lib3\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane3.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane3_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane3_R2.fastq.gz &
+wait
 
 # convert sam to bam
 samtools view -@ 8 -h -b -o WGS_Norm_Lane1.bam WGS_Norm_Lane1.sam
