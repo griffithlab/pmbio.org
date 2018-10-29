@@ -2,11 +2,12 @@
 cd /workspace/align
 
 # run per lane alignments
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.1\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane1_R2.fastq.gz
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane2\tPL:ILLUMINA\tPU:D1VCPACXX.2\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane2.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane2_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane2_R2.fastq.gz
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane3\tPL:ILLUMINA\tPU:D1VCPACXX.3\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane3.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane3_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane3_R2.fastq.gz
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane4\tPL:ILLUMINA\tPU:D1VCPACXX.4\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane4.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane4_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane4_R2.fastq.gz
-bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane5\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tumor_lib3\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane5.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane5_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane5_R2.fastq.gz
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.1\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane1_R2.fastq.gz &
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane2\tPL:ILLUMINA\tPU:D1VCPACXX.2\tLB:wgs_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane2.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane2_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane2_R2.fastq.gz &
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane3\tPL:ILLUMINA\tPU:D1VCPACXX.3\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane3.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane3_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane3_R2.fastq.gz &
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane4\tPL:ILLUMINA\tPU:D1VCPACXX.4\tLB:wgs_tumor_lib2\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane4.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane4_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane4_R2.fastq.gz &
+bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane5\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs_tumor_lib3\tSM:HCC1395_DNA" -o /workspace/align/WGS_Tumor_Lane5.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane5_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Tumor/WGS_Tumor_Lane5_R2.fastq.gz &
+wait
 
 # convert sam to bam
 samtools view -@ 8 -h -b -o WGS_Tumor_Lane1.bam WGS_Tumor_Lane1.sam
