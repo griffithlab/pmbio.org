@@ -14,8 +14,6 @@ WGS and Exome raw sequence (fastq) data for our tumor and normal samples will be
 - Y: use soft clipping for supplementary alignments
 - R: read group header line info. See table in [Data Module](/module-02-inputs/0002/05/01/Data/) for sample details.
 
-#TO DO - use a single dataset (e.g., Exome Norm) to demonstrate individual commands. Then process the rest with more efficient piped commands.
-
 ### Aligning the WGS results (optional)
 
 Even downsampled to two chromosomes the WGS data will still take a bit of time to complete. For convienience we've wrapped the WGS commands listed in this section into bash scripts. This will allow us to run all the WGS commands below in one go and move on to other topics while we wait for the alignments to finish. If you choose to do this option please don't run the WGS commands individually as they are all in these bash scripts.
