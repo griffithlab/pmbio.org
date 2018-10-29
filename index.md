@@ -22,4 +22,4 @@ These materials have been developed with the support of [PR Informatics](https:/
 
 PR informatics provides training courses and workshops in bioinformatics and associated fields. Each course we deliver comprises of a carefully thought out combination of lectures, group discussions and hands on practicals. We believe it is this combination of teaching mediums that underpins the success of our courses and workshops.
 
-**We are constantly improving the course material, if you notice a problem or have a suggestion for improvement please let us know by making a github issue at (https://github.com/griffithlab/pmbio.org/issues)[https://github.com/griffithlab/pmbio.org/issues]**
+**We are constantly improving the course material, if you notice a problem or have a suggestion for improvement please let us know by making a github issue at:** (https://github.com/griffithlab/pmbio.org/issues)[https://github.com/griffithlab/pmbio.org/issues]
