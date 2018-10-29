@@ -116,3 +116,4 @@ GetFusionz_and_namez <- function(sample, suffix) {
 
 # Use above funciton on all output files
 # lapply(Ids, function(x) GetFusionz_and_namez(x, suffix = "_fusion_GRCh38.json") )
+
