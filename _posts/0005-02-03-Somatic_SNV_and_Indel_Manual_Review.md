@@ -36,20 +36,25 @@ Briefly, manual review requires use of a genomic viewer, a BAM file of aligned s
 
 For convenience, we provided examples of true somatic variants and false positives observed during manual review of our sequencing data.
 
-**Somatic Variant**
+### Somatic Variant
+
 {% include figure.html image="/assets/module_4/IGV_screenshots/Somatic_1.jpg" position="left" width="450" %}
 
 
-**False Variant -  [INSERT]**
+### False Variant
+
 {% include figure.html image="/assets/module_4/IGV_screenshots/Fail_1.jpg" position="left" width="450" %}
 
-**False Variant -  [INSERT]**
+### False Variant
+
 {% include figure.html image="/assets/module_4/IGV_screenshots/Fail_2.jpg" position="left" width="450" %}
 
-**False Variant -  [INSERT]**
+### False Variant
+
 {% include figure.html image="/assets/module_4/IGV_screenshots/Fail_3.jpg" position="left" width="450" %}
 
-**Ambiguous variant**
+### Ambiguous variant
+
 {% include figure.html image="/assets/module_4/IGV_screenshots/Ambiguous_1.jpg" position="left" width="450" %}
 
 ##### **Automated Somatic Variant Refinement**
