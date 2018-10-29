@@ -19,7 +19,7 @@ First, we will extract all SNPs from the VQSR-filtered whole genome VCF file cre
 
 ```bash
 # Make sure you are in directory for somatic results
-cd ~/workspace/data/results/somatic
+cd ~/workspace/results/somatic
 
 # Create directory for LOH results, move into that directory
 mkdir loh
@@ -108,7 +108,7 @@ tumor_VAFs <- read.delim("tumor.readcounts", header = FALSE, fill = TRUE, col.na
 tumor_VAFs <- select(tumor_VAFs, CHROM, POS, TUMOR_DP, count_A, count_C, count_G, count_T)
 
 # Filter down to positions with at least 20x coverage
-tumor_VAFs <- subset.data.frame(tumor_VAFs, TUMOR_DP > 20)
+tumor_VAFs <- subset.data.frame(tumor_VAFs, TUMOR_DP >= 20)
 
 # Spilt columns with allele info into separate columns with allele depth
 tumor_VAFs <- tumor_VAFs %>% separate(count_A, c("A", "A_AD"), extra = "drop"); tumor_VAFs <- tumor_VAFs %>% separate(count_C, c("C", "C_AD"), extra = "drop"); tumor_VAFs <- tumor_VAFs %>% separate(count_G, c("G", "G_AD"), extra = "drop"); tumor_VAFs <- tumor_VAFs %>% separate(count_T, c("T", "T_AD"), extra = "drop")
@@ -136,29 +136,20 @@ write.table(tumor_VAFs, file="tumor.VAFs.table", sep = "\t", col.names = TRUE, r
 # Read in previously made table with germline VAFs
 germline_VAFs <- read.delim("heterozygous.snps.table", header = TRUE, col.names = c("CHROM", "POS", "GT", "AD", "DP", "VAF"))
 
-# Plot VAFs for chromosome 6
-png("chr6_normal_vs_tumor_VAFs.png", width = 1340, height = 300)
-chr6_VAF_plot <- ggplot() + geom_point(data = germline_VAFs[germline_VAFs$CHROM == "chr6", ], aes(POS,VAF), color="blue") + geom_point(data = tumor_VAFs[tumor_VAFs$CHROM == "chr6", ], aes(POS,VAF), color="green") + xlab("Chr6 Position") + ylab("VAF")
-plot(chr6_VAF_plot)
-dev.off()
-
 # Plot VAFs for chromosome 17
 png("chr17_normal_vs_tumor_VAFs.png", width = 1340, height = 300)
-chr17_VAF_plot <- ggplot() + geom_point(data = germline_VAFs[germline_VAFs$CHROM == "chr17", ], aes(POS,VAF), color="blue") + geom_point(data = tumor_VAFs[tumor_VAFs$CHROM == "chr17", ], aes(POS,VAF), color="green") + xlab("Chr17 Position") + ylab("VAF")
+chr17_VAF_plot <- ggplot() + geom_point(data = germline_VAFs, aes(POS,VAF), color="blue") + geom_point(data = tumor_VAFs, aes(POS,VAF), color="green") + xlab("Chromosome Position") + ylab("VAF")
 plot(chr17_VAF_plot)
 dev.off()
 
 # Exit R, no need to save workspace
 q()
 ```
-You should now see three new files in your loh directory
+You should now see two new files in your loh directory
 1. tumor.VAFs.table
-2. chr6_normal_vs_tumor_VAFs.png
-3. chr17_normal_vs_tumor_VAFs.png
+2. chr17_normal_vs_tumor_VAFs.png
 
-The two plots will look similar to these:
-{% include figure.html image="/assets/module_5/chr6_normal_vs_tumor_VAFs.png" position="left" width="1340" %}
-
+The plot should look similar to this:
 {% include figure.html image="/assets/module_5/chr17_normal_vs_tumor_VAFs.png" position="left" width="1340" %}
 
-In the next section, we will look for sgemented regions of LOH 
+In the next section, we will look for regions of LOH 
