@@ -304,7 +304,7 @@ unzip v0.9.5.zip
 
 # test installation
 source activate cnvkit
-python ~/workspace/bin/cnvkit-0.9.5/cnvkit.py --help
+cnvkit.py --help
 
 # to exit the virtual environment
 source deactivate

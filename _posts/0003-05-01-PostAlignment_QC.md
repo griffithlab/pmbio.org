@@ -9,7 +9,7 @@ date: 0003-05-01
 ---
 
 Calculate QC metric for bam files using samtools and picard
-
+See docs here: https://github.com/genome/cancer-genomics-workflow/wiki/Alignment
 ### Run Samtools flagstat
 
 ```bash
@@ -34,8 +34,8 @@ java -Xmx24g -jar $PICARD CollectAlignmentSummaryMetrics I=/workspace/align/WGS_
 
 #Picard CollectHsMetrics
 #Exome Only
-java -Xmx24g -jar $PICARD CollectHsMetrics I=/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam O=/workspace/align/Exome_Norm_hs_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa BI=/workspace/inputs/references/exome/xgen-exome-research-panel-probes.interval_list TI=/workspace/inputs/references/exome/xgen-exome-research-panel-targets.interval_list
-java -Xmx24g -jar $PICARD CollectHsMetrics I=/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam O=/workspace/align/Exome_Tumor_hs_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa BI=/workspace/inputs/references/exome/xgen-exome-research-panel-probes.interval_list TI=/workspace/inputs/references/exome/xgen-exome-research-panel-targets.interval_list
+java -Xmx24g -jar $PICARD CollectHsMetrics I=/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam O=/workspace/align/Exome_Norm_hs_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa BI=/workspace/inputs/references/exome/probe_regions.bed.interval_list TI=/workspace/inputs/references/exome/exome_regions.bed.interval_list
+java -Xmx24g -jar $PICARD CollectHsMetrics I=/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam O=/workspace/align/Exome_Tumor_hs_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa BI=/workspace/inputs/references/exome/probe_regions.bed.interval_list TI=/workspace/inputs/references/exome/exome_regions.bed.interval_list
 
 #Picard CollectGcBiasMetrics
 #WGS only
@@ -43,13 +43,37 @@ java -Xmx24g -jar $PICARD CollectGcBiasMetrics I=/workspace/align/WGS_Norm_merge
 java -Xmx24g -jar $PICARD CollectGcBiasMetrics I=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam O=/workspace/align/WGS_Tumor_merged_gc_bias_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa CHART=/workspace/align/WGS_Tumor_merged_gc_bias_metrics.pdf S=/workspace/align/WGS_Tumor_merged_gc_bias_summary.txt
 
 #Picard CollectWgsMetrics
-java -Xmx24g -jar $PICARD CollectWgsMetrics I=/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam O=/workspace/align/WGS_Norm_merged_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa INTERVALS=$SOMATIC_REFSEQ_DIR/${GENOME_BASENAME}_autosomal.interval_list
-java -Xmx24g -jar $PICARD CollectWgsMetrics I=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam O=/workspace/align/WGS_Tumor_merged_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa INTERVALS=$SOMATIC_REFSEQ_DIR/${GENOME_BASENAME}_autosomal.interval_list
+
+#First we need to create the Autosomal Chromosome Interval List
+egrep 'chr[0-9]{1,2}\s' /workspace/inputs/references/genome/ref_genome.fa.fai | awk '{print $1"\t1\t"$2"\t+\t"$1}' | cat /workspace/inputs/references/genome/ref_genome.dict - > /workspace/inputs/references/genome/ref_genome_autosomal.interval_list
+
+java -Xmx24g -jar $PICARD CollectWgsMetrics I=/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam O=/workspace/align/WGS_Norm_merged_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa INTERVALS=/workspace/inputs/references/genome/ref_genome_autosomal.interval_list
+java -Xmx24g -jar $PICARD CollectWgsMetrics I=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam O=/workspace/align/WGS_Tumor_merged_metrics.txt R=/workspace/inputs/references/genome/ref_genome.fa INTERVALS=/workspace/inputs/references/genome/ref_genome_autosomal.interval_list
 ```
 ### Run FastQC
 
+```bash
+cd /workspace/inputs/data/fastq
 
+fastqc Exome_Norm/Exome_Norm*.fastq.gz
+fastqc Exome_Tumor/Exome_Tumor*.fastq.gz
+tree
+
+fastqc WGS_Norm/WGS_Norm*.fastq.gz
+fastqc WGS_Tumor/WGS_Tumor*.fastq.gz
+tree
+
+fastqc RNAseq_Norm/RNAseq_Norm*.fastq.gz
+fastqc RNAseq_Tumor/RNAseq_Tumor*.fastq.gz
+tree
+
+```
 ### Run MultiQC to produce a final report
+```bash
+cd /workspace/inputs
+mkdir qc
+cd qc
+multiqc /workspace/inputs/data/fastq/
+tree
 
-
-See docs here: https://github.com/genome/cancer-genomics-workflow/wiki/Alignment
+```
