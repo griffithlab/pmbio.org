@@ -15,7 +15,7 @@ In order to prevent storage space from running out, you may want to unzip the fi
 
 You will need to have the following software installed, including `HISAT`, `Sambamba`, `StringTie`, `Gffcompare`, `R`. If you are missing any of the following software, or you run into problems with running commands using your currently installed version, please refer to the installation page.
 
-#### **Annotation**
+### Annotation
 To continue with the annotation step, you will need to first download the proper gtf file named `converted_Homo_sapiens.GRCh38.92.gtf` from genomedata.org. You may need to create a folder in `/data` for storing annotation files by running `mkdir -p /data/annotation`.
 ```bash
 ~/bin/hisat2-2.0.4/hisat2_extract_splice_sites.py /data/refseq/converted_Homo_sapiens.GRCh38.92.gtf > /data/annotation/GRCh38_ss.tsv
@@ -24,14 +24,15 @@ To continue with the annotation step, you will need to first download the proper
 (/workspace/inputs/references/transcriptome/exons.tsv)
 ```
 
-#### **Indexing**
+### Indexing
 \* Note that this step may require up to 200 GB of RAM.
 ```bash
 ~/bin/hisat2-2.0.4/hisat2-build -p 1 --ss /data/annotation/GRCh38_ss.tsv --exon /data/annotation/GRCh38_exons.tsv /data/refseq/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/refseq/GRCh38_tran
 (/workspace/inputs/references/transcriptome/ref_genome)
 ```
+### Adapter Trimming FASTQ files
 
-#### **Alignment**
+#### Alignment
 First, we will assign a path for temporary directories:
 ```bash
 mkdir -p /workspace/rnaseq/alignments
