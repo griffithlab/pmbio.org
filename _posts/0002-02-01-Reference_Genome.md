@@ -152,7 +152,7 @@ For more details on each version of the reference, look for a README file in the
 Note that throughout this course there are places where we obtain annotation files that may not be perfectly compatible with the reference genome we have chosen. This is a common (almost unavoidable problem). For some analyses we may have to adjust chromosome names or take other measures to work around the differences that result from the lack of a clear standard reference genome.
 
 ### EXERCISE ANSWERS
-How many occurences of the EcoRI restriction site are present in the chromosome 22 sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
+How many occurences of the EcoRI restriction site are present in our reference sequence? The EcoRI restriction enzyme recognition sequence is 5'-GAATTC-'3. Since this is a palendrome, the reverse complement is the same and we only have to search for one sequence in our string. After accounting for end of line breaks and case sensitivity we find 71525 occurences of this sequence.
 
 ```bash
 # example code
