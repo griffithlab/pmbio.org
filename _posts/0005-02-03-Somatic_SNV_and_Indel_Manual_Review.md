@@ -37,18 +37,20 @@ Briefly, manual review requires use of a genomic viewer, a BAM file of aligned s
 For convenience, we provided examples of true somatic variants and false positives observed during manual review of our sequencing data.
 
 **Somatic Variant**
-
-
-
-**False Variant -  [INSERT]**
+{% include figure.html image="/assets/module_4/IGV_screenshots/Somatic_1.jpg" position="left" width="450" %}
 
 
 **False Variant -  [INSERT]**
-
+{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_1.jpg" position="left" width="450" %}
 
 **False Variant -  [INSERT]**
+{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_2.jpg" position="left" width="450" %}
 
+**False Variant -  [INSERT]**
+{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_3.jpg" position="left" width="450" %}
 
+**Ambiguous variant**
+{% include figure.html image="/assets/module_4/IGV_screenshots/Ambiguous_1.jpg" position="left" width="450" %}
 
 ##### **Automated Somatic Variant Refinement**
 Many of the existing limitations of filtering and manual review could be addressed by automating somatic variant refinement. This would further standardize the MPS pipeline and reduce the labor burden required to identify putative somatic variants. Advancements in computational approaches provide an opportunity for the development of such a process.
