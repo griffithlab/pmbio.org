@@ -53,27 +53,27 @@ java -Xmx24g -jar $PICARD CollectWgsMetrics I=/workspace/align/WGS_Tumor_merged_
 ### Run FastQC
 
 ```bash
-cd /workspace/inputs/data/fastq
+cd /workspace/align
 
-fastqc Exome_Norm/Exome_Norm*.fastq.gz
-fastqc Exome_Tumor/Exome_Tumor*.fastq.gz
+fastqc Exome_Norm_sorted_mrkdup_bqsr.bam
+fastqc Exome_Tumor_sorted_mrkdup_bqsr.bam
 tree
 
-fastqc WGS_Norm/WGS_Norm*.fastq.gz
-fastqc WGS_Tumor/WGS_Tumor*.fastq.gz
+fastqc WGS_Norm_merged_sorted_mrkdup_bqsr.bam
+fastqc WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
 tree
 
-fastqc RNAseq_Norm/RNAseq_Norm*.fastq.gz
-fastqc RNAseq_Tumor/RNAseq_Tumor*.fastq.gz
-tree
+#fastqc RNAseq_Norm
+#fastqc RNAseq_Tumor
+#tree
 
 ```
 ### Run MultiQC to produce a final report
 ```bash
-cd /workspace/inputs
+cd /workspace/align
 mkdir qc
 cd qc
-multiqc /workspace/inputs/data/fastq/
+multiqc /workspace/align/
 tree
 
 ```
