@@ -95,7 +95,7 @@ head SeqCap_EZ_Exome_v3_hg38_capture_targets.v2.bed
 # use bedtools to determine the size of the capture space represented by this bed file
 
 # first sort the bed files and store the sorted versions
-bedtools sort -i SeqCap_EZ_Exome_v3_hg38_capture_targets.v2.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed
+bedtools sort -i SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed > SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.bed
 
 bedtools sort -i SeqCap_EZ_Exome_v3_hg38_capture_targets.v2.bed > SeqCap_EZ_Exome_v3_hg38_capture_targets.v2.sort.bed
 
