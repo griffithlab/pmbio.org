@@ -19,10 +19,10 @@ In the previous section [AWS Intro](http://pmbio.org/module-01-setup/0001/02/01/
 In order to launch your own instance you will either need to use your own personal AWS account (not recommended unless you are already familiar with and using AWS) OR you will need to be assigned an AWS account using the IAMS system. If neither of these is possible, the instructors will have to launch an instance for you and provide the login details.
 
 Instance details:
-* AMI: `pmbio ami v4` (`ami-05634ed111b3581c1`) (Publicly available in `London` Zone) 
+* AMI: `pmbio ami v4` (`ami-05634ed111b3581c1`) (Publicly available in `London` Zone)
 * Based on OS: Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
 * Instance type: r5.2xlarge (8 CPUs, 64 GB RAM, Up to 10 Gigabit network speed, EBS storage only)
-* Volumes: 2. A 500GB "root" ("/") volume, and a 2TB "workspace" volume 
+* Volumes: 2. A 500GB "root" ("/") volume, and a 2TB "workspace" volume
 * Security group and details: "pmbio ssh and http"
 * Other notes: Protect from accidental termination.
 
@@ -32,11 +32,11 @@ For this course the instructors have launched instances for you (so that you wil
 
 Example login commands (for Mac/linux laptops):
 ```bash
-ssh -i pmbio.pem ubuntu@18.220.123.159
+ssh -i pmbio.pem ubuntu@s1.pmbio.org
 
 ```
 
-In this command, 'pmbio.pem' is the AWS key file used to authenticate SSH access to the machine, 'ubuntu' is the name of the user account on the machine (a common default user name for the Ubuntu linux operating system), and '18.220.123.159' is the IP address of the machine.  This last part will need to replace with your instance's unique IP address.
+In this command, 'pmbio.pem' is the AWS key file used to authenticate SSH access to the machine, 'ubuntu' is the name of the user account on the machine (a common default user name for the Ubuntu linux operating system), and 's1.pmbio.org' is a domain name linked to the IP address of the machine.  This last part will need to replace with your instance's unique IP address or the shorthand domain name.
 
 #### Use of a terminal multiplexer
 
@@ -48,7 +48,7 @@ Throughout this course we will be logged into an AWS terminal session via SSH co
 
 There are various ways to get around this problem, but the most robust approach is to use a "terminal multiplexer". The purpose of these programs is to make your session persist regardless of your SSH connection.  If your connection gets killed, you can just log into the AWS instance again, attach the multiplexer session and it will be as if nothing happened.
 
-If you are already familiar with `screen`, `tmux`, `byobu`, etc. you can use on of those. If you are not already familiar, we recommend `screen` for its simplicity.  
+If you are already familiar with `screen`, `tmux`, `byobu`, etc. you can use on of those. If you are not already familiar, we recommend `screen` for its simplicity.
 
 To use it, simply type `screen` when you login. If you have already logged in previously and left a `screen` session running you may have to use `screen -r` or `screen -r -d`. When you want to leave your session, you can just close the window or use `screen -d` to detach your session.
 
@@ -57,9 +57,7 @@ Basic screen commands:
 * `screen -r`. Resume a session that was properly detachead.
 * `screen -r -d`. Resume a session that was NOT properly detached.
 * `screen -d`. Detach a session so that later you can resume.
-* `<ctrl> <c>`. Create an additional tab in your current session. 
+* `<ctrl> <c>`. Create an additional tab in your current session.
 * `<ctrl> <space>`. Cycle through existing tabs.
 * `<ctrl> <a> <ctrl> <a>`. Flip between two tabs.
 * `<ctrl> <a> <">` View a list of tabs.
-
-
