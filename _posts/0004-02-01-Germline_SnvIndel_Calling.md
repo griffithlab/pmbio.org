@@ -31,7 +31,7 @@ GATK HaplotypeCaller is run with the following options:
 * -I specifies the path to the input bam file for which to call variants
 * -O specifies the path to the output vcf file to write variants to
 * --bam-output specifies the path to an optional bam file which will store local realignments around variants that HaplotypeCaller used to make calls
-* $GATK_REGIONS is an environment variable that we defined [earlier]({{ site.baseurl }}{% link _posts/0001-05-01-Environment_Setup.md %}) to limit calling to specific regions (e.g., just chr6 and chr17) 
+* $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17) 
 
 ```bash
 #Make sure that $GATK_REGIONS is set correctly
@@ -48,11 +48,30 @@ gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/ge
 gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.vcf --bam-output /workspace/germline/WGS_Norm_HC_out.bam $GATK_REGIONS 
 ```
 
-### Explore the performance/benefits of local realignment
+### Exercise - Explore the performance/benefits of local realignment
 
-TO DO: Add exercise to compare alignments from bwa-mem alignment to HaplotypeCaller local realignment
-Potential example: chr17:76,286,974-76,287,203
-Should this go in next section when we have variants as starting point?
+Let's examine and compare the alignments made by HaplotypeCaller for local re-alignment around variants to those produced originally by BWA-MEM for the normal (germline) exome data. First start a new IGV session and load the following bam files by URL (don’t forget to substitute your number for #).
+
+* http://s#.pmbio.org/align/Exome_Norm_merged_sorted_mrkdup_bqsr.bam
+* http://s#.pmbio.org/germline/Exome_Norm_HC_out.bam
+
+We identified an illustrative deletion by looking through the germline variant calls that we just created in Exome_Norm_HC_calls.vcf. Once you have loaded the above bam files and performed any desired set up (e.g., naming your tracks) navigate to the following coordinates: `chr17:76286974-76287203`.
+
+You should see something like the following:
+
+{% include figure.html image="/assets/module_4/igv_snapshot_HC_vs_BWA.png" width="1000" %}
+
+Notice that the local realignment (top track) has produced a very clear call of a 28bp deletion. In contrast, the bwa-mem alignment, while also supporting the 28bp deletion with some reads, is characterized by a bunch of messy soft-clipping and a probably false positive SNV at the end of CA repeat. The contrast is even more striking when we collapse all reads to a squished view.
+
+{% include figure.html image="/assets/module_4/igv_snapshot_HC_vs_BWA_squished.png" width="1000" %}
+
+Notice how much "cleaner" the alignments are in the top (locally realigned) track. Unfortunately, many variant callers (without local realignment) would likely call the T->C variant, requiring subsequent filtering and/or manual review to eliminate this artifact. Finally, let's zoom out a little more to get the big picture.
+
+{% include figure.html image="/assets/module_4/igv_snapshot_HC_vs_BWA_squished_zoomout.png" width="1000" %}
+
+What differences do you notice between the local realignment and bwa-mem alignment from this perspective, apart from the already observed more clean 28bp deletion?
+
+{% include question.html question="Answer" answer='In the local realignment, the alignments stop shortly, obviously within some pre-determined window. On the other hand the bwa-mem alignments spread out further, naturally distributed around the targeted region (exon). Remember that the local alignment is local, not complete. The bam files from HaplotypeCaller represent only a subset of alignments, centered around potential variation. These BAM files are therefore not a replacement for the complete bwa-mem BAMs.' %}
 
 
 ### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling (for exomes)
@@ -67,9 +86,11 @@ GATK HaplotypeCaller is run with all of the same options as above, except for on
 #Call variants in GVCF mode for exome data
 gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -O /workspace/germline/Exome_Norm_HC_calls.g.vcf --bam-output /workspace/germline/Exome_Norm_HC_GVCF_out.bam $GATK_REGIONS 
 
-#Call variants in GVCF mode for WGS data
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.g.vcf --bam-output /workspace/germline/WGS_Norm_HC_GVCF_out.bam $GATK_REGIONS
+#Call variants in GVCF mode for WGS data - currently this takes too long and isn't used for any subsequent modules. Skip for now.
+#gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.g.vcf --bam-output /workspace/germline/WGS_Norm_HC_GVCF_out.bam $GATK_REGIONS
 ```
+
+Future improvement: Experiment with splitting the above GVCF commands into smaller segments for faster run times.
 
 
 ### Obtain 1000 Genomes Project (1KGP) exome data for joint genotyping and VQSR steps
