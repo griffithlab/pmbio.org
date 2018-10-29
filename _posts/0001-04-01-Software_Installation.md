@@ -414,3 +414,20 @@ ln -s ~/workspace/bin/vt-latest/vt ~/workspace/bin/vt
 #testing Installation
 vcf-readcount-annotator -h
 ```
+
+#### Install seqtk
+[Seqtk](https://github.com/lh3/seqtk) is a lighweight tool for processing FASTQ and FASTA files. We will use seqtk to subset RNA-seq fastq files to more quickly run the fusion alignment module.
+```bash
+# Download
+cd ~/workspace/bin
+git clone https://github.com/lh3/seqtk.git seqtk.v1
+
+# Install
+cd seqtk.v1
+make
+# (Ignore warning message)
+
+# Check install
+ln -s ~/workspace/bin/seqtk.v1/seqtk ~/workspace/bin/seqtk
+~/workspace/bin/seqtk
+```
