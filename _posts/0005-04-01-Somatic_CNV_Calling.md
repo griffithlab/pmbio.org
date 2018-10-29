@@ -31,11 +31,11 @@ mkdir -p ~/workspace/somatic/copycat_wgs
 cd ~/workspace/somatic/copycat_wgs
 
 # run mosdepth for tumor/normal
-mosdepth --no-per-base -t 4 -b 10000 ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth ~/workspace/align/WGS_Norm_merged_sorted_mrkdup.bam
+mosdepth --no-per-base -t 4 -b 10000 ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam
 bgzip -d WGS_Norm.mosdepth.regions.bed.gz
 cat ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > ~/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth.regions.2.bed
 
-mosdepth --no-per-base -t 4 -b 10000 ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam
+mosdepth --no-per-base -t 4 -b 10000 ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
 bgzip -d WGS_Tumor.mosdepth.regions.bed.gz
 cat ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth.regions.bed | cut -f 1,2,4 | awk 'BEGIN{print "Chr\tStart\tCounts.100"}1' > ~/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth.regions.2.bed
 ```
@@ -70,7 +70,7 @@ all_depth$Counts.100Normal <- all_depth$Counts.100Normal * (total_tumor_reads/to
 all_depth$diff <- all_depth$Counts.100Tumor - all_depth$Counts.100Normal
 
 # plot the result for chromosome 6
-pdf(file="tumor_depth_cn.chr1.pdf", height=5, width=10)
+pdf(file="tumor_depth_cn.chr6.pdf", height=5, width=10)
 ggplot(all_depth[all_depth$Chr == "chr6",], aes(x=Start, y=diff, color=diff)) + geom_point() + scale_color_viridis("Depth", option = "plasma") + theme_bw() +
     ylab("Relative Depth Difference") + xlab("Position")
 dev.off()
@@ -118,6 +118,7 @@ The script will create a directory called `copyCat_annotation` with annotations 
 
 ## rename the entrypoints file
 # mv hg38entrypoints.female entrypoints.female
+# cp entrypoints.female entrypoints.male
 
 # as mentioned the above takes some time so we'll just download the result for HG38
 cd /workspace/somatic/copycat_wgs
@@ -128,15 +129,18 @@ unzip copyCat_annotation.zip
 At the end your directory structure should look something like this:
 
 ```bash
+cd /workspace/somatic/copycat_wgs/copyCat_annotation && tree
+.
 ├── entrypoints.female
+├── entrypoints.male
 ├── gaps.bed
 └── readlength.100
     ├── gcWinds
-    │   ├── chr6.gc.gz
     │   ├── chr17.gc.gz
+    │   └── chr6.gc.gz
     └── mapability
-        ├── chr6.dat.gz
         ├── chr17.dat.gz
+        └── chr6.dat.gz
 ```
 
 With Everything now set up we can start `R` and load the copyCat library. From there we can run the `runPairedSampleAnalysis()` function to perform the analysis. Most of the parameters in the function are the defaults and are only provided for the sake of completeness, the parameters changed are as follows:
@@ -148,7 +152,8 @@ With Everything now set up we can start `R` and load the copyCat library. From t
 5. maxCores: number of cores to use, 0 means all available cores
 
 ```R
-# Start R
+# change dir and Start R
+cd /workspace/somatic/copycat_wgs/
 R
 
 # load the copyCat library
@@ -157,8 +162,8 @@ library(copyCat)
 # run copyCat in paired mode
 runPairedSampleAnalysis(annotationDirectory="/workspace/somatic/copycat_wgs/copyCat_annotation",
                         outputDirectory="/workspace/somatic/copycat_wgs",
-                        normal="/workspace/copycat_wgs/somatic/WGS_Norm.mosdepth.regions.2.bed",
-                        tumor="/workspace/copycat_wgs/somatic/WGS_Tumor.mosdepth.regions.2.bed",
+                        normal="/workspace/somatic/copycat_wgs/WGS_Norm.mosdepth.regions.2.bed",
+                        tumor="/workspace/somatic/copycat_wgs/WGS_Tumor.mosdepth.regions.2.bed",
                         inputType="bins",
                         maxCores=0,
                         binSize=0,
@@ -209,9 +214,9 @@ cna_bin <- fread("rd.bins.dat")
 colnames(cna_bin) <- c("Chr", "Pos", "CNA")
 
 # create the plot
-pdf(file="copycat_final.chr2.pdf", height=5, width=10)
-ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr2",], aes(x=Pos, y=CNA, color=CNA)) +
-    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr2",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
+pdf(file="copycat_final.chr17.pdf", height=5, width=10)
+ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr17",], aes(x=Pos, y=CNA, color=CNA)) +
+    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr17",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
     scale_y_continuous(limits=c(0, 15), oob=squish) + scale_color_viridis(limits=c(0, 4), option="plasma", oob=squish) + theme_bw() +
     geom_hline(yintercept = c(1, 2, 3), linetype="longdash")
 dev.off()
