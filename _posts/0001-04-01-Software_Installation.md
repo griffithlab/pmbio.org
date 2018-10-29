@@ -426,6 +426,7 @@ git clone https://github.com/lh3/seqtk.git seqtk.v1
 cd seqtk.v1
 make
 # (Ignore warning message)
+make install
 
 # Check install
 ln -s ~/workspace/bin/seqtk.v1/seqtk ~/workspace/bin/seqtk
