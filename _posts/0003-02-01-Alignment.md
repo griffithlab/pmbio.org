@@ -154,8 +154,8 @@ create an index for these new bams
 
 ```bash
 cd /workspace/align
-java -Xmx60g -jar $PICARD BuildBamIndex I=Exome_Norm_merged_sorted_mrkdup_bqsr.bam
-java -Xmx60g -jar $PICARD BuildBamIndex I=Exome_Tumor_merged_sorted_mrkdup_bqsr.bam
+java -Xmx60g -jar $PICARD BuildBamIndex I=Exome_Norm_sorted_mrkdup_bqsr.bam
+java -Xmx60g -jar $PICARD BuildBamIndex I=Exome_Tumor_sorted_mrkdup_bqsr.bam
 java -Xmx60g -jar $PICARD BuildBamIndex I=WGS_Norm_merged_sorted_mrkdup_bqsr.bam
 java -Xmx60g -jar $PICARD BuildBamIndex I=WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
 ```
