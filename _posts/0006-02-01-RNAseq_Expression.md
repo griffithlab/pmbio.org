@@ -19,45 +19,50 @@ You will need to have the following software installed, including `HISAT`, `Samb
 To continue with the annotation step, you will need to first download the proper gtf file named `converted_Homo_sapiens.GRCh38.92.gtf` from genomedata.org. You may need to create a folder in `/data` for storing annotation files by running `mkdir -p /data/annotation`.
 ```bash
 ~/bin/hisat2-2.0.4/hisat2_extract_splice_sites.py /data/refseq/converted_Homo_sapiens.GRCh38.92.gtf > /data/annotation/GRCh38_ss.tsv
+(/workspace/inputs/references/transcriptome/splicesites.tsv)
 ~/bin/hisat2-2.0.4/hisat2_extract_exons.py /data/refseq/converted_Homo_sapiens.GRCh38.92.gtf > /data/annotation/GRCh38_exons.tsv
+(/workspace/inputs/references/transcriptome/exons.tsv)
 ```
 
 #### **Indexing**
 \* Note that this step may require up to 200 GB of RAM.
 ```bash
 ~/bin/hisat2-2.0.4/hisat2-build -p 1 --ss /data/annotation/GRCh38_ss.tsv --exon /data/annotation/GRCh38_exons.tsv /data/refseq/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/refseq/GRCh38_tran
+(/workspace/inputs/references/transcriptome/ref_genome)
 ```
 
 #### **Alignment**
 First, we will assign a path for temporary directories:
 ```bash
-TUMOR_DATA_1_TEMP=`mktemp -d /data/RNA_seq/alignments/2895626107.XXXXXXXXXXXX`
-TUMOR_DATA_2_TEMP=`mktemp -d /data/RNA_seq/alignments/2895626112.XXXXXXXXXXXX`
-NORMAL_DATA_1_TEMP=`mktemp -d /data/RNA_seq/alignments/2895625992.XXXXXXXXXXXX`
-NORMAL_DATA_2_TEMP=`mktemp -d /data/RNA_seq/alignments/2895626097.XXXXXXXXXXXX`
-#here
-~/bin/hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895626107 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-GCCAAT.4 --rg LB:rna_tumor_lib1 --rg SM:HCC1395_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Tumor/2895626107_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Tumor/2895626107_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | ~/bin/sambamba sort -t 4 -m 8G --tmpdir $TUMOR_DATA_1_TEMP -o /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam /dev/stdin
+mkdir -p /workspace/rnaseq/alignments
+cd /workspace/rnaseq/alignments
+TUMOR_DATA_1_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895626107.XXXXXXXXXXXX`
+TUMOR_DATA_2_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895626112.XXXXXXXXXXXX`
+NORMAL_DATA_1_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895625992.XXXXXXXXXXXX`
+NORMAL_DATA_2_TEMP=`mktemp -d /workspace/rnaseq/alignments2895626097.XXXXXXXXXXXX`
 
-Optional: rmdir $TUMOR_DATA_1_TEMP/* $TUMOR_DATA_1_TEMP
+hisat2 -p 4 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895626107 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-GCCAAT.4 --rg LB:rna_tumor_lib1 --rg SM:HCC1395_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane1_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane1_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 4 -m 8G --tmpdir $TUMOR_DATA_1_TEMP -o /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /dev/stdin
 
-~/bin/hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895626112 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-GCCAAT.5 --rg LB:rna_tumor_lib1 --rg SM:HCC1395_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Tumor/2895626112_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Tumor/2895626112_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | ~/bin/sambamba sort -t 4 -m 8G --tmpdir $TUMOR_DATA_2_TEMP -o /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam /dev/stdin
+rmdir $TUMOR_DATA_1_TEMP/* $TUMOR_DATA_1_TEMP
 
-Optional: rmdir $TUMOR_DATA_2_TEMP/* $TUMOR_DATA_2_TEMP
+hisat2 -p 4 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895626112 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-GCCAAT.5 --rg LB:rna_tumor_lib1 --rg SM:HCC1395_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane2_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane2_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | ~/bin/sambamba sort -t 4 -m 8G --tmpdir $TUMOR_DATA_2_TEMP -o /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam /dev/stdin
 
-hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895625992 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.4 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895625992_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895625992_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | /data/RNA_seq/software/sambamba_v0.6.4 sort -t 4 -m 8G --tmpdir $NORMAL_DATA_1_TEMP -o /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam /dev/stdin
+rmdir $TUMOR_DATA_2_TEMP/* $TUMOR_DATA_2_TEMP
 
-Optional: rmdir $NORMAL_DATA_1_TEMP/* $NORMAL_DATA_1_TEMP
+hisat2 -p 4 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895625992 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.4 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Norm_Lane1_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Norm_Lane1_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 4 -m 8G --tmpdir $NORMAL_DATA_1_TEMP -o /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam /dev/stdin
 
-hisat2 -p 4 --dta -x /data/RNA_seq/refseq/GRCh38_tran --rg-id 2895626097 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.5 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895626097_1.fastq.gz -2  /data/RNA_seq/fastqs_RNA/RNAseq_Norm/2895626097_2.fastq.gz | ~/bin/sambamba view -S -f bam -l 0 /dev/stdin | ~/bin/sambamba sort -t 4 -m 8G --tmpdir $NORMAL_DATA_2_TEMP -o /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam /dev/stdin
+rmdir $NORMAL_DATA_1_TEMP/* $NORMAL_DATA_1_TEMP
 
-Optional: rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
+hisat2 -p 4 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895626097 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.5 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Norm_Lane2_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Norm_Lane2_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 4 -m 8G --tmpdir $NORMAL_DATA_1_TEMP -o /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam /dev/stdin
+
+rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
 ```
 #### **Merging Bams**
 
 ```bash
-sambamba merge -t 4 /workspace/rnaseq/alignments/HCC1395BL_RNA.bam /workspace/rnaseq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam /workspace/rnaseq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam
+sambamba merge -t 4 /workspace/rnaseq/alignments/HCC1395BL_RNA.bam /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 
-sambamba merge -t 4 /workspace/rnaseq/alignments/HCC1395_RNA.bam /workspace/rnaseq/alignments/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam /workspace/rnaseq/alignments/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam
+sambamba merge -t 4 /workspace/rnaseq/alignments/HCC1395_RNA.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 ```
 #### **Assembling transcript from merged bams**
 

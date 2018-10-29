@@ -95,6 +95,7 @@ time grep -v ">" ref_genome.fa | wc
 head -n 2500000 ref_genome.fa | tail
 
 # What is the count of each base in the entire reference genome file (skipping the header lines for each sequence)?
+# Runtime: ~30s
 cat ref_genome.fa | grep -v ">" | perl -ne 'chomp $_; $bases{$_}++ for split //; if (eof){print "$_ $bases{$_}\n" for sort keys %bases}'
 
 # What does each of these bases refer to? What are the "unexpected bases"?
