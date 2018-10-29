@@ -17,8 +17,8 @@ JSON data are name/value pairs separated by a colon. Pairs are organized into ob
 ```bash
 # Get R scripts for later use
 cd /workspace/rnaseq/fusion
-wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/scripts/mod.grolar.R
-wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/scripts/importPizzly.R
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/mod.grolar.R
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/importPizzly.R
 ```
 
 ```R
