@@ -38,24 +38,24 @@ For convenience, we provided examples of true somatic variants and false positiv
 
 ### Somatic Variant
 
-{% include figure.html image="/assets/module_4/IGV_screenshots/Somatic_1.jpg" position="left" width="450" %}
+{% include figure.html image="/assets/module_4/IGV_screenshots/Somatic_1.jpg" %}
 
 
 ### False Variant
 
-{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_1.jpg" position="left" width="450" %}
+{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_1.jpg" %}
 
 ### False Variant
 
-{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_2.jpg" position="left" width="450" %}
+{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_2.jpg" %}
 
 ### False Variant
 
-{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_3.jpg" position="left" width="450" %}
+{% include figure.html image="/assets/module_4/IGV_screenshots/Fail_3.jpg" %}
 
 ### Ambiguous variant
 
-{% include figure.html image="/assets/module_4/IGV_screenshots/Ambiguous_1.jpg" position="left" width="450" %}
+{% include figure.html image="/assets/module_4/IGV_screenshots/Ambiguous_1.jpg" %}
 
 ##### **Automated Somatic Variant Refinement**
 Many of the existing limitations of filtering and manual review could be addressed by automating somatic variant refinement. This would further standardize the MPS pipeline and reduce the labor burden required to identify putative somatic variants. Advancements in computational approaches provide an opportunity for the development of such a process.
