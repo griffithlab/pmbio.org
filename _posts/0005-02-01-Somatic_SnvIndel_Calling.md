@@ -8,15 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-02-01
 ---
 
-#### Downloading Reference Files
-__________________________  
-In order to run the following variant detection algorithms, you will need to download a few reference files from `genome_data.org` to your directory for reference file storage:
-
-```bash
-mkdir -p ~/workspace/references
-cd ~/workspace/references
-wget genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
-```
+ADD INTRO
 
 #### Running VARSCAN
 __________________________  

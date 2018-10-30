@@ -70,26 +70,28 @@ sambamba merge -t 4 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rna
 #### **Merging Transcripts from merged bams**
 
 ```bash
-~/bin/stringtie --merge -p 4 -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/stringtie_merged_bams.gtf /workspace/rnaseq/alignments/HCC1395_RNA.gtf $RNA_HOME/transcripts/HCC1395BL_RNA.gtf
+~/bin/stringtie --merge -p 4 -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/stringtie_merged_bams.gtf /workspace/rnaseq/alignments/RNAseq_Tumor.gtf /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf
 ```
 #### **Comparing transcripts**
 
 ```bash
-~/bin/gffcompare -r /data/RNA_seq/refseq/converted_Homo_sapiens.GRCh38.92.gtf -o /data/RNA_seq/transcripts/gffcmp /data/RNA_seq/transcripts/stringtie_merged_bams.gtf
+mkdir -p /workspace/rnaseq/transcripts/
+cd /workspace/rnaseq/transcripts/
+gffcompare -r /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/transcripts/gffcmp /workspace/inputs/references/transcriptome/stringtie_merged_bams.gtf
 ```
 #### **Estimate Abundance**
 
 ```bash
-mkdir -p /data/RNA_seq/ballgown/HCC1395_RNA_H3MYFBBXX_4_GCCAAT
-mkdir -p /data/RNA_seq/ballgown/HCC1395_RNA_H3MYFBBXX_5_GCCAAT
-mkdir -p /data/RNA_seq/ballgown/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA
-mkdir -p /data/RNA_seq/ballgown/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA
+mkdir -p /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1
+mkdir -p /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2
+mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1
+mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2
 
-~/bin/stringtie -e -B -G /data/RNA_seq/transcripts/gffcmp.annotated.gtf -o /data/RNA_seq/ballgown/HCC1395_RNA_H3MYFBBXX_4_GCCAAT/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.gtf -p 4 /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_4_GCCAAT.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 4 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
 
-~/bin/stringtie -e -B -G /data/RNA_seq/transcripts/gffcmp.annotated.gtf -o /data/RNA_seq/ballgown/HCC1395_RNA_H3MYFBBXX_5_GCCAAT/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.gtf -p 4 /data/RNA_seq/alignments/HCC1395_RNA_H3MYFBBXX_5_GCCAAT.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 4 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 
-~/bin/stringtie -e -B -G /data/RNA_seq/transcripts/gffcmp.annotated.gtf -o /data/RNA_seq/ballgown/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.gtf -p 4 /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 4 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
 
-~/bin/stringtie -e -B -G /data/RNA_seq/transcripts/gffcmp.annotated.gtf -o /data/RNA_seq/ballgown/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.gtf -p 4 /data/RNA_seq/alignments/HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Tumor_Lane2.gtf -p 4 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 ```
