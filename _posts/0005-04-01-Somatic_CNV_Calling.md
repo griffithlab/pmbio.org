@@ -214,9 +214,9 @@ cna_bin <- fread("rd.bins.dat")
 colnames(cna_bin) <- c("Chr", "Pos", "CNA")
 
 # create the plot
-pdf(file="copycat_final.chr17.pdf", height=5, width=10)
-ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr17",], aes(x=Pos, y=CNA, color=CNA)) +
-    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr17",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
+pdf(file="copycat_final.chr6.pdf", height=5, width=10)
+ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr6",], aes(x=Pos, y=CNA, color=CNA)) +
+    geom_segment(data=copy_segment_alteration[copy_segment_alteration$Chr == "chr6",], aes(x=Start, xend=Stop, y=Tumor_CN, yend=Tumor_CN), color="black", size=1) +
     scale_y_continuous(limits=c(0, 15), oob=squish) + scale_color_viridis(limits=c(0, 4), option="plasma", oob=squish) + theme_bw() +
     geom_hline(yintercept = c(1, 2, 3), linetype="longdash")
 dev.off()
@@ -247,6 +247,10 @@ Our next step is to calculate the regions of the genome which are inaccessible t
 ```bash
 # Calculate the regions of the genome which are inaccessible to sequencing
 cnvkit.py access ~/references/genome/ref_genome.fa -x ~/workspace/somatic/copycat_wgs/copyCat_annotation/gaps.bed -o ~/workspace/inputs/references/genome/access-excludes.hg38.bed
+
+# cnvkit will complain if access-excludes contains chromosomes not in the bam file
+# we subset to chr6 and chr17 here to avoid this error later
+grep "chr6\|chr17" ~/workspace/inputs/references/genome/access-excludes.hg38.bed > ~/workspace/inputs/references/genome/access-excludes.hg38.chr6_and_17.bed
 ```
 
 With our accessibility file created we can run `cnvkit.py batch' which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
@@ -267,15 +271,18 @@ With our accessibility file created we can run `cnvkit.py batch' which will run 
 We will also convert the pdf diagram and scatter plots to png so that they load faster.
 
 ```bash
+
+grep "chr6\|chr17" ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed > ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.chr6_and_17.bed
+
 # run the entire cnvkit workflow for the exome data
-cnvkit.py batch ~/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --normal ~/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --targets ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed --fasta ~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir ~/workspace/somatic/cnvkit_exome/ --method hybrid -p 8 --diagram --scatter --drop-low-coverage
+cnvkit.py batch ~/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --normal ~/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --targets ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.chr6_and_17.bed --fasta ~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.chr6_and_17.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir ~/workspace/somatic/cnvkit_exome/ --method hybrid -p 8 --diagram --scatter --drop-low-coverage
 
 # convert the pdf generated from the workflow to png/jpg
-convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.png
-convert Exome_Tumor_sorted_mrkdup-scatter.pdf Exome_Tumor_sorted_mrkdup-scatter.jpg
+convert Exome_Tumor_sorted_mrkdup_bqsr-scatter.pdf Exome_Tumor_sorted_mrkdup_bqsr-scatter.png
+convert Exome_Tumor_sorted_mrkdup_bqsr-scatter.pdf Exome_Tumor_sorted_mrkdup_bqsr-scatter.jpg
 
-convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.png
-convert Exome_Tumor_sorted_mrkdup-diagram.pdf Exome_Tumor_sorted_mrkdup-diagram.jpg
+convert Exome_Tumor_sorted_mrkdup_bqsr-diagram.pdf Exome_Tumor_sorted_mrkdup_bqsr-diagram.png
+convert Exome_Tumor_sorted_mrkdup_bqsr-diagram.pdf Exome_Tumor_sorted_mrkdup_bqsr-diagram.jpg
 ```
 
 With our running of the pipeline completed you should see the files listed below in your output directory. For a complete description of the files and the specific columns please see the CNVkit file format help documentation available [here](https://cnvkit.readthedocs.io/en/stable/fileformats.html).
@@ -301,11 +308,11 @@ Finally it might be the case that you want a closer look at the results, perhaps
 
 ```bash
 # create a scatter plot for just chromosome 6
-cnvkit.py scatter --segment Exome_Tumor_sorted_mrkdup.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup.cns
+cnvkit.py scatter --segment Exome_Tumor_sorted_mrkdup_bqsr.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup_bqsr.cns
 
 # create a heatmap for just chromosome 6
-cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup.cnr
-cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.pdf Exome_Tumor_sorted_mrkdup.cns
+cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup_bqsr.cnr
+cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_segments.pdf Exome_Tumor_sorted_mrkdup_bqsr.cns
 
 # deactivate conda environment
 source deactivate
@@ -322,15 +329,15 @@ cd /workspace/data/results/somatic/cnvkit_wgs
 source activate cnvkit
 
 # run the cnvkit pipeline
-cnvkit.py batch ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam --normal ~/workspace/align/WGS_Norm_merged_sorted_mrkdup.bam --fasta /~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir /workspace/somatic/cnvkit_wgs/ --method wgs -p 8 --diagram --scatter
+cnvkit.py batch ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --normal ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam --fasta ~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.chr6_and_17.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir /workspace/somatic/cnvkit_wgs/ --method wgs -p 8 --diagram --scatter
 
 # deactivate the cnvkit environment
 source deactivate
 
 # convert the .pdf plots to png/jpg
-convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup-scatter.png
-convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup-scatter.jpg
+convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.png
+convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.jpg
 
-convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.png
-convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup-diagram.jpg
+convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.png
+convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.jpg
 ```
