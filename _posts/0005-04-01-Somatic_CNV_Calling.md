@@ -271,7 +271,7 @@ With our accessibility file created we can run `cnvkit.py batch' which will run 
 We will also convert the pdf diagram and scatter plots to png so that they load faster.
 
 ```bash
-
+# cnvkit will complain if chromosomes are in the bed file but not the bam, we fix this here
 grep "chr6\|chr17" ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed > ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.chr6_and_17.bed
 
 # run the entire cnvkit workflow for the exome data
@@ -308,7 +308,7 @@ Finally it might be the case that you want a closer look at the results, perhaps
 
 ```bash
 # create a scatter plot for just chromosome 6
-cnvkit.py scatter --segment Exome_Tumor_sorted_mrkdup_bqsr.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup_bqsr.cns
+cnvkit.py scatter --segment Exome_Tumor_sorted_mrkdup_bqsr.cns --chromosome chr6:1-170805979 --output chr6_scatter.pdf Exome_Tumor_sorted_mrkdup_bqsr.cnr
 
 # create a heatmap for just chromosome 6
 cnvkit.py heatmap --chromosome chr6:1-170805979 --output chr6_heatmap_probes.pdf Exome_Tumor_sorted_mrkdup_bqsr.cnr
@@ -322,8 +322,8 @@ It should be noted that cnvkit.py can also work on whole genome sequencing data.
 
 ```bash
 # make directory to store results
-mkdir -p /workspace/data/results/somatic/cnvkit_wgs
-cd /workspace/data/results/somatic/cnvkit_wgs
+mkdir -p /workspace/somatic/cnvkit_wgs
+cd /workspace/somatic/cnvkit_wgs
 
 # activate cnvkit environment
 source activate cnvkit
