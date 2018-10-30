@@ -335,9 +335,9 @@ cnvkit.py batch ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --norm
 source deactivate
 
 # convert the .pdf plots to png/jpg
-convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.png
-convert WGS_Tumor_merged_sorted_mrkdup-scatter.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.jpg
+convert WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.png
+convert WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-scatter.jpg
 
-convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.png
-convert WGS_Tumor_merged_sorted_mrkdup-diagram.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.jpg
+convert WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.png
+convert WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.pdf WGS_Tumor_merged_sorted_mrkdup_bqsr-diagram.jpg
 ```
