@@ -71,12 +71,12 @@ Notice how much "cleaner" the alignments are in the top (locally realigned) trac
 
 What differences do you notice between the local realignment and bwa-mem alignment from this perspective, apart from the already observed more clean 28bp deletion?
 
-{% include question.html question="Answer" answer='In the local realignment, the alignments stop shortly, obviously within some pre-determined window. On the other hand the bwa-mem alignments spread out further, naturally distributed around the targeted region (exon). Remember that the local alignment is local, not complete. The bam files from HaplotypeCaller represent only a subset of alignments, centered around potential variation. These BAM files are therefore not a replacement for the complete bwa-mem BAMs.' %}
+{% include question.html question="Answer" answer='In the local realignment, the alignments stop abruptly, obviously within some pre-determined window. On the other hand the bwa-mem alignments spread out further, and are naturally distributed around the targeted region (exon). Remember that the local alignment is *local*, not complete. This means that the bam files from HaplotypeCaller represent only a subset of alignments, centered around potential variation. These BAM files are therefore not a replacement for the complete bwa-mem BAMs.' %}
 
 
 ### Run HaplotypeCaller in GVCF mode with single sample calling, followed by joint calling (for exomes)
 
-An alternate (and GATK recommended) method is to use the GVCF workflow. In this mode, HaplotypeCaller runs per-sample to generate an intermediate GVCF, which can then be used with the GenotypeGVCF command for joint genotyping of multiple samples in a very efficient way. Joint genotyping has several advantages. In joint genotyping, variants are analyzed across all samples simultaneously. This ensures that if any sample in the study population has variation at a specific site then the genotype for all samples will be determined at that site. It allows more sensitive detection of genotype calls at sites where one sample might have lower coverage but other samples have a confident variant at that position. Joint calling is also necessary to produce data needed for VQSR filtering (see [next module]({{ site.baseurl }}{% link _posts/0004-02-02-Germline_SnvIndel_FilteringAnnotationReview.md %})). While joint genotyping can be performed directly with HaplotypeCaller (by specifying multiple -I paramters) it is less efficient, and less scalable. Each time a new sample is acquired the entire (progressively slower) variant calling analysis must be repeated. With the GVCF workflow, new samples can be run individually and then more quickly joint genotyped using the GenotypeGVCFs command.    
+An alternate (and GATK recommended) method is to use the GVCF workflow. In this mode, HaplotypeCaller runs per-sample to generate an intermediate GVCF, which can then be used with the GenotypeGVCF command for joint genotyping of multiple samples in a very efficient way. Joint genotyping has several advantages. In joint genotyping, variants are analyzed across all samples simultaneously. This ensures that if any sample in the study population has variation at a specific site then the genotype for all samples will be determined at that site. It allows more sensitive detection of genotype calls at sites where one sample might have lower coverage but other samples have a confident variant at that position. Joint calling is also necessary to produce data needed for VQSR filtering (see [next module]({{ site.baseurl }}{% link _posts/0004-02-02-Germline_SnvIndel_FilteringAnnotationReview.md %})). While joint genotyping can be performed directly with HaplotypeCaller (by specifying multiple -I paramters) it is less efficient, and less scalable. Each time a new sample is added the entire (progressively slower) variant calling analysis must be repeated. With the GVCF workflow, new samples can be run individually and then more quickly joint genotyped using the GenotypeGVCFs command.    
 
 GATK HaplotypeCaller is run with all of the same options as above, except for one addition:
 
@@ -117,7 +117,7 @@ As described above, there are several advantages to joint genotype calling. The 
 - Select 'Analysis groups' -> 'Exome'
 - 'Download the list' (e.g., save as igsr_GBR_GRCh38_exome_alignment.tsv). 
 
-Using the information obtained above, we could download the already aligned exome data for several 1KGP individuals in cram format. These cram files were created in a generally compatible way with the anlysis done so far in this tutorial. The were aligned with BWA-mem to GRCh38 with alternative sequences, plus decoys and HLA. This was followed by GATK BAM improvement steps as in the 1000 Genomes phase 3 pipeline (GATK IndelRealigner, BQSR, and Picard MarkDuplicates). Of course, there will be batch effects related to potentially different sample preparation, library construction, exome capture reagent and protocol, sequencing pipeline, etc. For more details see:
+Using the information obtained above, we could download the already aligned exome data for several 1KGP individuals in cram format. These cram files were created in a generally compatible way with the anlysis done so far in this tutorial. They were aligned with BWA-mem to GRCh38 with alternative sequences, plus decoys and HLA. This was followed by GATK BAM improvement steps as in the 1000 Genomes phase 3 pipeline (GATK IndelRealigner, BQSR, and Picard MarkDuplicates). Of course, there will be batch effects related to potentially different sample preparation, library construction, exome capture reagent and protocol, sequencing pipeline, etc. For more details see:
 
 - [http://www.internationalgenome.org/analysis](http://www.internationalgenome.org/analysis)
 - [https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf](https://media.nature.com/original/nature-assets/nature/journal/v526/n7571/extref/nature15393-s1.pdf)
@@ -145,11 +145,31 @@ wget http://genomedata.org/pmbio-workshop/references/1KGP/gvcfs/chr17/HG00158_HC
 
 Create a joint genotype GVCF, combining HCC1395 Exome normal together with a set of 1KGP exomes, for later use in VQSR filtering.
 
-```bash
-#Combine gvcfs into a single vcf for use with GenotypeGVCFs
-gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00150_HC_calls.g.vcf -V /workspace/germline/HG00158_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
+First, combine the g.vcf files together into a single combined g.vcf with the `CombineGVCFs` command.
 
-#Perform joint genotyping
+GATK CombineGVCFs is run with the following options:
+
+* --java-options '-Xmx60g' tells GATK to use 60GB of memory
+* CombineGVCFs specifies the GATK command to run
+* -R specifies the path to the reference genome
+* -V [multiple] specifies the path to each o the input g.vcf files
+* -O specifies the path to the output combined g.vcf file
+* $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17)
+
+```bash
+gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00150_HC_calls.g.vcf -V /workspace/germline/HG00158_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
+```
+
+Finally, perfom joint genotyping with the `GenotypeGVCFs` command. This command is run with the following options:
+
+* --java-options '-Xmx60g' tells GATK to use 60GB of memory
+* GenotypeGVCFs specifies the GATK command to run
+* -R specifies the path to the reference genome
+* -V specifies the path to combined g.vcf files
+* -O specifies the path to the output the joint genotyped vcf file 
+* $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17)
+
+```bash
 gatk --java-options '-Xmx60g' GenotypeGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf -O /workspace/germline/Exome_GGVCFs_jointcalls.vcf $GATK_REGIONS 
 ```
 
