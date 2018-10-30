@@ -40,7 +40,7 @@ ls -lh
 
 ### Download coordinates describing the Exome Reagent used to generate our exome data (SeqCapEZ_Exome_v3.0)
 The reagent used to produce the exome sequenced data for this course was the SeqCapEZ_Exome_v3.0 from Roche Nimblegen. Nimblegen provides a set of files describing this reagent which can be downloaded from their site
-[here](https://sequencing.roche.com/en/products-solutions/by-category/target-enrichment/hybridization/seqcap-ez-exome-v3-kit.html). We are most interested in the file named `SeqCap_EZ_Exome_v3_hg19_primary_targets.bed` which contains the chromosome, start, stop, and gene annotation for each probe used in the reagent. Let's go ahead and downlod these files for later use.
+[here](https://sequencing.roche.com/en/products-solutions/by-category/target-enrichment/hybridization/seqcap-ez-exome-v3-kit.html). We are most interested in the file named `SeqCap_EZ_Exome_v3_hg19_capture_targets.bed` which contains the chromosome, start, stop, and gene annotation for each probe used in the reagent. Let's go ahead and downlod these files for later use.
 
 ```bash
 # change directories
