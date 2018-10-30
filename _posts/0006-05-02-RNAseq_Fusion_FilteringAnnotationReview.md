@@ -12,7 +12,7 @@ date: 0006-05-02
 Pizzly generates outputs in `.fasta` and `.json` formats. Some initial filtering is performed automatically in pizzly, for example removing alignments where the distance of the breakpoint to exon boundaries is 10 or more base pairs. These automatically filtered reads are included in the outputs with `unfiltered.` suffix. In this module we will perform additional annotation, filtering and visualization of the `.json` output.
 
 # Annotation
-JSON data are name/value pairs separated by a colon. Pairs are organized into objects within curly braces and arrays within square brackets. JSON data can be reorganized into a delimited text file using many tools and programming languages. Below, we will use R and a modified script from the [grolar](https://github.com/MattBashton/grolar/blob/master/grolar.R) GitHub repository to annotate pizzly output and create a tabular, annotated output. 
+JSON data (JavaScript Object Notation) are name/value pairs separated by a colon. Pairs are organized into objects within curly braces and arrays within square brackets. JSON data can be reorganized into a delimited text file using many tools and programming languages. Below, we will use R and a modified script from the [grolar](https://github.com/MattBashton/grolar/blob/master/grolar.R) GitHub repository to annotate pizzly output and create a tabular, annotated output. 
 
 ```bash
 # Get R scripts for later use
