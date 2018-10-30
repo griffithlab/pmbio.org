@@ -13,8 +13,8 @@ Let's take a look at some of the aligments we just produced using IGV. Since we 
 
 To load the exome BAMs your URLs should look like these (don't forget to substitute your number for `#`):
 
-* http://s#.pmbio.org/align/Exome_Norm_merged_sorted_mrkdup_bqsr.bam
-* http://s#.pmbio.org/align/Exome_Tumor_merged_sorted_mrkdup_bqsr.bam
+* http://s#.pmbio.org/align/Exome_Norm_sorted_mrkdup_bqsr.bam
+* http://s#.pmbio.org/align/Exome_Tumor_sorted_mrkdup_bqsr.bam
 
 Let's go through some simple exercises for exploring the Exome BAMs in IGV.
 
@@ -30,8 +30,8 @@ Let's go through some simple exercises for exploring the Exome BAMs in IGV.
 For example, let's take a look at TP53 on chr17. Simply type `TP53` into the search box and hit `Go` or enter.
 
 {% include figure.html image="/assets/module_2/igv_exome_tumor_norm_tp53.png" width="1000" %}
- 
-Notice the coverage peaks roughly centered around each protein-coding exon. Notice that there are several variants. 
+
+Notice the coverage peaks roughly centered around each protein-coding exon. Notice that there are several variants.
 
 ### EXERCISE
 
@@ -62,7 +62,7 @@ Try loading the .bed file for the exome reagent. Browse your instance for the Ni
 * http://s#.pmbio.org/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed
 
 {% include figure.html image="/assets/module_2/igv_exome_tumor_norm_tp53_exome_bed.png" width="1000" %}
- 
+
 How does the coverage pattern compare to the coordinates of targeted regions?
 
 {% include question.html question="Answer" answer='As expected, the targeted regions closely overlap the coding exons.' %}

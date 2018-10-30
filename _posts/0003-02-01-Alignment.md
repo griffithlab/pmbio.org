@@ -33,7 +33,9 @@ bash run_wgs_tumor.sh
 
 ```bash
 cd /workspace/align
+# Runtime: ~ 4min
 bwa mem -t 8 -Y -R "@RG\tID:Exome_Norm\tPL:ILLUMINA\tPU:C1TD1ACXX-CGATGT.7\tLB:exome_norm_lib1\tSM:HCC1395BL_DNA" -o /workspace/align/Exome_Norm.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/Exome_Norm/Exome_Norm_R1.fastq.gz /workspace/inputs/data/fastq/Exome_Norm/Exome_Norm_R2.fastq.gz
+# Runtime: ~ 4min
 bwa mem -t 8 -Y -R "@RG\tID:Exome_Tumor\tPL:ILLUMINA\tPU:C1TD1ACXX-ATCACG.7\tLB:exome_tumor_lib1\tSM:HCC1395_DNA" -o /workspace/align/Exome_Tumor.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/Exome_Tumor/Exome_Tumor_R1.fastq.gz /workspace/inputs/data/fastq/Exome_Tumor/Exome_Tumor_R2.fastq.gz
 
 bwa mem -t 8 -Y -R "@RG\tID:WGS_Norm_Lane1\tPL:ILLUMINA\tPU:D1VCPACXX.6\tLB:wgs_norm_lib1\tSM:HCC1395BL_DNA" -o /workspace/align/WGS_Norm_Lane1.sam /workspace/inputs/references/genome/ref_genome.fa /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R1.fastq.gz /workspace/inputs/data/fastq/WGS_Norm/WGS_Norm_Lane1_R2.fastq.gz
@@ -51,8 +53,11 @@ bwa mem -t 8 -Y -R "@RG\tID:WGS_Tumor_Lane5\tPL:ILLUMINA\tPU:D1VCPACXX.5\tLB:wgs
 
 ```bash
 cd /workspace/align
+# Runtime: ~30s
 samtools view -@ 8 -h -b -o Exome_Norm.bam Exome_Norm.sam
+# Runtime: ~45s
 samtools view -@ 8 -h -b -o Exome_Tumor.bam Exome_Tumor.sam
+
 samtools view -@ 8 -h -b -o WGS_Norm_Lane1.bam WGS_Norm_Lane1.sam
 samtools view -@ 8 -h -b -o WGS_Norm_Lane2.bam WGS_Norm_Lane2.sam
 samtools view -@ 8 -h -b -o WGS_Norm_Lane3.bam WGS_Norm_Lane3.sam
