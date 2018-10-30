@@ -21,8 +21,8 @@ Even downsampled to two chromosomes the WGS data will still take a bit of time t
 ```bash
 # download bash scripts
 cd /workspace/align
-wget -c https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/run_wgs_normal.sh
-wget -c https://github.com/griffithlab/pmbio.org/blob/master/assets/course_scripts/run_wgs_tumor.sh
+wget -c https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/run_wgs_normal.sh
+wget -c https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/run_wgs_tumor.sh
 
 # run bash script
 bash run_wgs_normal.sh
