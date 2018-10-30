@@ -48,12 +48,10 @@ cd /workspace/inputs/reference/fusion/per-feature
 csplit -s -z ../Homo_sapiens.GRCh38.cdna.all.fa '/>/' '{*}'
 #  If from chromosomes 6 or 17, rename files using the columns of the original ensemble header
 #  (This step takes about 12 minutes. You can proceed with the next section in /workspace/inputs/data/fastq/chr6_and_chr17)
-
 for f in xx*; do awk -F ":" 'NR==1 && $3=="6" || $3=="17"{print $2 "." $3 "." $4 "." $5}' $f | xargs -I{} mv $f {}.fa; done
 
-for f in xx*; do awk -F ":" 'NR==1{print $2 "." $3 "." $4 "." $5 }' $f | xargs -I{} mv $f {}.fa; done
 #  Concatenate features from chromsomes 6 and 17 to a new reference fasta  
-cd /workspace/inputs/reference/fusion)
+cd /workspace/inputs/reference/fusion
 cat ./per-feature/GRCh38.17.*.fa ./per-feature/GRCh38.17.*.fa > chr617.fa
 rm -rf per-feature
 ```
