@@ -54,6 +54,7 @@ vcf-readcount-annotator ~/workspace/somatic/final/exome.tumordna_annotated.vcf.g
 # Remove the intermediate file
 rm exome.tumordna_annotated.vcf.gz
 tabix -p vcf exome.annotated.vcf.gz
+source deactivate
 ```
 ### Generating Table from VCF file
 
