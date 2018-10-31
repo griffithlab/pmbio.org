@@ -12,6 +12,8 @@ date: 0005-02-01
 __________________________  
 
 The first variant caller that we will use here is [VARSCAN](http://varscan.sourceforge.net/), VarScan is a platform-independent mutation caller for targeted, exome, and whole-genome resequencing data and employs a robust heuristic/statistic approach to call variants that meet desired thresholds for read depth, base quality, variant allele frequency, and statistical significance:
+
+### Exome data commands:
 ```bash
 mkdir -p ~/workspace/somatic/varscan
 cd ~/workspace/somatic/varscan
@@ -30,31 +32,71 @@ bcftools concat -a -o exome.vcf.gz -O z exome.snp.Somatic.hc.filter.vcf.gz exome
 tabix -f /workspace/somatic/varscan/exome.vcf.gz
 ```
 
+### WGS commands:
+```bash
+cd ~/workspace/somatic/varscan
+java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup --no-BAQ -f /workspace/inputs/references/genome/ref_genome.fa /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam) /workspace/somatic/varscan/wgs --mpileup 1 --output-vcf
+
+java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic wgs.snp.vcf wgs.snp
+java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic wgs.indel.vcf wgs.indel
+find ~/workspace/somatic/varscan -name '*.vcf' -exec bgzip -f {} \;
+find ~/workspace/somatic/varscan -name '*.vcf.gz' -exec tabix -f {} \;
+
+gatk VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V wgs.snp.Somatic.vcf.gz --mask wgs.snp.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O wgs.snp.Somatic.hc.filter.vcf.gz
+gatk VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V wgs.indel.Somatic.vcf.gz --mask wgs.indel.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O wgs.indel.Somatic.hc.filter.vcf.gz
+
+bcftools concat -a -o wgs.vcf.gz -O z wgs.snp.Somatic.hc.filter.vcf.gz wgs.indel.Somatic.hc.filter.vcf.gz
+tabix -f /workspace/somatic/varscan/wgs.vcf.gz
+```
+
 #### **Running STRELKA**
 __________________________  
 
 The second variant caller that we will use is [STRELKA](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). Strelka calls germline and somatic small variants from mapped sequencing reads and is optimized for rapid clinical analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. Both germline and somatic callers include a final empirical variant rescoring step using a random forest model to reflect numerous features indicative of call reliability which may not be represented in the core variant calling probability model.
 
+#### Exome data commands:
 ```bash
-mkdir -p ~/workspace/somatic/strelka
+mkdir -p ~/workspace/somatic/strelka/exome
 cd ~
 
 source activate strelka
-/usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --exome --runDir=/workspace/somatic/strelka
+/usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --exome --runDir=/workspace/somatic/strelka/exome
 source deactivate
 #Please specify according to the number of cpus available or how many you would like to allocate to this job. In this case, four were given.
 # Runtime: ~ 3min
 python2 /workspace/somatic/strelka/runWorkflow.py -m local -j 8
 
-cd ~/workspace/somatic/strelka/results/variants
+cd ~/workspace/somatic/strelka/exome/results/variants
 zcat somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.snvs.gt.vcf
 zcat somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.indels.gt.vcf
-find ~/workspace/somatic/strelka/results/variants/ -name "*.vcf" -exec bgzip -f {} \;
-find ~/workspace/somatic/strelka/results/variants/ -name "*.vcf.gz" -exec tabix -f {} \;
+find ~/workspace/somatic/strelka/exome/results/variants/ -name "*.vcf" -exec bgzip -f {} \;
+find ~/workspace/somatic/strelka/exome/results/variants/ -name "*.vcf.gz" -exec tabix -f {} \;
 
 bcftools concat -a -o exome.vcf.gz -O z somatic.snvs.gt.vcf.gz somatic.indels.gt.vcf.gz
 
 tabix exome.vcf.gz
+```
+#### WGS data commands:
+```bash
+mkdir -p ~/workspace/somatic/strelka/wgs
+cd ~
+source activate strelka
+/usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --runDir=/workspace/somatic/strelka/wgs
+source deactivate
+
+python2 /workspace/somatic/strelka/wgs/runWorkflow.py -m local -j 8
+
+cd ~/workspace/somatic/strelka/wgs/results/variants
+zcat somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.snvs.gt.vcf
+zcat somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.indels.gt.vcf
+
+find ~/workspace/somatic/strelka/wgs/results/variants/ -name "*.vcf" -exec bgzip -f {} \;
+find ~/workspace/somatic/strelka/wgs/results/variants/ -name "*.vcf.gz" -exec tabix -f {} \;
+
+bcftools concat -a -o wgs.vcf.gz -O z somatic.snvs.gt.vcf.gz somatic.indels.gt.vcf.gz
+
+tabix wgs.vcf.gz
+
 ```
 
 #### **Running MuTect2**
@@ -62,6 +104,7 @@ __________________________
 
 The final variant caller that we will also use results from is [MuTect2](https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_cancer_m2_MuTect2.php). MuTect2 is a somatic SNP and indel caller that combines the DREAM challenge-winning somatic genotyping engine of the original MuTect (Cibulskis et al., 2013) with the assembly-based machinery of HaplotypeCaller.
 
+### Exome data commands
 ```bash
 #Obtaining germline resource from GATK
 cd ~/workspace/inputs/references
@@ -87,6 +130,24 @@ bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/som
 mv mutect_exome.vcf.gz exome.vcf.gz
 tabix ~/workspace/somatic/mutect/exome.vcf.gz
 
+```
+### WGS data commands:
+```bash
+cd ~/workspace/somatic/mutect
+
+#Creating a panel of normals
+# Runtime:
+gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -tumor-sample HCC1395BL_DNA -O WGS_Norm_PON.vcf.gz
+#WGS_Norm_merged_sorted_mrkdup_bqsr.bam
+
+#Running Mutect2 Using latest version of GATK
+# Runtime:
+gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/inputs/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/somatic/mutect/WGS_Norm_PON.vcf.gz -O ~/workspace/somatic/mutect/wgs.vcf.gz -L chr6 -L chr17
+
+echo ~/workspace/somatic/mutect/wgs.vcf.gz > ~/workspace/somatic/mutect/wgs_vcf.fof
+bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/somatic/mutect/wgs_vcf.fof --output-type z --output ~/workspace/somatic/mutect/mutect_wgs.vcf.gz
+mv mutect_wgs.vcf.gz wgs.vcf.gz
+tabix ~/workspace/somatic/mutect/wgs.vcf.gz
 ```
 
 #### **Merge Variants**

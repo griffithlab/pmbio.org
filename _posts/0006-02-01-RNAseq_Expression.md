@@ -8,24 +8,16 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0006-02-01
 ---
 
-### Annotation
-To continue with the annotation step, you will need to first download the proper gtf file named `converted_Homo_sapiens.GRCh38.92.gtf` from genomedata.org. You may need to create a folder in `/data` for storing annotation files by running `mkdir -p /data/annotation`.
-```bash
-~/bin/hisat2-2.0.4/hisat2_extract_splice_sites.py /data/refseq/converted_Homo_sapiens.GRCh38.92.gtf > /data/annotation/GRCh38_ss.tsv
-(/workspace/inputs/references/transcriptome/splicesites.tsv)
-~/bin/hisat2-2.0.4/hisat2_extract_exons.py /data/refseq/converted_Homo_sapiens.GRCh38.92.gtf > /data/annotation/GRCh38_exons.tsv
-(/workspace/inputs/references/transcriptome/exons.tsv)
-```
 
-### Indexing
-
-\* Note that this step may require up to 200 GB of RAM.
-```bash
-~/bin/hisat2-2.0.4/hisat2-build -p 1 --ss /data/annotation/GRCh38_ss.tsv --exon /data/annotation/GRCh38_exons.tsv /data/refseq/GRCh38_full_analysis_set_plus_decoy_hla.fa /data/refseq/GRCh38_tran
-(/workspace/inputs/references/transcriptome/ref_genome)
-```
 ### Adapter Trimming FASTQ files
+```bash
+cd ~/workspace/inputs/references
+wget -c http://genomedata.org/rnaseq-tutorial/illumina_multiplex.fa
+cd ~/workspace/inputs/data/fastq/RNAseq_Tumor
 
+flexbar --adapter-min-overlap 7 --adapter-trim-end RIGHT --adapters ~/workspace/inputs/references/illumina_multiplex.fa --pre-trim-left 13 --max-uncalled 300 --min-read-length 25 --threads 8 --zip-output GZ --reads RNAseq_Tumor_Lane1_R1.fastq.gz --reads2 RNAseq_Tumor_Lane1_R2.fastq.gz --target ~/workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane1
+flexbar --adapter-min-overlap 7 --adapter-trim-end RIGHT --adapters ~/workspace/inputs/references/illumina_multiplex.fa --pre-trim-left 13 --max-uncalled 300 --min-read-length 25 --threads 8 --zip-output GZ --reads RNAseq_Tumor_Lane2_R1.fastq.gz --reads2 RNAseq_Tumor_Lane2_R2.fastq.gz --target ~/workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane2
+```
 
 #### Alignment
 First, we will assign a path for temporary directories:
