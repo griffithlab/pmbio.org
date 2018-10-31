@@ -42,7 +42,7 @@ cat Homo_sapiens.GRCh38.87.gtf | grep --color=never -w "^17">> chr617.gtf
 
 # Parse transcriptome fasta, preserving full ensembl headers
 #  Setup directory
-mkdir /workspace/inputs/reference/fusion/per-feature
+mkdir -p /workspace/inputs/reference/fusion/per-feature
 cd /workspace/inputs/reference/fusion/per-feature
 #  Split fasta at each instance of a sequence header and write to new file
 csplit -s -z ../Homo_sapiens.GRCh38.cdna.all.fa '/>/' '{*}'
@@ -55,7 +55,7 @@ cat ./per-feature/GRCh38.17.*.fa ./per-feature/GRCh38.17.*.fa > chr617.fa
 rm -rf per-feature
 ```
 
-- To get one read pair each for normal and tumor, merge the chr6_and_chr17 only RNA-seq fastqs (2 min):
+- To get one read pair each for normal and tumor, merge the chr6_and_chr17 only RNA-seq fastqs (2 min, assumes RNA-seq tarballs unpacked as in [Data](https://pmbio.org/module-02-inputs/0002/05/01/Data/):
 ```bash
 mkdir -p /workspace/inputs/data/fastq/chr6_and_chr17/fusion
 cd /workspace/inputs/data/fastq/chr6_and_chr17/fusion
@@ -104,7 +104,7 @@ pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-t
 # Possible Additional Analysis
 - Indexing full transcriptome in kallisto is not recommended for a machine instance with course specifications, and will likely result in a memory fault
 
-- Fusion calling for full RNA-seq data set is possible, but will take about _minutes. After following dirctions above through the indexing step:
+- Fusion calling for full RNA-seq data set is possible, but will take several hours. After following dirctions above through the indexing step:
 
 ```bash
 # Quantify potential fusions

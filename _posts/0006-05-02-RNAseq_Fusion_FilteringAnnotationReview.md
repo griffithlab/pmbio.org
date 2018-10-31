@@ -12,13 +12,13 @@ date: 0006-05-02
 Pizzly generates outputs in `.fasta` and `.json` formats. Some initial filtering is performed automatically in pizzly, for example removing alignments where the distance of the breakpoint to exon boundaries is 10 or more base pairs. These automatically filtered reads are included in the outputs with `unfiltered.` suffix. In this module we will perform additional annotation, filtering and visualization of the `.json` output.
 
 # Annotation
-[JSON](https://www.json.org/) data (JavaScript Object Notation) are name/value pairs separated by a colon. Pairs are organized into objects within curly braces and arrays within square brackets. JSON data can be reorganized into a delimited text file using many tools and programming languages. Below, we will use R and a modified script from the [grolar](https://github.com/MattBashton/grolar/blob/master/grolar.R) GitHub repository to annotate pizzly output and create a tabular, annotated output. 
+[JSON](https://www.json.org/) data (JavaScript Object Notation) are name/value pairs separated by a colon. Pairs are organized into objects within curly braces and arrays within square brackets. JSON data can be reorganized into tabular form in a delimited text file using many tools and programming languages. Below, we will use R and a modified script from the [grolar](https://github.com/MattBashton/grolar/blob/master/grolar.R) GitHub repository by Matthew Bashton to annotate pizzly output and create a tabular, annotated output. 
 
 ```bash
 # Get R scripts for later use
 cd /workspace/rnaseq/fusion
 wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/mod.grolar.R
-wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/import_pizzly.R
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/import_Pizzly.R
 ```
 
 ```R
@@ -26,7 +26,7 @@ wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/cours
 R
 setwd("/workspace/rnaseq/fusion/")
 
-# Install packages if necessary
+# Install packages if necessary from these commented lines-
 #  If asked about updating old packages (e.g. Old packages: 'MASS', 'devtools'... Update all/some/none? [a/s/n]:), select n
 # install.packages("jsonlite")
 # install.packages("dplyr")
@@ -57,9 +57,20 @@ GetFusionz_and_namez
 lapply(Ids, function(x) GetFusionz_and_namez(x, suffix=suffix))
 ```
 
+The function should return:
+```R
+[[1]]
+[1] TRUE
+
+[[2]]
+[1] TRUE
+```
+
 # Filtering
 
-- The GetFusionz_and_namez script wrote two new files into /workspace/rnaseq/fusion: ```norm-fuse_fusions_filt_sorted.txt``` and ```tumor-fuse_fusions_filt_sorted.txt```. Let's read those back into R and filter further:
+- The GetFusionz_and_namez script wrote two new files into /workspace/rnaseq/fusion:
+```norm-fuse_fusions_filt_sorted.txt``` and ```tumor-fuse_fusions_filt_sorted.txt```.
+Let's read those back into R and filter further:
 
 ```R
 normal=read.table("./norm-fuse_fusions_filt_sorted.txt", header=T)
@@ -102,12 +113,15 @@ nrow(normal)
 nrow(highNormal)
 [1] 3
 ```
+We wouldn't necessary expect the normal tissue fusions to be absent from the tumor sample. This is more likely an artifact of the downsampling required to run fusion alignment quickly. 
 
 - Finally, let's get a complete list of fusions including the unfiltered reads:
+
 ```R
 # Convert the unfiltered reads from .json to tab-delimited
-suffix = "unfiltered.json"
+suffix = "filtered.json"
 JSON_files = list.files(path = "/workspace/rnaseq/fusion", pattern = paste0("*",suffix))
+Ids = gsub(suffix, "", JSON_files)
 lapply(Ids, function(x) GetFusionz_and_namez(x, suffix=suffix))
 
 # Exit R and save the workspace
@@ -116,22 +130,31 @@ Save workspace image? [y/n/c]:
 y
 
 # Merge the unfiltered reads
-awk ' FNR==1 && NR!=1 { while (/^<header>/) getline; } 1 {print}' *fuse617._fusions*.txt >all-fusions.txt
+awk ' FNR==1 && NR!=1 { while (/^<header>/) getline; } 1 {print}' **un_fusions*.txt >all-fusions.txt
 ```
 
 # Visualization:
 Chimeraviz is an R package for visualizing fusions from RNA-seq data. The chimeraviz package has import functions built in for a variety of fusion-finder programs, but not for pizzly. We will have to load our own import function that you downloaded above:
 
 ```R
-# Ener T, install and load chimeraviz 
+# Enter R, install and load chimeraviz 
 R
 source("https://bioconductor.org/biocLite.R")
 biocLite("chimeraviz")
+# (if asked to update old packages, you can ignore- Update all/some/none? [a/s/n]:)
 library(chimeraviz)
 
 # Use the pizzly importer script to import fusion data
 source("./import_Pizzly.R")
 #  You can view the function by calling it without variables
-import_Pizzly
-import_Pizzly("./all-fusions.txt","hg38")
+importPizzly
+fusions = importPizzly("./all-fusions.txt","hg38")
+fusion=fusions[1:100]
+pdf("chr17-fuse-circ.pdf")
+plot_circle(fusion)
+dev.off()
 ```
+```
+
+
+{% include figure.html image="/assets/module_6/chr17-fuse-circ.png" %}
