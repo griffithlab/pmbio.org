@@ -77,7 +77,7 @@ gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/re
 
 #Running Mutect2 Using latest version of GATK
 # Runtime: ~20m
-gatk -nt 8 --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/inputs/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/somatic/mutect/Exome_Norm_PON.vcf.gz -O ~/workspace/somatic/mutect/exome.vcf.gz -L chr6 -L chr17
+gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/inputs/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/somatic/mutect/Exome_Norm_PON.vcf.gz -O ~/workspace/somatic/mutect/exome.vcf.gz -L chr6 -L chr17
 #Need to change header sample names in order to combine variants with those from other algorithms
 sed -i 's/HCC1395BL_DNA/NORMAL/' exome.vcf.gz
 sed -i 's/HCC1395_DNA/TUMOR/' exome.vcf.gz
