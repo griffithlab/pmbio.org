@@ -143,7 +143,7 @@ GATK VariantRecalibrator is run with the following options:
 * Note: For exome data, exclude "-an DP" as this coverage metric should only be used if extreme deviations in coverage are not expected and indicative of errors
 * Note: The "-an InbreedingCoeff" option is for a population level statistic that requires at least 10 samples in order to be computed (When?). For projects with fewer samples, or that includes many closely related samples (such as a family) omit this annotation from the command line.
 
-```
+```bash
 cd /workspace/germline/
 gatk --java-options '-Xmx60g' VariantRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_GGVCFs_jointcalls.vcf --resource hapmap,known=false,training=true,truth=true,prior=15.0:/workspace/inputs/references/gatk/hapmap_3.3.hg38.vcf.gz --resource omni,known=false,training=true,truth=true,prior=12.0:/workspace/inputs/references/gatk/1000G_omni2.5.hg38.vcf.gz --resource 1000G,known=false,training=true,truth=false,prior=10.0:/workspace/inputs/references/gatk/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQ -an MQRankSum -an ReadPosRankSum --mode SNP -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 -O recalibrate_SNP.recal --tranches-file recalibrate_SNP.tranches --rscript-file recalibrate_SNP_plots.R
 ```
