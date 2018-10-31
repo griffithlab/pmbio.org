@@ -24,6 +24,7 @@ doi:10.1186/s13059-016-0974-4)
 
 ```bash
 cd /workspace/somatic
+# Runtime: ~4min
 vep -i ~/workspace/somatic/exome.merged.norm.pass_only.vcf --cache --dir /opt/vep_cache/ --format vcf --vcf --plugin Downstream --plugin Wildtype --symbol --terms SO --flag_pick --transcript_version -o ~/workspace/somatic/exome.merged.norm.annotated.vcf
 ```
 

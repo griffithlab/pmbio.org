@@ -58,12 +58,12 @@ java -Xmx24g -jar $PICARD CollectWgsMetrics I=/workspace/align/WGS_Tumor_merged_
 ```bash
 cd /workspace/align
 
-fastqc Exome_Norm_sorted_mrkdup_bqsr.bam
-fastqc Exome_Tumor_sorted_mrkdup_bqsr.bam
+fastqc -t 8 Exome_Norm_sorted_mrkdup_bqsr.bam
+fastqc -t 8 Exome_Tumor_sorted_mrkdup_bqsr.bam
 tree
 
-fastqc WGS_Norm_merged_sorted_mrkdup_bqsr.bam
-fastqc WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
+fastqc -t 8 WGS_Norm_merged_sorted_mrkdup_bqsr.bam
+fastqc -t 8 WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
 tree
 
 #fastqc RNAseq_Norm
