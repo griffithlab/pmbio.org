@@ -55,7 +55,7 @@ For convenience, we provided examples of true somatic variants and false positiv
 ##### **Automated Somatic Variant Refinement**
 Many of the existing limitations of filtering and manual review could be addressed by automating somatic variant refinement. This would further standardize the MPS pipeline and reduce the labor burden required to identify putative somatic variants. Advancements in computational approaches provide an opportunity for the development of such a process.
 
-To date we have developed DeepSVR, which is a deep learning model that incorporates manual review data from 41,000 variants derived from 9 tumor subtypes in 22 cancer cohorts. This model can be downloaded from the 'DeepSVR GitHub Repo'[https://github.com/griffithlab/DeepSVR/]. A tutorial for DeepSVR can be found on the 'DeepSVR Wiki'[https://github.com/griffithlab/DeepSVR/wiki].
+To date we have developed DeepSVR, which is a deep learning model that incorporates manual review data from 41,000 variants derived from 9 tumor subtypes in 22 cancer cohorts. This model can be downloaded from the [DeepSVR GitHub Repo](https://github.com/griffithlab/DeepSVR/). A tutorial for DeepSVR can be found on the [DeepSVR Wiki](https://github.com/griffithlab/DeepSVR/wiki).
 
 
 
