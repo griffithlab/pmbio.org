@@ -41,9 +41,9 @@ cat WGS_Tumor_merged_sorted_mrkdup_bqsr.2.annotated.cns | grep chr6 | awk '{if($
 
 As a final exercise let's see what one of the more drastic CN segmented regions look like in IGV.
 
-{% include figure.html image="/assets//module_5/igv_deletion_1.png" %}
+{% include figure.html image="/assets/module_5/deletion_igv_1.png" %}
 
-{% include figure.html image="/assets//module_5/igv_deletion_2.png" %}
+{% include figure.html image="/assets/module_5/deletion_igv_2.png" %}
 
 TODO:
 Right side breakpoint of that one is around here.  chr6:105,846,162-105,847,004
