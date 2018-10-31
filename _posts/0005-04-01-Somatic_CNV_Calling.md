@@ -10,7 +10,7 @@ date: 0005-04-01
 
 [Copy number alterations (CNA)](https://en.wikipedia.org/wiki/Copy-number_variation) occur when sections of a genome are duplicated or deleted. This phenomenom can actually be quite usefull from an evolutionary standpoint, an example would be the duplication of opsin genes allowing some vertebrate species to see more colors. These types of events however can have a significant impact in the context of disease with perhaps the most famous being an amplification of chromosome 21 resulting in down sydrome. In this section we will go over identifying these types of alterations with [copycat](https://github.com/chrisamiller/copyCat), and [cnvkit](https://github.com/etal/cnvkit). However first let's examine exactly what we mean when the segment of a genome is duplicated or deleted and how these types of events can be identified in sequencing data.
 
-{% include figure.html image="/assets/module_4/CNA_illustration.png" position="left" width="450" %}
+{% include figure.html image="/assets/module_5/CNA_illustration.png" position="left" width="450" %}
 
 To begin, the concept of a CNA is fairly straight forward, in the figure to the left we show a standard pair of chromosomes divided into 8 segments. In a copy number amplification a region of the genome is duplicated, in our figure region J has 2 extra segments right after each other. When looking at this region in the reference genome we would expect to see a sharp and dramatic increase in coverage at this region. Further with paired end data the insert size for reads spanning the amplification would be larger. In contrast a deletion is how it sounds and is simply a segment of the chromosome which is gone. In our figure we show a single copy deletion of segment C which would result in a sharp drop in coverage at that region in the sequencing data and a shorter average insert size at the breakpoints of the event.
 
@@ -81,7 +81,7 @@ q() # don't save workspace image: n [ENTER]
 
 you should see something like the plot below where there is a fairly clear indication of a copy number amplification on the p arm of the chromosome, and a copy deletion twoards the center of the chromosome. Keep in mind that what's plotted is the Tumor depth relative to the normal and not the actual copy number.
 
-{% include figure.html image="/assets//module_4/mosdepth_CNA.png" %}
+{% include figure.html image="/assets//module_5/mosdepth_CNA.png" %}
 
 
 Nice job, that was pretty easy! But not so fast, there are two obvious biases when using depth to determine copy number. The first, GC-content is well known to have an effect on coverage in illumina sequencing data. This goes all the way back to the PCR amplification of the library affecting the number of reads generated. The second thing which can introduce bias is the overall mapability of a region of the genome. A low complexity region in the genome for example will have coverage differences just because it is hard for alignment algorithms to map reads there. These biases are fairly straight forward to address in WGS data however in exome/targeted data it is much more complicated.
@@ -182,7 +182,7 @@ runPairedSampleAnalysis(annotationDirectory="/workspace/somatic/copycat_wgs/copy
 
 The analysis will take a few minutes to complete however once it's done there are a few files that we care about. First you'll notice there is now a plots directory at `/workspace/somatic/copycat_wgs/plots`, inside we can view the graphs [copyCat](https://github.com/chrisamiller/copyCat) created to visualize the gc bias correction, they should look something like this:
 
-{% include figure.html image="/assets/module_4/normal.gccontent.lib1.readLength100.png" %}
+{% include figure.html image="/assets/module_5/normal.gccontent.lib1.readLength100.png" %}
 
 As we can see there was quite an extreme bias between the number of reads mapped and the GC content of the reads particulary when the GC content falls below 30% or above 50% however the LOESS correction dealt with this quite nicely.
 
@@ -222,7 +222,7 @@ ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr6",], aes(x=Pos, y=CNA, co
 dev.off()
 ```
 
-{% include figure.html image="/assets/module_4/copyCat_final.png" %}
+{% include figure.html image="/assets/module_5/copyCat_final.png" %}
 
 ### Somatic CNA for exome
 [CNVkit](https://cnvkit.readthedocs.io/en/stable/) is a python package for copy number calling specifically designed for hybrid capture and exome sequencing data. During a typical hybrid capture sequencing experiment the probes capture DNA from the sequencing library, however the probes don't always bind perfectly. This results in not only the "on-target" regions being pulled from the library for later sequencing but "off-target" as well where the probes didn't perfectly bind and essentially pulled the wrong region. The effect provides very low read coverage across the entire genome which [CNVkit](https://cnvkit.readthedocs.io/en/stable/) takes advantage of to make CN calls. Further the software performs the basic bias correction for gc-content and mappability discussed above and will also correct for the typically normal distrubtion of reads for a given target region and the spacing between them.
@@ -298,11 +298,11 @@ With our running of the pipeline completed you should see the files listed below
 
 Let's take a look at the plots that were produced. Below you will see the cnvkit diagram results for the entire exome region. Your results will look a bit different as you only ran a subset of the data. On the left of each chromosome in the diagram amplifications (red) and deletions (blue) are displayed on the left side of each chromosome. On the right side the individual bins for each CN call are displayed.
 
-{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-diagram.png" %}
+{% include figure.html image="/assets/module_5/Exome_Tumor_sorted_mrkdup-diagram.png" %}
 
 The scatter plot shows the same general information as the diagram but in a slightly different fashion. On the y-axis we have the log2 ratio of T/N CN calls. Let's go over this a bit as it can get a bit confusing. In our case we have a typical diploid genome (i.e. each chromosome has 2 copies), so in a signle sample copy-neutral would be 2. The y-axis is displaying the log2 ratio of T/N so copy neutral would be log2(2/2) which is 0. Each grey dot is a binned CN call and orange lines are segments. The x-axis is obviously the coordinate for the CN bin.
 
-{% include figure.html image="/assets/module_4/Exome_Tumor_sorted_mrkdup-scatter.png" %}
+{% include figure.html image="/assets/module_5/Exome_Tumor_sorted_mrkdup-scatter.png" %}
 
 Finally it might be the case that you want a closer look at the results, perhaps theres a specific region of interest that you would like to view in detail. Let's go ahead and make both a chromosome 6 scatter plot and heatmaps for both the probes and segment calls. We can use `cnvkit.py scatter` and `cnvit.py heatmap` to achieve this.
 
