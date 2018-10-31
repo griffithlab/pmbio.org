@@ -12,13 +12,13 @@ date: 0006-05-02
 Pizzly generates outputs in `.fasta` and `.json` formats. Some initial filtering is performed automatically in pizzly, for example removing alignments where the distance of the breakpoint to exon boundaries is 10 or more base pairs. These automatically filtered reads are included in the outputs with `unfiltered.` suffix. In this module we will perform additional annotation, filtering and visualization of the `.json` output.
 
 # Annotation
-JSON data (JavaScript Object Notation) are name/value pairs separated by a colon. Pairs are organized into objects within curly braces and arrays within square brackets. JSON data can be reorganized into a delimited text file using many tools and programming languages. Below, we will use R and a modified script from the [grolar](https://github.com/MattBashton/grolar/blob/master/grolar.R) GitHub repository to annotate pizzly output and create a tabular, annotated output. 
+[JSON](https://www.json.org/) data (JavaScript Object Notation) are name/value pairs separated by a colon. Pairs are organized into objects within curly braces and arrays within square brackets. JSON data can be reorganized into tabular form in a delimited text file using many tools and programming languages. Below, we will use R and a modified script from the [grolar](https://github.com/MattBashton/grolar/blob/master/grolar.R) GitHub repository by Matthew Bashton to annotate pizzly output and create a tabular, annotated output. 
 
 ```bash
 # Get R scripts for later use
 cd /workspace/rnaseq/fusion
 wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/mod.grolar.R
-wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/importPizzly.R
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/course_scripts/import_Pizzly.R
 ```
 
 ```R
@@ -26,7 +26,7 @@ wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/cours
 R
 setwd("/workspace/rnaseq/fusion/")
 
-# Install packages if necessary
+# Install packages if necessary from these commented lines-
 #  If asked about updating old packages (e.g. Old packages: 'MASS', 'devtools'... Update all/some/none? [a/s/n]:), select n
 # install.packages("jsonlite")
 # install.packages("dplyr")
@@ -49,16 +49,28 @@ Ids = gsub(suffix, "", JSON_files)
 # Load grolar.R script and run the GetFusionz_and_namez function to annotate
 source("./mod.grolar.R")
 
-# The function is too long to copy out line by line, but we can view it by calling it without variables
+# The function is too long to type out line by line, but we can view it by calling it without variables
 GetFusionz_and_namez
+#  Look through the funciton steps to get a sense of how our output is being processed. 
 
 # Run annotation script on each file in /workspace/rna/fusion suffixed with fusion.json
 lapply(Ids, function(x) GetFusionz_and_namez(x, suffix=suffix))
 ```
 
+The function should return:
+```R
+[[1]]
+[1] TRUE
+
+[[2]]
+[1] TRUE
+```
+
 # Filtering
 
-- The GetFusionz_and_namez script wrote two new files into /workspace/rnaseq/fusion: ```norm-fuse_fusions_filt_sorted.txt``` and ```tumor-fuse_fusions_filt_sorted.txt```. Let's read those back into R and filter further:
+- The GetFusionz_and_namez script wrote two new files into /workspace/rnaseq/fusion:
+```norm-fuse_fusions_filt_sorted.txt``` and ```tumor-fuse_fusions_filt_sorted.txt```.
+Let's read those back into R and filter further:
 
 ```R
 normal=read.table("./norm-fuse_fusions_filt_sorted.txt", header=T)
@@ -66,7 +78,7 @@ tumor=read.table("./tumor-fuse_fusions_filt_sorted.txt", header=T)
 names(normal)
 ```
 
-- In addition to values present in the orignial ```.json`` files, each fusion now has a unique identifier, sequence positions, and distance values for genes from the same chromosome: 
+- In addition to values present in the orignial ```.json``` files, each fusion now has a unique identifier, sequence positions, and distance values for genes from the same chromosome: 
 
 ```R
 > names(normal)
@@ -84,7 +96,6 @@ names(normal)
 ```R
 normal$sample="normal"
 tumor$sample="tumor"
-allfusions=rbind(normal, tumor)
 normal$genepr=paste0(normal$geneA.name,".",normal$geneB.name)
 tumor$genepr=paste0(tumor$geneA.name,".",tumor$geneB.name)
 uniqueTumor=subset(tumor, !(tumor$genepr %in% normal$genepr))
@@ -102,15 +113,48 @@ nrow(normal)
 nrow(highNormal)
 [1] 3
 ```
+We wouldn't necessary expect the normal tissue fusions to be absent from the tumor sample. This is more likely an artifact of the downsampling required to run fusion alignment quickly. 
 
-# Visualization: 
+- Finally, let's get a complete list of fusions including the unfiltered reads:
+
+```R
+# Convert the unfiltered reads from .json to tab-delimited
+suffix = "filtered.json"
+JSON_files = list.files(path = "/workspace/rnaseq/fusion", pattern = paste0("*",suffix))
+Ids = gsub(suffix, "", JSON_files)
+lapply(Ids, function(x) GetFusionz_and_namez(x, suffix=suffix))
+
+# Exit R and save the workspace
+quit()
+Save workspace image? [y/n/c]:
+y
+
+# Merge the unfiltered reads
+awk ' FNR==1 && NR!=1 { while (/^<header>/) getline; } 1 {print}' **un_fusions*.txt >all-fusions.txt
 ```
-# Install and load chimeraviz 
+
+# Visualization:
+Chimeraviz is an R package for visualizing fusions from RNA-seq data. The chimeraviz package has import functions built in for a variety of fusion-finder programs, but not for pizzly. We will have to load our own import function that you downloaded above:
+
+```R
+# Enter R, install and load chimeraviz 
+R
 source("https://bioconductor.org/biocLite.R")
 biocLite("chimeraviz")
+# (if asked to update old packages, you can ignore- Update all/some/none? [a/s/n]:)
 library(chimeraviz)
 
 # Use the pizzly importer script to import fusion data
-source("./importPizzly.R")
-fusions = importPizzly(allfuion,"hg38")
+source("./import_Pizzly.R")
+#  You can view the function by calling it without variables
+importPizzly
+fusions = importPizzly("./all-fusions.txt","hg38")
+fusion=fusions[1:100]
+pdf("chr17-fuse-circ.pdf")
+plot_circle(fusion)
+dev.off()
 ```
+```
+
+
+{% include figure.html image="/assets/module_6/chr17-fuse-circ.png" %}

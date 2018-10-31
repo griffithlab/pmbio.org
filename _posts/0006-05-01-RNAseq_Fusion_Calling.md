@@ -23,7 +23,7 @@ including:**
 
 **Additional setup:**
 
-**_Important: pizzly will not work with the most recent Ensembl human GTF annotation file. Download the version 87 GTF as shown in the below code block. We will subset the reference transcriptome fasta file. Fasta splitting programs which do no preserve the full Ensembl header such as gffread or gtf_to_fasta will not work with pizzly._**
+**_Important: pizzly will not work with the most recent Ensembl human GTF annotation file. Download the version 87 GTF as shown in the below code block. We will subset the reference transcriptome fasta file. Fasta splitting programs which do not preserve the full Ensembl header such as gffread or gtf_to_fasta will not work with pizzly._**
 
 - Download Ensembl GTF and fasta and parse to include only chromosomes 6 and 17 (12 min): 
 
@@ -42,21 +42,20 @@ cat Homo_sapiens.GRCh38.87.gtf | grep --color=never -w "^17">> chr617.gtf
 
 # Parse transcriptome fasta, preserving full ensembl headers
 #  Setup directory
-mkdir /workspace/inputs/reference/fusion/per-feature
+mkdir -p /workspace/inputs/reference/fusion/per-feature
 cd /workspace/inputs/reference/fusion/per-feature
 #  Split fasta at each instance of a sequence header and write to new file
 csplit -s -z ../Homo_sapiens.GRCh38.cdna.all.fa '/>/' '{*}'
 #  If from chromosomes 6 or 17, rename files using the columns of the original ensemble header
 #  (This step takes about 12 minutes. You can proceed with the next section in /workspace/inputs/data/fastq/chr6_and_chr17)
-for f in xx*; do awk -F ":" 'NR==1 && $3=="6" || $3=="17"{print $2 "." $3 "." $4 "." $5}' $f | xargs -I{} mv $f {}.fa; done
-
+for f in xx*; do awk -F ":" 'NR==1 && $3=="6" || NR==1 && $3=="17"{print $2 "." $3 "." $4 "." $5}' $f | xargs -I{} mv $f {}.fa; done
 #  Concatenate features from chromsomes 6 and 17 to a new reference fasta  
 cd /workspace/inputs/reference/fusion
 cat ./per-feature/GRCh38.17.*.fa ./per-feature/GRCh38.17.*.fa > chr617.fa
 rm -rf per-feature
 ```
 
-- To get one read pair each for normal and tumor, merge the chr6_and_chr17 only RNA-seq fastqs (2 min):
+- To get one read pair each for normal and tumor, merge the chr6_and_chr17 only RNA-seq fastqs (2 min, assumes RNA-seq tarballs unpacked as in [Data](https://pmbio.org/module-02-inputs/0002/05/01/Data/):
 ```bash
 mkdir -p /workspace/inputs/data/fastq/chr6_and_chr17/fusion
 cd /workspace/inputs/data/fastq/chr6_and_chr17/fusion
@@ -105,7 +104,7 @@ pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-t
 # Possible Additional Analysis
 - Indexing full transcriptome in kallisto is not recommended for a machine instance with course specifications, and will likely result in a memory fault
 
-- Fusion calling for full RNA-seq data set is possible, but will take about _minutes. After following dirctions above through the indexing step:
+- Fusion calling for full RNA-seq data set is possible, but will take several hours. After following dirctions above through the indexing step:
 
 ```bash
 # Quantify potential fusions
