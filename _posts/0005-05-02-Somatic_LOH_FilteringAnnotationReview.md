@@ -91,3 +91,7 @@ In your loh directory, you should now see a new file: chr17_segmentation.pdf
 The plot you created should look similar to this plot:
 {% include figure.html image="/assets/module_5/chr17_segmentation.png" position="left" width="1340" %}
 Blue is our normal heterozygous VAFs, green is our tumor VAFs, red is known breast cancer genes, and black is our segmentation results. Black lines close to 0 or 1 indicate segments of complete LOH, while lines between .4 to .6 indicate regions that are still heterozygous. As we can see, chromosome 17 exhibits nearly complete LOH in our tumor sample.
+
+If we had done our LOH analysis on chromosome 6, we would have seen a plot similar to this:
+{% include figure.html image="/assets/module_5/chr6_segmentation.png" position="left" width="1340" %}
+Here, we see regions that are still heterozygous as well as regions of LOH.
