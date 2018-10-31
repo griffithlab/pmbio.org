@@ -216,7 +216,7 @@ gatk --java-options '-Xmx64g' SelectVariants -R /workspace/inputs/references/gen
 Choose one of the filtering strategies above, try changing the filter criteria to increase or decrease the stringency of various filters, and then view the result effect on the numbers of variants passing filters.  
 
 
-### Perform VEP annotation filtered variants
+### Perform VEP annotation of filtered variants
 
 Now that we have high-confidence, filtered variants, we want to start understanding which of these variants might be clinically or biologically relevant. Ensembl's VEP annotation software is a powerful tool for annotating variants with a great deal of biological features. This includes such information as protein consequence (non-coding or coding), population frequencies, links to external databases, various scores designed to estimate the importance of individual variants on protein function, and much more. 
 

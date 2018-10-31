@@ -9,7 +9,7 @@ date: 0005-01-01
 ---
 
 ### Key concepts 
-* Somatic variation, variant types (SNVs, small indels, CNVs, SVs, LOH), VCFs, variant allele fraction (VAF), purity estimation and tumor clonality
+* Somatic variation, variant types (SNVs, small indels, CNVs, SVs, LOH), VCFs, variant allele fraction (VAF), purity estimation and tumor clonality. [Lecture File: PMBIO_Module05_Somatic.pdf](/assets/lectures/PMBIO_Module05_Somatic.pdf)
 
 ### Learning objectives
 * Compare and contrast the merits of exome and WGS data for variant calling
