@@ -8,15 +8,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0005-02-01
 ---
 
-#### Downloading Reference Files
-__________________________  
-In order to run the following variant detection algorithms, you will need to download a few reference files from `genome_data.org` to your directory for reference file storage:
-
-```bash
-mkdir -p ~/workspace/references
-cd ~/workspace/references
-wget genomedata.org/pmbio-workshop/references/NimbleGenExome_v3.interval_list
-```
+ADD INTRO
 
 #### Running VARSCAN
 __________________________  
@@ -42,6 +34,7 @@ tabix -f /workspace/somatic/varscan/exome.vcf.gz
 
 #### **Running STRELKA**
 __________________________  
+
 The second variant caller that we will use is [STRELKA](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). Strelka calls germline and somatic small variants from mapped sequencing reads and is optimized for rapid clinical analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. Both germline and somatic callers include a final empirical variant rescoring step using a random forest model to reflect numerous features indicative of call reliability which may not be represented in the core variant calling probability model.
 
 ```bash
@@ -65,6 +58,7 @@ tabix exome.vcf.gz
 
 #### **Running MuTect2**
 __________________________
+
 The final variant caller that we will also use results from is [MuTect2](https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_cancer_m2_MuTect2.php). MuTect2 is a somatic SNP and indel caller that combines the DREAM challenge-winning somatic genotyping engine of the original MuTect (Cibulskis et al., 2013) with the assembly-based machinery of HaplotypeCaller.
 
 ```bash
@@ -92,6 +86,7 @@ tabix ~/workspace/somatic/mutect/exome.vcf.gz
 
 #### **Merge Variants**
 __________________________
+
 With outputs from all three algorithms, we can now merge the variants to generate a comprehensive list of detected variants:
 Installation of GATK version 3.6 is need for the further processing of our variants.
 

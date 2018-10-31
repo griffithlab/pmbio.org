@@ -9,7 +9,7 @@ date: 0003-01-01
 ---
 
 ### Key concepts
-* Sequence alignment algorithms, BAM files, genome viewers, alignment quality assessment 
+* Sequence alignment algorithms, BAM files, genome viewers, alignment quality assessment. [Lecture File: PMBIO_Module03_Align.pdf](/assets/lectures/PMBIO_Module03_Align.pdf)
 
 ### Learning objectives
 * Compare and contrast DNA vs. RNA sequence alignment strategies

@@ -13,9 +13,9 @@ date: 0006-03-01
 ```bash
 cd /data/RNA_seq
 # Make CSV/TSV for phenotype data
-printf "\"ids\",\"type\"\n\"HCC1395BL_RNA_H3MYFBBXX_4_CTTGTA\",\"normal\"\n\"HCC1395BL_RNA_H3MYFBBXX_5_CTTGTA\",\"normal\"\n\"HCC1395_RNA_H3MYFBBXX_4_GCCAAT\",\"tumor\"\n\"HCC1395_RNA_H3MYFBBXX_5_GCCAAT\",\"tumor\"\n" > HCC1395.csv
+printf "\"ids\",\"type\"\n\"RNAseq_Norm_Lane1\",\"normal\"\n\"RNAseq_Norm_Lane1\",\"normal\"\n\"RNAseq_Tumor_Lane1\",\"tumor\"\n\"RNAseq_Tumor_Lane2\",\"tumor\"\n" > RNA_data.csv
 #Run R
-~/bin/R
+R
 # In R, run the following commands
 library(ballgown)
 library(RSkittleBrewer)
@@ -23,9 +23,9 @@ library(genefilter)
 library(dplyr)
 library(devtools)
 # Load the phenotype data for each sample
-pheno_data = read.csv("HCC1395.csv")
+pheno_data = read.csv("RNA_data.csv")
 # Load ballgown data structures for each sample
-bg = ballgown(dataDir = "ballgown", samplePattern = "HCC1395", pData=pheno_data)
+bg = ballgown(dataDir = "ballgown", samplePattern = "RNAseq", pData=pheno_data)
 # Filter low-abundance genes
 bg_filt = subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
 # Identify signficant differently expressed Transcripts
@@ -38,11 +38,11 @@ results_transcripts = data.frame(geneNames=ballgown::geneNames(bg_filt),geneIDs=
 results_transcripts = arrange(results_transcripts,pval)
 results_genes = arrange(results_genes,pval)
 # Output as CSV
-write.csv(results_transcripts,"HCC1395_transcript_results.csv",row.names=FALSE)
-write.csv(results_genes,"HCC1395_genes_results.csv",row.names=FALSE)
+write.csv(results_transcripts,"RNAseq_transcript_results.csv",row.names=FALSE)
+write.csv(results_genes,"RNAseq_genes_results.csv",row.names=FALSE)
 # Output as TSV
-write.table(results_transcripts,"HCC1395_transcript_results.tsv",sep="\t")
-write.table(results_genes,"HCC1395_gene_results.tsv",sep="\t")
+write.table(results_transcripts,"RNAseq_transcript_results.tsv",sep="\t")
+write.table(results_genes,"RNAseq_gene_results.tsv",sep="\t")
 # Identify genes with p value < 0.05
 subset(results_transcripts,results_transcripts$pval<0.05)
 subset(results_genes,results_genes$pval<0.05)

@@ -9,6 +9,7 @@ date: 0005-02-02
 ---
 
 ### Basic Filtering on Somatic Variants
+
 First, let's do a basic filtering for `PASS` only variants on our merged and normalized vcf file:
 ```bash
 cd /workspace/somatic
@@ -16,6 +17,10 @@ java -Xmx24g -jar /usr/local/bin/GenomeAnalysisTK.jar -T SelectVariants -R ~/wor
 ```
 
 #### VEP Annotation
+[VEP](https://useast.ensembl.org/info/docs/tools/vep/index.html) stands for Variant Effect Predictor. We will use it to annotate our variants to determine the effect of the variants (e.g. SNPs, insertions, deletions, CNVs or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions. (McLaren W, Gil L, Hunt SE, Riat HS, Ritchie GR, Thormann A, Flicek P, Cunningham F.
+The Ensembl Variant Effect Predictor.
+Genome Biology Jun 6;17(1):122. (2016)
+doi:10.1186/s13059-016-0974-4)
 
 ```bash
 cd /workspace/somatic
@@ -23,6 +28,7 @@ vep -i ~/workspace/somatic/exome.merged.norm.pass_only.vcf --cache --dir /opt/ve
 ```
 
 ### Adding Bam-readcounts to VCF file
+
 We have added a python helper script that will take your vcf and DNA bam files and generates two bam-readcount output files, one for snv and one for indel.
 
 ```bash

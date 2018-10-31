@@ -75,8 +75,8 @@ tree
 
 ```bash
 cd /workspace/align
-mkdir qc
-cd qc
+mkdir post_align_qc
+cd post_align_qc
 multiqc /workspace/align/
 tree
 

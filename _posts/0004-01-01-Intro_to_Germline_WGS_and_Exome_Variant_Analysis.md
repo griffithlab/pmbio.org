@@ -9,7 +9,7 @@ date: 0004-01-01
 ---
 
 ### Key concepts
-* Variation, germline mutation, polymorphism, SNPs, variant databases, germline variant calling, mechanisms of mutation, heterozygous vs. homozygous variants.
+* Variation, germline mutation, polymorphism, SNPs, variant databases, germline variant calling, mechanisms of mutation, heterozygous vs. homozygous variants. [Lecture File: PMBIO_Module04_Germline.pdf](/assets/lectures/PMBIO_Module04_Germline.pdf)
 
 
 ### Learning objectives
