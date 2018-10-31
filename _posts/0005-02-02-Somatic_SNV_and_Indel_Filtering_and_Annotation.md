@@ -42,6 +42,7 @@ python -u /usr/local/bin/bam_readcount_helper.py ~/workspace/somatic/exome.merge
 python -u /usr/local/bin/bam_readcount_helper.py ~/workspace/somatic/exome.merged.norm.annotated.vcf 'NORMAL' ~/workspace/inputs/references/genome/ref_genome.fa /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam ~/workspace/somatic/bam_readcounts/
 ```
 Once we concatenate the snv readcount file as well as the indel readcount file, we can then run the vcf-annotation-tool to add these bam-readcounts to our vcf output.
+
 ```bash
 cd ~/workspace/somatic/bam_readcounts/
 cat TUMOR_bam_readcount_snv.tsv TUMOR_bam_readcount_indel.tsv > TUMOR_bam_readcount_combined.tsv
@@ -62,9 +63,12 @@ source deactivate
 # Adjust the output fields accordingly
 cd ~/workspace/somatic/final/
 gunzip exome.annotated.vcf.gz
-java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T VariantsToTable -R ~/workspace/inputs/references/genome/ref_genome.fa --variant ~/workspace/somatic/final/exome.annotated.vcf -F CHROM -F POS -F ID -F REF -F ALT -F set -F AC -F AF -o variants.tsv
+#java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T VariantsToTable -R ~/workspace/inputs/references/genome/ref_genome.fa --variant ~/workspace/somatic/final/exome.annotated.vcf -F CHROM -F POS -F ID -F REF -F ALT -F set -F AC -F AF -F DP -F AF -F CSQ -o variants.tsv
+gatk VariantsToTable -V ~/workspace/somatic/final/exome.annotated.vcf -F CHROM -F POS -F ID -F REF -F ALT -F set -F AC -F AF -GF GT -GF AD -O variants.tsv
+wget -c https://raw.githubusercontent.com/genome/docker-cle/master/add_annotations_to_table_helper.py
+source activate bam-readcount
+python -u add_annotations_to_table_helper.py variants.tsv exome.annotated.vcf.gz HGVSc,HGVSp annotated_variants.tsv
+source deactivate
 ```
-### Additional Filters
-Filter vcf allele frequency
 
 **Please continue to the next section for instructions on how to perform manual review on these somatic variant results*
