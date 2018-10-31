@@ -283,7 +283,7 @@ To load the VEP summaries, in your browser, navigate to a URL like this (don't f
 
 You should see various summary tables and graphics such as the following breakdown of variant consequences.
 
-{% include figure.html image="/assets/module_4/vep_example_consequences.png" width="1000" %}
+{% include figure.html image="/assets/module_4/vep_example_consequences.png" width="800" %}
 
 * How many variants were processed by VEP?
 * What is the most common kind of variant and variant consequence?
@@ -297,7 +297,4 @@ This analysis demonstrated in this tutorial would not be possible without the ef
 * **A framework for variation discovery and genotyping using next-generation DNA sequencing data**. DePristo MA, Banks E, Poplin R, Garimella KV, Maguire JR, Hartl C, Philippakis AA, del Angel G, Rivas MA, Hanna M, McKenna A, Fennell TJ, Kernytsky AM, Sivachenko AY, Cibulskis K, Gabriel SB, Altshuler D, Daly MJ. Nat Genet. 2011 May;43(5):491-8. doi: [10.1038/ng.806](https://doi.org/10.1038/ng.806). Epub 2011 Apr 10.
 * **From FastQ data to high confidence variant calls: the Genome Analysis Toolkit best practices pipeline**. Van der Auwera GA, Carneiro MO, Hartl C, Poplin R, Del Angel G, Levy-Moonshine A, Jordan T, Shakir K, Roazen D, Thibault J, Banks E, Garimella KV, Altshuler D, Gabriel S, DePristo MA. Curr Protoc Bioinformatics. 2013;43:11.10.1-33. doi: [10.1002/0471250953.bi1110s43](https://doi.org/10.1002/0471250953.bi1110s43).
 * **The Ensembl Variant Effect Predictor**. McLaren W, Gil L, Hunt SE, Riat HS, Ritchie GR, Thormann A, Flicek P, Cunningham F. Genome Biol. 2016 Jun 6;17(1):122. doi: [10.1186/s13059-016-0974-4](https://doi.org/10.1186/s13059-016-0974-4).
-
-### Future developments
-
 
