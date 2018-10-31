@@ -25,7 +25,7 @@ First, we will run [GATK HaplotypeCaller](https://software.broadinstitute.org/ga
 
 GATK HaplotypeCaller is run with the following options:
 
-* --java-options '-Xmx64g' tells GATK to use 64GB of memory
+* --java-options '-Xmx60g' tells GATK to use 60GB of memory
 * HaplotypeCaller specifies the GATK command to run
 * -R specifies the path to the reference genome
 * -I specifies the path to the input bam file for which to call variants
@@ -152,7 +152,7 @@ GATK CombineGVCFs is run with the following options:
 * --java-options '-Xmx60g' tells GATK to use 60GB of memory
 * CombineGVCFs specifies the GATK command to run
 * -R specifies the path to the reference genome
-* -V [multiple] specifies the path to each o the input g.vcf files
+* -V [multiple] specifies the path to each of the input g.vcf files
 * -O specifies the path to the output combined g.vcf file
 * $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17)
 
