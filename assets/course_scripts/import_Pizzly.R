@@ -108,8 +108,8 @@ importPizzly <- function (filename, genome_version, limit) {
 #    }
 
     # Number of supporting reads
-    split_reads_count <- report[[i, "splitcount"]]
-    spanning_reads_count <- report[[i, "paircount"]]
+    split_reads_count <- as.numeric(report[[i, "splitcount"]])
+    spanning_reads_count <- as.numeric(report[[i, "paircount"]])
 
     chromosome_upstream <- paste("chr", report[[i, "geneA.seq_name"]],
             sep = "")
@@ -122,7 +122,7 @@ importPizzly <- function (filename, genome_version, limit) {
      breakpoint_downstream <- tryCatch(as.numeric(report[[i,
             "geneB.gene_seq_start"]]), warning = function(w) {
             -1
-        })
+        })	
      strand_upstream <- report[[i, "geneA.seq_strand"]]
      strand_downstream <- report[[i, "geneB.seq_strand"]]
 
