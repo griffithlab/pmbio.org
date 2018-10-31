@@ -47,7 +47,6 @@ Next, we will perform so-called hard-filtering by applying a number of *hard* (s
 ```bash
 cd /workspace/germline/
 gatk --java-options '-Xmx64g' VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.snps.vcf --filter-expression "QD < 2.0" --filter-name "QD_lt_2" --filter-expression "FS > 60.0" --filter-name "FS_gt_60" --filter-expression "MQ < 40.0" --filter-name "MQ_lt_40" --filter-expression "MQRankSum < -12.5" --filter-name "MQRS_lt_n12.5" --filter-expression "ReadPosRankSum < -8.0" --filter-name "RPRS_lt_n8" --filter-expression "SOR > 3.0" --filter-name "SOR_gt_3" -O /workspace/germline/Exome_Norm_HC_calls.snps.filtered.vcf
-
 gatk --java-options '-Xmx64g' VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.indels.vcf --filter-expression "QD < 2.0" --filter-name "QD_lt_2" --filter-expression "FS > 200.0" --filter-name "FS_gt_200" --filter-expression "ReadPosRankSum < -20.0" --filter-name "RPRS_lt_n20" --filter-expression "SOR > 10.0" --filter-name "SOR_gt_10" -O /workspace/germline/Exome_Norm_HC_calls.indels.filtered.vcf
 ```
 
@@ -146,7 +145,6 @@ GATK VariantRecalibrator is run with the following options:
 
 ```
 cd /workspace/germline/
-
 gatk --java-options '-Xmx60g' VariantRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_GGVCFs_jointcalls.vcf --resource hapmap,known=false,training=true,truth=true,prior=15.0:/workspace/inputs/references/gatk/hapmap_3.3.hg38.vcf.gz --resource omni,known=false,training=true,truth=true,prior=12.0:/workspace/inputs/references/gatk/1000G_omni2.5.hg38.vcf.gz --resource 1000G,known=false,training=true,truth=false,prior=10.0:/workspace/inputs/references/gatk/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource dbsnp,known=true,training=false,truth=false,prior=2.0:/workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz -an QD -an FS -an SOR -an MQ -an MQRankSum -an ReadPosRankSum --mode SNP -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 -O recalibrate_SNP.recal --tranches-file recalibrate_SNP.tranches --rscript-file recalibrate_SNP_plots.R 
 ```
 
@@ -213,6 +211,11 @@ gatk --java-options '-Xmx64g' ApplyVQSR -R /workspace/inputs/references/genome/r
 gatk --java-options '-Xmx64g' SelectVariants -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/WGS_Norm_HC_calls_recalibrated.vcf -O /workspace/germline/WGS_Norm_HC_calls_recalibrated.PASS.vcf --exclude-filtered --exclude-non-variants --remove-unused-alternates --sample-name HCC1395BL_DNA
 ```
 
+### Exercise
+
+Choose one of the filtering strategies above, try changing the filter criteria to increase or decrease the stringency of various filters, and then view the result effect on the numbers of variants passing filters.  
+
+
 ### Perform VEP annotation filtered variants
 
 Now that we have high-confidence, filtered variants, we want to start understanding which of these variants might be clinically or biologically relevant. Ensembl's VEP annotation software is a powerful tool for annotating variants with a great deal of biological features. This includes such information as protein consequence (non-coding or coding), population frequencies, links to external databases, various scores designed to estimate the importance of individual variants on protein function, and much more. 
@@ -271,9 +274,19 @@ vep --cache --dir_cache /opt/vep_cache --dir_plugins /opt/vep_cache/Plugins --fa
 vep --cache --dir_cache /opt/vep_cache --dir_plugins /opt/vep_cache/Plugins --fasta /opt/vep_cache/homo_sapiens/93_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --fork 8 --assembly=GRCh38 --offline --tab --plugin Downstream --everything --terms SO --pick --coding_only --transcript_version -i /workspace/germline/WGS_Norm_HC_calls_recalibrated.PASS.vcf -o /workspace/germline/WGS_Norm_HC_calls_recalibrated.PASS.vep.tsv --force_overwrite
 ```
 
-To Do: Explore html output of VEP
+### Explore the VEP summaries
 
+To load the VEP summaries, in your browser, navigate to a URL like this (don't forget to substitute your number for `#`):
 
+* http://s#.pmbio.org/germline/Exome_Norm_GGVCFs_jointcalls_recalibrated.PASS.vep.vcf_summary.html
+* http://s#.pmbio.org/germline/Exome_Norm_HC_calls.filtered.PASS.vep.vcf_summary.html
+
+You should see various summary tables and graphics such as the following breakdown of variant consequences.
+
+{% include figure.html image="/assets/module_4/vep_example_consequences.png" width="1000" %}
+
+* How many variants were processed by VEP?
+* What is the most common kind of variant and variant consequence?
 
 
 ### Acknowledgements and citations
