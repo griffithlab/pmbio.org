@@ -67,7 +67,7 @@ gunzip exome.annotated.vcf.gz
 gatk VariantsToTable -V ~/workspace/somatic/final/exome.annotated.vcf -F CHROM -F POS -F ID -F REF -F ALT -F set -F AC -F AF -GF GT -GF AD -O variants.tsv
 wget -c https://raw.githubusercontent.com/genome/docker-cle/master/add_annotations_to_table_helper.py
 source activate bam-readcount
-python -u add_annotations_to_table_helper.py variants.tsv exome.annotated.vcf HGVSc,HGVSp ./
+python -u add_annotations_to_table_helper.py variants.tsv exome.annotated.vcf Consequence,Gene ./
 source deactivate
 ```
 
