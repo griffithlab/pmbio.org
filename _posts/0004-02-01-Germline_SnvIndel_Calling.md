@@ -15,9 +15,9 @@ date: 0004-02-01
 - Perform single-sample germline variant calling with GATK GVCF workflow on additional exomes from 1000 Genomes Project
 - Perform joint genotype calling on exome data, including additional exomes from 1000 Genomes Project
 
-In this module we will use the GATK HaplotypeCaller to call variants from our aligned bams. Since we are only interested in germline variants in this module, we will only call variants in the normal samples (i.e., WGS_Norm and Exome_Norm). The following example commands were inspired by an excellent [GATK tutorial](https://gatkforums.broadinstitute.org/gatk/discussion/7869/howto-discover-variants-with-gatk-a-gatk-workshop-tutorial), provided by the Broad Institute. 
+In this module we will use the GATK HaplotypeCaller to call variants from our aligned bams. Since we are only interested in germline variants in this module, we will only call variants in the normal samples (i.e., WGS_Norm and Exome_Norm). The following example commands were inspired by an excellent [GATK tutorial](https://gatkforums.broadinstitute.org/gatk/discussion/7869/howto-discover-variants-with-gatk-a-gatk-workshop-tutorial), provided by the Broad Institute.
 
-Note: We are using [GATK4 v4.0.10.0](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.10.0/) for this tutorial. 
+Note: We are using [GATK4 v4.0.10.0](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.10.0/) for this tutorial.
 
 ### Run GATK HaplotypeCaller
 
@@ -31,7 +31,7 @@ GATK HaplotypeCaller is run with the following options:
 * -I specifies the path to the input bam file for which to call variants
 * -O specifies the path to the output vcf file to write variants to
 * --bam-output specifies the path to an optional bam file which will store local realignments around variants that HaplotypeCaller used to make calls
-* $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17) 
+* $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17)
 
 ```bash
 #Make sure that $GATK_REGIONS is set correctly
@@ -45,14 +45,14 @@ cd /workspace/germline
 gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -O /workspace/germline/Exome_Norm_HC_calls.vcf --bam-output /workspace/germline/Exome_Norm_HC_out.bam $GATK_REGIONS
 
 #Call variants for WGS data
-gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.vcf --bam-output /workspace/germline/WGS_Norm_HC_out.bam $GATK_REGIONS 
+gatk --java-options '-Xmx60g' HaplotypeCaller -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.vcf --bam-output /workspace/germline/WGS_Norm_HC_out.bam $GATK_REGIONS
 ```
 
 ### Exercise - Explore the performance/benefits of local realignment
 
 Let's examine and compare the alignments made by HaplotypeCaller for local re-alignment around variants to those produced originally by BWA-MEM for the normal (germline) exome data. First start a new IGV session and load the following bam files by URL (don’t forget to substitute your number for #).
 
-* http://s#.pmbio.org/align/Exome_Norm_merged_sorted_mrkdup_bqsr.bam
+* http://s#.pmbio.org/align/Exome_Norm_sorted_mrkdup_bqsr.bam
 * http://s#.pmbio.org/germline/Exome_Norm_HC_out.bam
 
 We identified an illustrative deletion by looking through the germline variant calls that we just created in Exome_Norm_HC_calls.vcf. Once you have loaded the above bam files and performed any desired set up (e.g., naming your tracks) navigate to the following coordinates: `chr17:76286974-76287203`.
@@ -84,7 +84,7 @@ GATK HaplotypeCaller is run with all of the same options as above, except for on
 
 ```bash
 #Call variants in GVCF mode for exome data
-gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -O /workspace/germline/Exome_Norm_HC_calls.g.vcf --bam-output /workspace/germline/Exome_Norm_HC_GVCF_out.bam $GATK_REGIONS 
+gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam -O /workspace/germline/Exome_Norm_HC_calls.g.vcf --bam-output /workspace/germline/Exome_Norm_HC_GVCF_out.bam $GATK_REGIONS
 
 #Call variants in GVCF mode for WGS data - currently this takes too long and isn't used for any subsequent modules. Skip for now.
 #gatk --java-options '-Xmx60g' HaplotypeCaller -ERC GVCF -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -O /workspace/germline/WGS_Norm_HC_calls.g.vcf --bam-output /workspace/germline/WGS_Norm_HC_GVCF_out.bam $GATK_REGIONS
@@ -115,7 +115,7 @@ As described above, there are several advantages to joint genotype calling. The 
 - Choose '1000 Genomes on GRCh38' tab
 - Select 'Data types' -> 'Alignment'
 - Select 'Analysis groups' -> 'Exome'
-- 'Download the list' (e.g., save as igsr_GBR_GRCh38_exome_alignment.tsv). 
+- 'Download the list' (e.g., save as igsr_GBR_GRCh38_exome_alignment.tsv).
 
 Using the information obtained above, we could download the already aligned exome data for several 1KGP individuals in cram format. These cram files were created in a generally compatible way with the anlysis done so far in this tutorial. They were aligned with BWA-mem to GRCh38 with alternative sequences, plus decoys and HLA. This was followed by GATK BAM improvement steps as in the 1000 Genomes phase 3 pipeline (GATK IndelRealigner, BQSR, and Picard MarkDuplicates). Of course, there will be batch effects related to potentially different sample preparation, library construction, exome capture reagent and protocol, sequencing pipeline, etc. For more details see:
 
@@ -157,7 +157,7 @@ GATK CombineGVCFs is run with the following options:
 * $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17)
 
 ```bash
-gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00150_HC_calls.g.vcf -V /workspace/germline/HG00158_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx60g' CombineGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_HC_calls.g.vcf -V /workspace/germline/HG00099_HC_calls.g.vcf -V /workspace/germline/HG00102_HC_calls.g.vcf -V /workspace/germline/HG00104_HC_calls.g.vcf -V /workspace/germline/HG00150_HC_calls.g.vcf -V /workspace/germline/HG00158_HC_calls.g.vcf -O /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf $GATK_REGIONS
 ```
 
 Finally, perfom joint genotyping with the `GenotypeGVCFs` command. This command is run with the following options:
@@ -166,11 +166,11 @@ Finally, perfom joint genotyping with the `GenotypeGVCFs` command. This command 
 * GenotypeGVCFs specifies the GATK command to run
 * -R specifies the path to the reference genome
 * -V specifies the path to combined g.vcf files
-* -O specifies the path to the output the joint genotyped vcf file 
+* -O specifies the path to the output the joint genotyped vcf file
 * $GATK_REGIONS is an environment variable that we defined [earlier](/module-01-setup/0001/05/01/Environment_Setup/) to limit calling to specific regions (e.g., just chr6 and chr17)
 
 ```bash
-gatk --java-options '-Xmx60g' GenotypeGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf -O /workspace/germline/Exome_GGVCFs_jointcalls.vcf $GATK_REGIONS 
+gatk --java-options '-Xmx60g' GenotypeGVCFs -R /workspace/inputs/references/genome/ref_genome.fa -V /workspace/germline/Exome_Norm_1KGP_HC_calls_combined.g.vcf -O /workspace/germline/Exome_GGVCFs_jointcalls.vcf $GATK_REGIONS
 ```
 
 
@@ -181,7 +181,7 @@ This analysis demonstrated in this tutorial would not be possible without the ef
 * **The Genome Analysis Toolkit: a MapReduce framework for analyzing next-generation DNA sequencing data**. McKenna A, Hanna M, Banks E, Sivachenko A, Cibulskis K, Kernytsky A, Garimella K, Altshuler D, Gabriel S, Daly M, DePristo MA. Genome Res. 2010 Sep;20(9):1297-303. doi: [10.1101/gr.107524.110](https://doi.org/10.1101/gr.107524.110). Epub 2010 Jul 19.
 * **A framework for variation discovery and genotyping using next-generation DNA sequencing data**. DePristo MA, Banks E, Poplin R, Garimella KV, Maguire JR, Hartl C, Philippakis AA, del Angel G, Rivas MA, Hanna M, McKenna A, Fennell TJ, Kernytsky AM, Sivachenko AY, Cibulskis K, Gabriel SB, Altshuler D, Daly MJ. Nat Genet. 2011 May;43(5):491-8. doi: [10.1038/ng.806](https://doi.org/10.1038/ng.806). Epub 2011 Apr 10.
 * **From FastQ data to high confidence variant calls: the Genome Analysis Toolkit best practices pipeline**. Van der Auwera GA, Carneiro MO, Hartl C, Poplin R, Del Angel G, Levy-Moonshine A, Jordan T, Shakir K, Roazen D, Thibault J, Banks E, Garimella KV, Altshuler D, Gabriel S, DePristo MA. Curr Protoc Bioinformatics. 2013;43:11.10.1-33. doi: [10.1002/0471250953.bi1110s43](https://doi.org/10.1002/0471250953.bi1110s43).
-* **A global reference for human genetic variation. 1000 Genomes Project Consortium**. Auton A, Brooks LD, Durbin RM, Garrison EP, Kang HM, Korbel JO, Marchini JL, McCarthy S, McVean GA, Abecasis GR. Nature. 2015 Oct 1;526(7571):68-74. doi: [10.1038/nature15393](https://doi.org/10.1038/nature15393). 
+* **A global reference for human genetic variation. 1000 Genomes Project Consortium**. Auton A, Brooks LD, Durbin RM, Garrison EP, Kang HM, Korbel JO, Marchini JL, McCarthy S, McVean GA, Abecasis GR. Nature. 2015 Oct 1;526(7571):68-74. doi: [10.1038/nature15393](https://doi.org/10.1038/nature15393).
 
 
 ### Future developments
