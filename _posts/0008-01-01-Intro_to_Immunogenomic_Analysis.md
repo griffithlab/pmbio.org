@@ -18,7 +18,7 @@ date: 0008-01-01
 ### Introduction to Immunogenomics
 Nonsynonymous coding mutations alter the amino acid sequences of endogenous proteins. Proteins are naturally processed by the immunoproteasome, and the lysed peptides are loaded into the antigen presentation complexes on the surface of the cell. Sometimes, mutant peptides due to nonsynonmyous mutations have increased affinity to the antigen presentation complex, effectively eliciting a tumor-specific adaptive immune and T cell response. These peptides are called *neoantigens* and can be inferred for a patient's tumor by their genomic and somatic profiles. The interaction between neoantigens and tumor-specific T cells has led to the discovery of personalized therapeutics (e.g. personalized cancer vaccines) and mechanisms of immunotherapeutic response.
 
-{% include figure.html image="/assets/module_8/Fixed_Neoantigen filtering strategy.png.png" position="right" width="600" %}
+{% include figure.html image="/assets/module_8/final_neoantigenfilteringstrategy.png" position="right" width="600" %}
 
 Following the identification of somatic mutations, the steps associated with identifying neoantigens include:
 1. Determine the normal HLA haplotypes
