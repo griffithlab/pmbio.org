@@ -10,14 +10,10 @@ date: 0006-03-01
 
 #### **Differential Expression**
 
-```bash
-cd /workspace/rnaseq/
-# Make CSV/TSV for phenotype data
-printf "\"ids\",\"type\"\n\"RNAseq_Norm_Lane1\",\"normal\"\n\"RNAseq_Norm_Lane2\",\"normal\"\n\"RNAseq_Tumor_Lane1\",\"tumor\"\n\"RNAseq_Tumor_Lane2\",\"tumor\"\n\"RNAseq_Norm\",\"normal\"\n\"RNAseq_Tumor\",\"tumor\"\n" > RNA_data.csv
-```
 
 ### Running Ballgown for differential expression
 ```bash
+cd /workspace/rnaseq/
 R
 # In R, run the following commands
 library(ballgown)
@@ -28,7 +24,7 @@ library(devtools)
 # Load the phenotype data for each sample
 pheno_data = read.csv("RNA_data.csv")
 # Load ballgown data structures for each sample
-bg = ballgown(dataDir = "/workspace/rnaseq/ballgown", samplePattern = "RNAseq", pData=pheno_data)
+bg = ballgown(dataDir = "ballgown", samplePattern = "RNAseq", pData=data.frame(ids=c("RNAseq_Norm", "RNAseq_Norm_Lane1", "RNAseq_Norm_Lane2", "RNAseq_Tumor", "RNAseq_Tumor_Lane1", "RNAseq_Tumor_Lane2"), type=c("normal", "normal", "normal", "tumor", "tumor", "tumor")))
 # Filter low-abundance genes
 bg_filt = subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
 # Identify signficant differently expressed Transcripts
