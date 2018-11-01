@@ -50,7 +50,7 @@ rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
 
 ```
 
-#### Merging Bams
+#### Merging BAMss
 Since we have multiple BAMs of each sample that just represent additional data for the same sequence library, we should combine them into a single BAM for convenience before proceeding.
 
 ```bash
@@ -59,6 +59,30 @@ sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam /workspace/rnas
 
 sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 ```
+
+#### Indexing BAMs
+In order to be able to view our BAM files in IGV, as usual we need to index them
+```bash
+cd  /workspace/rnaseq/alignments/
+samtools index RNAseq_Norm.bam
+samtools index RNAseq_Tumor.bam
+
+```
+
+#### IGV exercise
+Since we have RNA alignments now, we should compare these to the DNA alignments we generated previously. Open IGV and load six BAM files:
+* Normal Exome BAM: http://s#.pmbio.org/align/Exome_Norm_sorted_mrkdup_bqsr.bam
+* Tumor Exome BAM: http://s#.pmbio.org/align/Exome_Tumor_sorted_mrkdup_bqsr.bam
+* Normal WGS BAM: http://s#.pmbio.org/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam
+* Tumor WGS BAM: http://s#.pmbio.org/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam
+* Normal RNAseq BAM: http://s#.pmbio.org/rnaseq/alignments/RNAseq_Norm.bam
+* Tumor RNAseq BAM: http://s#.pmbio.org/rnaseq/alignments/RNAseq_Tumor.bam
+
+Specific exercises:
+* Can you find the BRCA1 germline variant we discussed previously? Hint: search the annotated germline VCF for BRCA1 variants that have "HIGH" impact if you have to.
+* Is the BRCA germline variant expressed?
+* Can you find the TP53 somatic mutation we discussed previously? Hint: load our final merged somatic VCF and visually compare the normal and tumor exome BAMs. 
+* Is the TP53 variant expressed?
 
 #### Assembling transcripts from merged bams
 We are now going to use `stringtie` to perform a reference guided transcriptome assembly and then determine transcript abundance estimates for those transcript. The so called "reference guided" mode is specified with `-G ref_transcriptome.gtf`.  If you would like to constrain StringTie to just calculate abundance estimates for those transcripts we already konw about (in the GTF) you would also add the `-e` option. This simplifies the output, makes it easier to integrate expression values with variant data for known genes and is faster.  
