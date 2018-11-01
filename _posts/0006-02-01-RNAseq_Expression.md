@@ -126,6 +126,8 @@ mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm
 
+cd /workspace/rnaseq/ballgown
+# Runtime: ~3min each stringtie command below
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
 
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
