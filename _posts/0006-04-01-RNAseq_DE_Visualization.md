@@ -42,9 +42,8 @@ merged_results <- merged_results[merged_results$FPKM > 1,]
 pdf(file="ma_plot.pdf", height=5, width=10)
 ggplot(data=merged_results) + geom_point(aes(y=log2_fc, x=FPKM, color=qval)) + ylim(c(-10, 10)) + xlim(c(0, 1000)) + scale_colour_viridis(direction=-1, trans='sqrt') + theme_bw() + xlab("FPKM") + ylab("log2 Fold Change")
 dev.off()
-
 ```
 
 at the end your `ma_plot.pdf` should look something like the example below:
 
-{% include figure.html image="/assets/module_6/ma_plot.png %}
+{% include figure.html image="/assets/module_6/ma_plot.png" %}
