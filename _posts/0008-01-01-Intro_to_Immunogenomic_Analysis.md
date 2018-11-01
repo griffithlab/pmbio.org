@@ -42,10 +42,8 @@ The inputs for these prediction algorithms include the somatic mutations of a pa
 
 In the next section, we will implement pVACtools to simulate the design of a personalized cancer vaccine, a therapeutic approach specifically designed for a patient based upon their tumor mutational profile. To narrow down the list of predicted, high-binding neoantigens, there are several questions to take into consideration:
 
-1. How specifically can a tumor be seen by the immune system? 
-
+* How specifically can a tumor be seen by the immune system? 
 pVACtools outputs the predicted binding affinity of both the mutant peptide, and the corresponding wildtype peptide. One filter includes removing neoantigens with similar ratios between mutant and wildtype peptides. Immunologically, this indicates that the immune system may have already seen the wildtype protein during development, and a T cell response to this peptide has been negatively selected from the patient's immune system through central tolerance. Clinically, this may indicate that the wildtype peptide sequence is equally or more likely to be seen by the immune system, which could result in eliciting immune responses to normal cells (i.e. autoimmunity).
 
-2. How likely is the mutant peptide to be expressed by the tumor?
-
+* How likely is the mutant peptide to be expressed by the tumor?
 pVACtools integrates both variant coverage and expression information to further distinguish which neoantigens are most likely to be expressed by the tumor. Setting minimum coverage and VAF values in the tumor DNA positively selects for mutations present in a higher fraction of tumor cells. By targeting neoantigens in the founding clone of the tumor, it is more likely to elicit an immune response to a higher fraction of the tumor. Choosing minimum expression values in the RNA (i.e. VAF, FPKM), we are selecting mutations that are more likely to be expressed at the RNA (and potentially protein) level.
