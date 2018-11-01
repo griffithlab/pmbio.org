@@ -175,15 +175,15 @@ exit
 # Unzip the vcf.gz files before combining Variants
 cd ~/workspace/somatic
 gunzip ~/workspace/somatic/varscan/exome.vcf.gz
-gunzip ~/workspace/somatic/strelka/results/variants/exome.vcf.gz
+gunzip ~/workspace/somatic/strelka/exome/results/variants/exome.vcf.gz
 gunzip ~/workspace/somatic/mutect/exome.vcf.gz
 
 #Need to change header sample names in vcf file produced by mutect2 in order to combine variants with those from other algorithms
 sed -i 's/HCC1395BL_DNA/NORMAL/' ~/workspace/somatic/mutect/exome.vcf
 sed -i 's/HCC1395_DNA/TUMOR/' ~/workspace/somatic/mutect/exome.vcf
 
-# (UNIQUIFY command) java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T CombineVariants -R ~/workspace/data/raw_data/references/ref_genome.fa -genotypeMergeOptions UNIQUIFY --variant:varscan ~/workspace/data/results/somatic/varscan/exome.vcf --variant:strelka ~/workspace/data/results/somatic/strelka/results/variants/exome.vcf --variant:mutect ~/workspace/data/results/somatic/mutect/new_gatk_files/exome.vcf -o ~/workspace/data/results/somatic/exome.unique.vcf.gz
-java -Xmx24g -jar /usr/local/bin/GenomeAnalysisTK.jar -T CombineVariants -R ~/workspace/inputs/references/genome/ref_genome.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan ~/workspace/somatic/varscan/exome.vcf --variant:strelka ~/workspace/somatic/strelka/results/variants/exome.vcf --variant:mutect ~/workspace/somatic/mutect/exome.vcf -o ~/workspace/somatic/exome.merged.vcf.gz
+# (UNIQUIFY command) java -Xmx4g -jar /usr/local/bin/GenomeAnalysisTK.jar -T CombineVariants -R ~/workspace/data/raw_data/references/ref_genome.fa -genotypeMergeOptions UNIQUIFY --variant:varscan ~/workspace/data/results/somatic/varscan/exome.vcf --variant:strelka ~/workspace/data/results/somatic/strelka/exome/results/variants/exome.vcf --variant:mutect ~/workspace/data/results/somatic/mutect/new_gatk_files/exome.vcf -o ~/workspace/data/results/somatic/exome.unique.vcf.gz
+java -Xmx24g -jar /usr/local/bin/GenomeAnalysisTK.jar -T CombineVariants -R ~/workspace/inputs/references/genome/ref_genome.fa -genotypeMergeOptions PRIORITIZE --rod_priority_list mutect,varscan,strelka --variant:varscan ~/workspace/somatic/varscan/exome.vcf --variant:strelka ~/workspace/somatic/strelka/exome/results/variants/exome.vcf --variant:mutect ~/workspace/somatic/mutect/exome.vcf -o ~/workspace/somatic/exome.merged.vcf.gz
 ```
 
 ### **Left Align and Trim**
