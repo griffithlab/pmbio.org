@@ -225,10 +225,10 @@ cd /workspace/rnaseq
 mkdir ref-only-expression
 cd ref-only-expression
 
-stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
-stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
-stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
-stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 
 ```
 
