@@ -54,7 +54,7 @@ cat ./per-feature/GRCh38.6.*.fa ./per-feature/GRCh38.17.*.fa > chr617.fa
 rm -rf per-feature
 ```
 
-- To get one read pair each for normal and tumor, merge the chr6_and_chr17 only RNA-seq fastqs (**2 min**, assumes RNA-seq tarballs unpacked as in [Data](https://pmbio.org/module-02-inputs/0002/05/01/Data/):
+- To get one read pair each for normal and tumor, merge the chr6_and_chr17 only RNA-seq fastqs (**2 min**, assumes RNA-seq tarballs unpacked as in [Data](https://pmbio.org/module-02-inputs/0002/05/01/Data/)):
 ```bash
 mkdir -p /workspace/inputs/data/fastq/chr6_and_chr17/fusion
 cd /workspace/inputs/data/fastq/chr6_and_chr17/fusion
@@ -98,7 +98,7 @@ pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-n
 pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-tumor617.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output tumor-fuse617 kquant-tumor617/fusion.txt
 ```
 
-- If using 30% of reads with the above process, expect about 13,000 retained transcripts from normal and about 3,000 retained transcripts from tumor. See next section to investigate the output of the pizzly fusion calling
+- If using 30% of reads with the above process, expect about 13,000 retained transcripts from normal and about 3,000 retained transcripts from tumor. See next section to investigate the output of the pizzly fusion calling.
 
 # Possible Additional Analysis
 - Fusion calling for "full" chromosome 6 and chromosome 17 RNA-seq data, full index, and full annotaiton set is possible, but will take several hours. Continue after following the directions above to download and unzip original transcriptome and annotation files:
@@ -113,8 +113,8 @@ kallisto quant -i index.full.idx --fusion -o kquant-norm-full /workspace/inputs/
 kallisto quant -i index.full.idx --fusion -o kquant-tumor-full /workspace/inputs/data/fastq/chr6_and_chr17/fusion/RNAseq_Tumor_R1.fastq.gz /workspace/inputs/data/fastq/chr6_and_chr17/fusion/RNAseq_Tumor_R2.fastq.gz
 
 # Call fusions
-pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-norm617.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output norm-fuse617 kquant-norm617/fusion.txt
-pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-tumor617.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output tumor-fuse617 kquant-tumor617/fusion.txt
+pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-full-norm.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output norm-full kquant-norm-full/fusion.txt
+pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-full-tumor.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output tumor-full kquant-tumor-full/fusion.txt
 ```
 
 
