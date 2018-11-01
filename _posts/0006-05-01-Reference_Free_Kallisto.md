@@ -82,9 +82,10 @@ Now load files and summarize results from each approach in R
 
 ```
 
+### Exercise: Create a custom Kallisto index for a selected subset of gene. Calculate abundances for this set only
+For example, you could create a custom GTF of rRNA genes, or cancer genes. Then create a custom transcriptome fasta file for this set. Then create a kallisto index.  Then get kallisto quants using this custom index.
 
-
-
-
+### Exercise: Use Sleuth to perform differential expression analysis with Kallisto output
+You may need to refer to the Sleuth documentation to determine if kallisto needs to be rerun in some specific way...
 
 
