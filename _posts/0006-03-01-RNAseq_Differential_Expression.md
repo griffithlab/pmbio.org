@@ -11,10 +11,13 @@ date: 0006-03-01
 #### **Differential Expression**
 
 ```bash
-cd /data/RNA_seq
+cd /workspace/rnaseq/
 # Make CSV/TSV for phenotype data
-printf "\"ids\",\"type\"\n\"RNAseq_Norm_Lane1\",\"normal\"\n\"RNAseq_Norm_Lane1\",\"normal\"\n\"RNAseq_Tumor_Lane1\",\"tumor\"\n\"RNAseq_Tumor_Lane2\",\"tumor\"\n" > RNA_data.csv
-#Run R
+printf "\"ids\",\"type\"\n\"RNAseq_Norm_Lane1\",\"normal\"\n\"RNAseq_Norm_Lane2\",\"normal\"\n\"RNAseq_Tumor_Lane1\",\"tumor\"\n\"RNAseq_Tumor_Lane2\",\"tumor\"\n\"RNAseq_Norm\",\"normal\"\n\"RNAseq_Tumor\",\"tumor\"\n" > RNA_data.csv
+```
+
+### Running Ballgown for differential expression
+```bash
 R
 # In R, run the following commands
 library(ballgown)
@@ -25,7 +28,7 @@ library(devtools)
 # Load the phenotype data for each sample
 pheno_data = read.csv("RNA_data.csv")
 # Load ballgown data structures for each sample
-bg = ballgown(dataDir = "ballgown", samplePattern = "RNAseq", pData=pheno_data)
+bg = ballgown(dataDir = "/workspace/rnaseq/ballgown", samplePattern = "RNAseq", pData=pheno_data)
 # Filter low-abundance genes
 bg_filt = subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
 # Identify signficant differently expressed Transcripts
@@ -46,4 +49,6 @@ write.table(results_genes,"RNAseq_gene_results.tsv",sep="\t")
 # Identify genes with p value < 0.05
 subset(results_transcripts,results_transcripts$pval<0.05)
 subset(results_genes,results_genes$pval<0.05)
+
+q()
 ```

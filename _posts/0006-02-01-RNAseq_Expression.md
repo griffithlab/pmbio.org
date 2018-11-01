@@ -19,6 +19,10 @@ cd ~/workspace/inputs/data/fastq/RNAseq_Tumor
 flexbar --adapter-min-overlap 7 --adapter-trim-end RIGHT --adapters ~/workspace/inputs/references/illumina_multiplex.fa --pre-trim-left 13 --max-uncalled 300 --min-read-length 25 --threads 8 --zip-output GZ --reads RNAseq_Tumor_Lane1_R1.fastq.gz --reads2 RNAseq_Tumor_Lane1_R2.fastq.gz --target ~/workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane1
 flexbar --adapter-min-overlap 7 --adapter-trim-end RIGHT --adapters ~/workspace/inputs/references/illumina_multiplex.fa --pre-trim-left 13 --max-uncalled 300 --min-read-length 25 --threads 8 --zip-output GZ --reads RNAseq_Tumor_Lane2_R1.fastq.gz --reads2 RNAseq_Tumor_Lane2_R2.fastq.gz --target ~/workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane2
 
+cd ~/workspace/inputs/data/fastq/RNAseq_Norm
+flexbar --adapter-min-overlap 7 --adapter-trim-end RIGHT --adapters ~/workspace/inputs/references/illumina_multiplex.fa --pre-trim-left 13 --max-uncalled 300 --min-read-length 25 --threads 8 --zip-output GZ --reads RNAseq_Norm_Lane1_R1.fastq.gz --reads2 RNAseq_Norm_Lane1_R2.fastq.gz --target ~/workspace/inputs/data/fastq/RNAseq_Norm/RNAseq_Norm_Lane1
+flexbar --adapter-min-overlap 7 --adapter-trim-end RIGHT --adapters ~/workspace/inputs/references/illumina_multiplex.fa --pre-trim-left 13 --max-uncalled 300 --min-read-length 25 --threads 8 --zip-output GZ --reads RNAseq_Norm_Lane2_R1.fastq.gz --reads2 RNAseq_Norm_Lane2_R2.fastq.gz --target ~/workspace/inputs/data/fastq/RNAseq_Norm/RNAseq_Norm_Lane2
+
 ```
 
 #### Alignment
@@ -73,7 +77,7 @@ stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o
 ```
 
 #### Merging Transcripts from merged bams
-Since we performed transcript discovery on the tumor and normal sample independently, we want to create a unified version of the transcriptome before proceeding to comparing expression between samples. The StringTie `--merge` option is used to combine multiple GTFs into a single GTF.  If we supply our reference transcriptome at the same time (using `-G` ref_transcriptome.gtf) it will also take this information into account. 
+Since we performed transcript discovery on the tumor and normal sample independently, we want to create a unified version of the transcriptome before proceeding to comparing expression between samples. The StringTie `--merge` option is used to combine multiple GTFs into a single GTF.  If we supply our reference transcriptome at the same time (using `-G` ref_transcriptome.gtf) it will also take this information into account.
 
 ```bash
 stringtie --merge -p 8 -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/stringtie_merged.gtf /workspace/inputs/references/transcriptome/RNAseq_Tumor.gtf /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf
@@ -103,17 +107,17 @@ mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm
 
 cd /workspace/rnaseq/ballgown
-# Runtime: ~3min each stringtie command below
+# Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
-
+# Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
-
+# Runtime: ~6min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
-
+# Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
-
+# Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
-
+# Runtime: ~6min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
