@@ -250,7 +250,7 @@ Our next step is to calculate the regions of the genome which are inaccessible t
 
 ```bash
 # Calculate the regions of the genome which are inaccessible to sequencing
-cnvkit.py access ~/references/genome/ref_genome.fa -x ~/workspace/somatic/copycat_wgs/copyCat_annotation/gaps.bed -o ~/workspace/inputs/references/genome/access-excludes.hg38.bed
+cnvkit.py access ~/workspace/inputs/references/genome/ref_genome.fa -x ~/workspace/somatic/copycat_wgs/copyCat_annotation/gaps.bed -o ~/workspace/inputs/references/genome/access-excludes.hg38.bed
 
 # cnvkit will complain if access-excludes contains chromosomes not in the bam file
 # we subset to chr6 and chr17 here to avoid this error later
