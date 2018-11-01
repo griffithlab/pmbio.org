@@ -8,10 +8,9 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0006-03-01
 ---
 
-#### **Differential Expression**
 
+#### Running Ballgown for differential expression
 
-### Running Ballgown for differential expression
 ```bash
 cd /workspace/rnaseq/
 R
