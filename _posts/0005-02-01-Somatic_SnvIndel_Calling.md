@@ -54,7 +54,8 @@ __________________________
 
 The second variant caller that we will use is [STRELKA](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). Strelka calls germline and somatic small variants from mapped sequencing reads and is optimized for rapid clinical analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. Both germline and somatic callers include a final empirical variant rescoring step using a random forest model to reflect numerous features indicative of call reliability which may not be represented in the core variant calling probability model.
 
-#### Exome data commands:
+### Exome data commands:
+
 ```bash
 mkdir -p ~/workspace/somatic/strelka/exome
 cd ~
@@ -64,7 +65,7 @@ source activate strelka
 source deactivate
 #Please specify according to the number of cpus available or how many you would like to allocate to this job. In this case, four were given.
 # Runtime: ~ 3min
-python2 /workspace/somatic/strelka/runWorkflow.py -m local -j 8
+python2 /workspace/somatic/strelka/exome/runWorkflow.py -m local -j 8
 
 cd ~/workspace/somatic/strelka/exome/results/variants
 zcat somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.snvs.gt.vcf
@@ -76,7 +77,8 @@ bcftools concat -a -o exome.vcf.gz -O z somatic.snvs.gt.vcf.gz somatic.indels.gt
 
 tabix exome.vcf.gz
 ```
-#### WGS data commands:
+### WGS data commands:
+
 ```bash
 #mkdir -p ~/workspace/somatic/strelka/wgs
 #cd ~
