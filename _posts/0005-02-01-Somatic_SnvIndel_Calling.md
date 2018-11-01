@@ -34,19 +34,19 @@ tabix -f /workspace/somatic/varscan/exome.vcf.gz
 
 ### WGS commands:
 ```bash
-cd ~/workspace/somatic/varscan
-java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup --no-BAQ -f /workspace/inputs/references/genome/ref_genome.fa /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam) /workspace/somatic/varscan/wgs --mpileup 1 --output-vcf
+#cd ~/workspace/somatic/varscan
+#java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar somatic <(samtools mpileup --no-BAQ -f /workspace/inputs/references/genome/ref_genome.fa /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam) /workspace/somatic/varscan/wgs --mpileup 1 --output-vcf
 
-java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic wgs.snp.vcf wgs.snp
-java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic wgs.indel.vcf wgs.indel
-find ~/workspace/somatic/varscan -name '*.vcf' -exec bgzip -f {} \;
-find ~/workspace/somatic/varscan -name '*.vcf.gz' -exec tabix -f {} \;
+#java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic wgs.snp.vcf wgs.snp
+#java -Xmx24g -jar /usr/local/bin/VarScan.v2.4.2.jar processSomatic wgs.indel.vcf wgs.indel
+#find ~/workspace/somatic/varscan -name '*.vcf' -exec bgzip -f {} \;
+#find ~/workspace/somatic/varscan -name '*.vcf.gz' -exec tabix -f {} \;
 
-gatk VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V wgs.snp.Somatic.vcf.gz --mask wgs.snp.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O wgs.snp.Somatic.hc.filter.vcf.gz
-gatk VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V wgs.indel.Somatic.vcf.gz --mask wgs.indel.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O wgs.indel.Somatic.hc.filter.vcf.gz
+#gatk VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V wgs.snp.Somatic.vcf.gz --mask wgs.snp.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O wgs.snp.Somatic.hc.filter.vcf.gz
+#gatk VariantFiltration -R /workspace/inputs/references/genome/ref_genome.fa -V wgs.indel.Somatic.vcf.gz --mask wgs.indel.Somatic.hc.vcf.gz --mask-name "processSomatic" --filter-not-in-mask -O wgs.indel.Somatic.hc.filter.vcf.gz
 
-bcftools concat -a -o wgs.vcf.gz -O z wgs.snp.Somatic.hc.filter.vcf.gz wgs.indel.Somatic.hc.filter.vcf.gz
-tabix -f /workspace/somatic/varscan/wgs.vcf.gz
+#bcftools concat -a -o wgs.vcf.gz -O z wgs.snp.Somatic.hc.filter.vcf.gz wgs.indel.Somatic.hc.filter.vcf.gz
+#tabix -f /workspace/somatic/varscan/wgs.vcf.gz
 ```
 
 #### **Running STRELKA**
@@ -78,24 +78,24 @@ tabix exome.vcf.gz
 ```
 #### WGS data commands:
 ```bash
-mkdir -p ~/workspace/somatic/strelka/wgs
-cd ~
-source activate strelka
-/usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --runDir=/workspace/somatic/strelka/wgs
-source deactivate
+#mkdir -p ~/workspace/somatic/strelka/wgs
+#cd ~
+#source activate strelka
+#/usr/local/bin/strelka-2.7.1.centos5_x86_64/bin/configureStrelkaSomaticWorkflow.py --normalBam=/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --runDir=/workspace/somatic/strelka/wgs
+#source deactivate
 
-python2 /workspace/somatic/strelka/wgs/runWorkflow.py -m local -j 8
+#python2 /workspace/somatic/strelka/wgs/runWorkflow.py -m local -j 8
 
-cd ~/workspace/somatic/strelka/wgs/results/variants
-zcat somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.snvs.gt.vcf
-zcat somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.indels.gt.vcf
+#cd ~/workspace/somatic/strelka/wgs/results/variants
+#zcat somatic.snvs.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.snvs.gt.vcf
+#zcat somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > somatic.indels.gt.vcf
 
-find ~/workspace/somatic/strelka/wgs/results/variants/ -name "*.vcf" -exec bgzip -f {} \;
-find ~/workspace/somatic/strelka/wgs/results/variants/ -name "*.vcf.gz" -exec tabix -f {} \;
+#find ~/workspace/somatic/strelka/wgs/results/variants/ -name "*.vcf" -exec bgzip -f {} \;
+#find ~/workspace/somatic/strelka/wgs/results/variants/ -name "*.vcf.gz" -exec tabix -f {} \;
 
-bcftools concat -a -o wgs.vcf.gz -O z somatic.snvs.gt.vcf.gz somatic.indels.gt.vcf.gz
+#bcftools concat -a -o wgs.vcf.gz -O z somatic.snvs.gt.vcf.gz somatic.indels.gt.vcf.gz
 
-tabix wgs.vcf.gz
+#tabix wgs.vcf.gz
 
 ```
 
@@ -133,20 +133,20 @@ tabix ~/workspace/somatic/mutect/exome.vcf.gz
 ```
 ### WGS data commands:
 ```bash
-cd ~/workspace/somatic/mutect
+#cd ~/workspace/somatic/mutect
 
 #Creating a panel of normals
 # Runtime:
-gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -tumor-sample HCC1395BL_DNA -O WGS_Norm_PON.vcf.gz
+#gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -tumor-sample HCC1395BL_DNA -O WGS_Norm_PON.vcf.gz
 #WGS_Norm_merged_sorted_mrkdup_bqsr.bam
 
 #Running Mutect2 Using latest version of GATK
 # Runtime:
-gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/inputs/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/somatic/mutect/WGS_Norm_PON.vcf.gz -O ~/workspace/somatic/mutect/wgs.vcf.gz -L chr6 -L chr17
+#gatk --java-options "-Xmx24G" Mutect2 -R ~/workspace/inputs/references/genome/ref_genome.fa -I ~/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam -tumor HCC1395_DNA -I ~/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam -normal HCC1395BL_DNA --germline-resource ~/workspace/inputs/references/af-only-gnomad.hg38.vcf.gz --af-of-alleles-not-in-resource 0.00003125 --panel-of-normals ~/workspace/somatic/mutect/WGS_Norm_PON.vcf.gz -O ~/workspace/somatic/mutect/wgs.vcf.gz -L chr6 -L chr17
 
-echo ~/workspace/somatic/mutect/wgs.vcf.gz > ~/workspace/somatic/mutect/wgs_vcf.fof
-bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/somatic/mutect/wgs_vcf.fof --output-type z --output ~/workspace/somatic/mutect/mutect_wgs.vcf.gz
-mv mutect_wgs.vcf.gz wgs.vcf.gz
+#echo ~/workspace/somatic/mutect/wgs.vcf.gz > ~/workspace/somatic/mutect/wgs_vcf.fof
+#bcftools concat --allow-overlaps --remove-duplicates --file-list ~/workspace/somatic/mutect/wgs_vcf.fof --output-type z --output ~/workspace/somatic/mutect/mutect_wgs.vcf.gz
+#mv mutect_wgs.vcf.gz wgs.vcf.gz
 tabix ~/workspace/somatic/mutect/wgs.vcf.gz
 ```
 
