@@ -222,6 +222,8 @@ ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr6",], aes(x=Pos, y=CNA, co
     scale_y_continuous(limits=c(0, 15), oob=squish) + scale_color_viridis(limits=c(0, 4), option="plasma", oob=squish) + theme_bw() +
     geom_hline(yintercept = c(1, 2, 3), linetype="longdash")
 dev.off()
+# exit R
+q()
 ```
 
 {% include figure.html image="/assets/module_5/copyCat_final.png" %}
