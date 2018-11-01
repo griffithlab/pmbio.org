@@ -225,11 +225,26 @@ cd /workspace/rnaseq
 mkdir ref-only-expression
 cd ref-only-expression
 
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gene.abundance.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/abundance.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/abundance.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/abundance.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/abundance.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 
 ```
 
+Create a tidy expression matrix files for the StringTie results. This will be done at both the gene and transcript level and also will take into account the various expression measures produced: coverage, FPKM, and TPM.
 
+```bash
+cd /workspace/rnaseq/ref-only-expression
+wget https://raw.githubusercontent.com/griffithlab/rnaseq_tutorial/master/scripts/stringtie_expression_matrix.pl
+chmod +x stringtie_expression_matrix.pl
+
+./stringtie_expression_matrix.pl --expression_metric=TPM --result_dirs='RNAseq_Norm_Lane1,RNAseq_Norm_Lane2,RNAseq_Tumor_Lane1,RNAseq_Tumor_Lane2' --transcript_matrix_file=transcript_tpm_all_samples.tsv --gene_matrix_file=gene_tpm_all_samples.tsv
+./stringtie_expression_matrix.pl --expression_metric=FPKM --result_dirs='RNAseq_Norm_Lane1,RNAseq_Norm_Lane2,RNAseq_Tumor_Lane1,RNAseq_Tumor_Lane2' --transcript_matrix_file=transcript_fpkm_all_samples.tsv --gene_matrix_file=gene_fpkm_all_samples.tsv
+./stringtie_expression_matrix.pl --expression_metric=Coverage --result_dirs='RNAseq_Norm_Lane1,RNAseq_Norm_Lane2,RNAseq_Tumor_Lane1,RNAseq_Tumor_Lane2' --transcript_matrix_file=transcript_coverage_all_samples.tsv --gene_matrix_file=gene_coverage_all_samples.tsv
+
+head transcript_tpm_all_samples.tsv gene_tpm_all_samples.tsv
+
+```
+
+These simplified files will be used later to help compare between the different expression abundance estimation tools we use.
