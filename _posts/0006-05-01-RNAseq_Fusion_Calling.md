@@ -113,8 +113,8 @@ kallisto quant -i index.full.idx --fusion -o kquant-norm-full /workspace/inputs/
 kallisto quant -i index.full.idx --fusion -o kquant-tumor-full /workspace/inputs/data/fastq/chr6_and_chr17/fusion/RNAseq_Tumor_R1.fastq.gz /workspace/inputs/data/fastq/chr6_and_chr17/fusion/RNAseq_Tumor_R2.fastq.gz
 
 # Call fusions
-pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-norm617.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output norm-full kquant-norm-full/fusion.txt
-pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-tumor617.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output tumor-full kquant-tumor-full/fusion.txt
+pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-full-norm.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output norm-full kquant-norm-full/fusion.txt
+pizzly -k 31 --gtf /workspace/inputs/reference/fusion/chr617.gtf --cache index-full-tumor.cache.txt --align-score 2 --insert-size 400 --fasta /workspace/inputs/reference/fusion/chr617.fa --output tumor-full kquant-tumor-full/fusion.txt
 ```
 
 
