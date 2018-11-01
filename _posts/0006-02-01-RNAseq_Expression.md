@@ -51,6 +51,7 @@ rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
 ```
 
 #### Merging Bams
+Since we have multiple BAMs of each sample that just represent additional data for the same sequence library, we should combine them into a single BAM for convenience before proceeding.
 
 ```bash
 # Runtime: ~ 8m each merging command
@@ -58,7 +59,9 @@ sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam /workspace/rnas
 
 sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 ```
-#### Assembling transcript from merged bams
+
+#### Assembling transcripts from merged bams
+We are now going to use `stringtie` to perform a reference guided transcriptome assembly and then determine transcript abundance estimates for those transcript. The so called "reference guided" mode is specified with `-G ref_transcriptome.gtf`.  If you would like to constrain StringTie to just calculate abundance estimates for those transcripts we already konw about (in the GTF) you would also add the `-e` option. This simplifies the output, makes it easier to integrate expression values with variant data for known genes and is faster.  
 
 ```bash
 # Runtime: ~8min
@@ -70,35 +73,45 @@ stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o
 ```
 
 #### Merging Transcripts from merged bams
+Since we performed transcript discovery on the tumor and normal sample independently, we want to create a unified version of the transcriptome before proceeding to comparing expression between samples. The StringTie `--merge` option is used to combine multiple GTFs into a single GTF.  If we supply our reference transcriptome at the same time (using `-G` ref_transcriptome.gtf) it will also take this information into account. 
 
 ```bash
-stringtie --merge -p 8 -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/stringtie_merged_bams.gtf /workspace/inputs/references/transcriptome/RNAseq_Tumor.gtf /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf
+stringtie --merge -p 8 -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/stringtie_merged.gtf /workspace/inputs/references/transcriptome/RNAseq_Tumor.gtf /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf
 
 ```
 
 #### Comparing transcripts
+The `gffcompare` tool can be used to give a more detailed comparison of the transcripts assembled by StringTie and the reference transcriptome.
 
 ```bash
 mkdir -p /workspace/rnaseq/transcripts/
 cd /workspace/rnaseq/transcripts/
-gffcompare -r /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/transcripts/gffcmp /workspace/inputs/references/transcriptome/stringtie_merged_bams.gtf
+gffcompare -r /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/transcripts/gffcmp /workspace/inputs/references/transcriptome/stringtie_merged.gtf
 
 ```
 
 #### Estimate Abundance
+Below we will estimate abundance using our final combined GTF.  We will do this for each of the individual lanes of RNA-seq data, but also for our merged normal and tumor BAMs.  
 
 ```bash
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2
+mkdir -p /workspace/rnaseq/ballgown/RNAseq_Tumor
+
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2
+mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm
 
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
 
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
+
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
 
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
