@@ -257,7 +257,7 @@ cnvkit.py access ~/workspace/inputs/references/genome/ref_genome.fa -x ~/workspa
 grep "chr6\|chr17" ~/workspace/inputs/references/genome/access-excludes.hg38.bed > ~/workspace/inputs/references/genome/access-excludes.hg38.chr6_and_17.bed
 ```
 
-With our accessibility file created we can run `cnvkit.py batch' which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
+With our accessibility file created we can run `cnvkit.py batch` which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
 
 1. Path to tumor bam file
 2. --normal: Path to normal bam file (to run in paired mode)
