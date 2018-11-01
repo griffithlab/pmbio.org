@@ -78,7 +78,8 @@ chmod +x kallisto_gene_matrix.pl
 
 Now load files and summarize results from each approach in R
 ```R
-
+# example code here:
+# https://github.com/griffithlab/rnaseq_tutorial/blob/master/scripts/Tutorial_comparisons.R
 
 ```
 
