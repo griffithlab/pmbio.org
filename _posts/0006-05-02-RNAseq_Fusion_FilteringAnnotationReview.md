@@ -176,10 +176,10 @@ source("./import_Pizzly.R")
 #  You can view the function by calling it without variables
 importPizzly
 fusions = importPizzly("./allfusions.txt","hg38")
-pdf("chr17-fuse-circ.pdf")
+pdf("chr617-fuse-circ.pdf")
 plot_circle(fusions)
 dev.off()
 ```
 
-
-{% include figure.html image="/assets/module_6/chr17-fuse-circ.png" %}
+The resulting circos plot shows our filtered gene fusions (blue for inter-chromosomal and red for intra-chromosomal) 
+{% include figure.html image="/assets/module_6/chr617-fuse-circ.png" %}

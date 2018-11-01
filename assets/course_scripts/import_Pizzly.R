@@ -128,10 +128,10 @@ importPizzly <- function (filename, genome_version, limit) {
 
      junction_sequence_upstream <- Biostrings::DNAString()
      junction_sequence_downstream <- Biostrings::DNAString()
-     name_upstream <- report[[i, "geneA.id"]]
-     name_downstream <- report[[i, "geneB.id"]]
-     ensembl_id_upstream <- report[[i, "geneA.name"]]
-     ensembl_id_downstream <- report[[i, "geneB.name"]]
+     name_upstream <- report[[i, "geneA.name"]]
+     name_downstream <- report[[i, "geneB.name"]]
+     ensembl_id_upstream <- report[[i, "geneA.id"]]
+     ensembl_id_downstream <- report[[i, "geneB.id"]]
      gene_upstream <- new(Class = "PartnerGene", name = name_upstream,
             ensembl_id = ensembl_id_upstream, chromosome = chromosome_upstream,
             breakpoint = breakpoint_upstream, strand = strand_upstream,
