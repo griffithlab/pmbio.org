@@ -31,7 +31,7 @@ cd ~/workspace/somatic/manta_wgs
 source activate manta
 
 # run the manta config script
-python /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --normalBam=/workspace/align/WGS_Norm_merged_sorted_mrkdup.bam --tumorBam=/workspace/align/WGS_Tumor_merged_sorted_mrkdup.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --runDir=/workspace/somatic/manta_wgs/
+python /usr/local/bin/manta-1.4.0.centos6_x86_64/bin/configManta.py --normalBam=/workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam --tumorBam=/workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --referenceFasta=/workspace/inputs/references/genome/ref_genome.fa --runDir=/workspace/somatic/manta_wgs/
 ```
 
 Next with everything configured we can go ahead and run manta. All we have to do here is run the `runWorfklow.py` script the configuration step created in the previous step and specify if we are running this locally or on a cluster with the `-m` The specific options we give and what they mean are provided below.

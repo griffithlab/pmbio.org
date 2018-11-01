@@ -11,6 +11,7 @@ date: 0005-03-02
 Now that we have our manta results, lets do some basic filtering annotation and visualization. First off Let's go ahead and look at how many SVs were called and if they passed or failed filters. We can accomplish this by cutting out the 7th column in the vcf file.
 
 ```bash
+cd /workspace/somatic/manta_wgs/results/variants
 zcat somaticSV.vcf.gz | grep -v "^#" |cut -f 7 | sort | uniq -c
 ```
 
@@ -83,7 +84,7 @@ Use a docker image to run svviz2
 
 # create a directory for the svviz2 results
 cd /workspace/somatic/manta_wgs/results/variants/
-mkdir svviz2 
+mkdir svviz2
 
 # use svviz2 within a docker image to produce visualiatons for our manta SV results
 docker pull sridnona/svviz2:v2
@@ -105,5 +106,3 @@ exit
 ```
 
 {% include figure.html image="/assets/module_5/svviz-del-example.png" position="left" %}
-
-

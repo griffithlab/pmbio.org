@@ -57,9 +57,10 @@ sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rna
 #### **Assembling transcript from merged bams**
 
 ```bash
+# Runtime: ~8min
 stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/RNAseq_Tumor.gtf -p 8 -l RNAseq_Tumor /workspace/rnaseq/alignments/RNAseq_Tumor.bam
 
-stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf -p 4 -l RNAseq_Norm /workspace/rnaseq/alignments/RNAseq_Norm.bam
+stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf -p 8 -l RNAseq_Norm /workspace/rnaseq/alignments/RNAseq_Norm.bam
 ```
 #### **Merging Transcripts from merged bams**
 
