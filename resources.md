@@ -21,5 +21,26 @@ layout: "home"
 * [Module 08](/assets/lectures/PMBIO_Module08_Immune.pdf)
 * [Module 09](/assets/lectures/PMBIO_Module09_CWL.pdf)
 
-### Somatic CNV Calling
+### Getting help after the course
+We will try our best to respond to personal requests for advise via email (but we can't make any guarantees). Apart from just Googling your question, there are some active online forums that are very good for asking questions and finding answers:
+
+* [Biostars](https://www.biostars.org/) (bioinformatics focused, probably the best resource for those kinds of issues)
+* [SeqAnswers](http://seqanswers.com/) (genomics focused with discussion of molecular biology as well as analysis)
+* [Bioinformatics Stack Exchange](https://bioinformatics.stackexchange.com/)
+* [StackOverflow](https://stackoverflow.com) (for general issues with tools, installation, error messages, etc). 
+
+### Companion online workshops
+* [genviz.org](https://genviz.org/) - Genomic Data Visualization and Interpretation
+* [rnabio.org](https://rnabio.org/) - RNA-seq data analysis
+
+### Other in-person workshops we recommend
+* [Canadian Bioinformatics Workshops](https://bioinformatics.ca/workshops/) (Toronto, Canada)
+* [Cold Spring Harbor Laboratory Courses](https://meetings.cshl.edu/courseshome.aspx) (New York, USA)
+* [Evomics](http://evomics.org/) (Český Krumlov, Czech Republic)
+* [Physalia](https://www.physalia-courses.org/) (Berlin, Germany)
+* [PR Informatics](https://www.prinformatics.com/) (Glasgow, UK)
+
+### Background reading material
+
+#### Somatic CNV Calling
 [Article on WGS CNV calling](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4394692/)
