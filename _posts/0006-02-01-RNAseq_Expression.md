@@ -226,9 +226,9 @@ mkdir ref-only-expression
 cd ref-only-expression
 
 stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
-stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 
 ```
 
