@@ -1165,4 +1165,4 @@ exit
 ```
 
 ### TO ADD
-- nothing known at this time
+- bedops is used for converting gtf to bed file as input to picard collectRNAmetrics command 
