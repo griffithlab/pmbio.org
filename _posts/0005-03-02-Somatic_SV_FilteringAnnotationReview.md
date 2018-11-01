@@ -85,6 +85,10 @@ Use a docker image to run svviz2
 cd /workspace/somatic/manta_wgs/results/variants/
 mkdir svviz2 
 
+# create a filtered version of the SVs that removes large SVs that take a while to visualize (e.g. >2500 bases)
+# note that some sizes are indicated as -ve values so we are using two regular expressions to grab just the number before assessing (SVLEN > 2500)
+zcat somaticSV.vcf.gz | perl -ne 'if ($_ =~ /SVLEN\=\-(\d+)/){if ($1 > 2500){next;}} if ($_ =~ /SVLEN\=(\d+)/){if ($1 > 2500){next;}}print $_' > somaticSV.filtered.vcf
+
 # use svviz2 within a docker image to produce visualiatons for our manta SV results
 docker pull sridnona/svviz2:v2
 
@@ -98,7 +102,7 @@ docker run -i -v /workspace:/workspace -t sridnona/svviz2:v2 /bin/bash
 svviz2 --help
 
 # run svviz on the manta SV results, supplying the VCF, reference genome, normal WGS BAM, and tumor WGS BAM
-svviz2 --ref /workspace/inputs/references/genome/ref_genome.fa --variants /workspace/somatic/manta_wgs/results/variants/somaticSV.vcf.gz /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --outdir /workspace/somatic/manta_wgs/results/variants/svviz2
+svviz2 --ref /workspace/inputs/references/genome/ref_genome.fa --variants /workspace/somatic/manta_wgs/results/variants/somaticSV.filtered.vcf /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --outdir /workspace/somatic/manta_wgs/results/variants/svviz2
 
 # leave the docker interactive session
 exit
