@@ -88,3 +88,21 @@ Erica Barnell is an MD/PhD candidate at the Washington University School of Medi
 Sharon Freshour is a graduate student in the Human and Statistical Genetics program at Washington University in St. Louis. She received her B.S. in Mathematics from St. Edward's University in 2016. She is interested in uncovering mechanisms of immunotherapy resistance in cancer. <br><br><br><br><br>
 
 ***
+
+### Jeff Szymanski
+<nav class="nav  nav--social">
+{% for link in site.contact_sharon %}
+    {% assign id = link[0] | downcase %}
+    {% capture refer %}{{link[1]}}{% endcapture %}
+<a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
+{% endfor %}
+</nav>
+{% include figure.html image="/assets/Authors/JeffSzymanski.png" position="right" class="rounded-circle" %}
+
+Jeff Szymanski is a clinical and molecular pathologist and clinical informatics fellow at Washington Univeristy in St. Louis. Jeff is interested in developing computational tools to improve interpretation of clinical laboratory and genomic data and is currently applying machine learning to complex clinical decision support problems.    
+
+<br><br><br><br><br>
+
+***
+
+

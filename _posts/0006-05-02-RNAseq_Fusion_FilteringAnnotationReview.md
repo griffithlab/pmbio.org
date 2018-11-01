@@ -39,6 +39,7 @@ setwd("/workspace/rnaseq/fusion/")
 library(jsonlite)
 library(dplyr)
 library(EnsDb.Hsapiens.v86)
+library(ggplot2))
 edb = EnsDb.Hsapiens.v86
 
 # Load data
@@ -71,7 +72,7 @@ The function should return:
 - The GetFusionz_and_namez script wrote two new files into /workspace/rnaseq/fusion:
 ```norm-fuse_fusions_filt_sorted.txt``` and ```tumor-fuse_fusions_filt_sorted.txt```.
 Let's read those back into R and filter further:
-
+<!-- -->
 ```R
 normal=read.table("./norm-fuse_fusions_filt_sorted.txt", header=T)
 tumor=read.table("./tumor-fuse_fusions_filt_sorted.txt", header=T)
@@ -88,51 +89,77 @@ names(normal)
 [10] "geneB.id"             "geneB.name"           "geneB.seq_name"
 [13] "geneB.gene_seq_start" "geneB.gene_seq_end"   "geneB.seq_strand"
 [16] "same_chr"             "gene_distance"
->
 ```
 
 - Common filtering tasks for fusion output include removing fusions from the tumor sample which are present in the normal, and removing fusions for which the is little support by pair and split read counts: 
+<!-- -->
+<!-- -->
 
 ```R
-normal$sample="normal"
-tumor$sample="tumor"
 normal$genepr=paste0(normal$geneA.name,".",normal$geneB.name)
 tumor$genepr=paste0(tumor$geneA.name,".",tumor$geneB.name)
 uniqueTumor=subset(tumor, !(tumor$genepr %in% normal$genepr))
 nrow(uniqueTumor)==nrow(tumor)
-[1] TRUE
-# All fusions from the tumor sample are unique to the tumor (and therefore all fusions in the normal sample are also unique from the tumor). 
+[1] FALSE
+nrow(tumor)-nrow(uniqueTumor)
+[1] 2
+# There are two fusions (or at least fusion gene pairs) from the normal sample which are also present in the tumor. 
+# Examine the output of- 
+shared_src_tumor=subset(tumor, (tumor$genepr %in% normal$genepr))
+shared_src_normal=subset(normal, (normal$genepr %in% tumor$genepr))
+shared_src_tumor
+shared_src_normal
 ```
 
-- Split read and paired read counts are generally low, consistent with our heavily downsampled fastqs. To see the highest counts for normal fusions:
+- Filtering by counts:  
+<!-- -->
+<!-- -->
 
 ```R
-highNormal=subset(normal, normal$paircount + normal$splitcount >1)
-nrow(normal)
-[1] 21
-nrow(highNormal)
-[1] 3
+# Merge normal and tumor data
+normal$sample="normal"
+tumor$sample="tumor"
+allfusions=rbind(normal,tumor)
+# Compare counts of paired and split reads
+tapply(allfusions$paircount, allfusions$sample, summary)
+$normal
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+  0.000   0.000   0.000   1.148   2.000  24.000
+
+$tumor
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+ 0.0000  0.0000  0.0000  0.5965  1.0000  6.0000
+
+tapply(allfusions$splitcount, allfusions$sample, summary)
+$normal
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+  0.000   1.000   1.000   4.901   3.000 123.000
+
+$tumor
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+  0.000   1.000   1.000   2.526   3.000  24.000
+# As a density plot
+countplot=list()
+countplot[[1]]=ggplot(allfusions, aes(paircount, fill=sample))+geom_density(alpha=.4)+geom_vline(xintercept=2)+coord_fixed(ratio=15)
+countplot[[2]]=ggplot(allfusions, aes(splitcount, fill=sample))+geom_density(alpha=.4)+coord_cartesian(ylim= c(0,.2))+geom_vline(xintercept=5)+coord_fixed(ratio=200)
+pdf("countplot.pdf")
+countplot
+dev.off()
 ```
-We wouldn't necessary expect the normal tissue fusions to be absent from the tumor sample. This is more likely an artifact of the downsampling required to run fusion alignment quickly. 
-
-- Finally, let's get a complete list of fusions including the unfiltered reads:
-
+<!-- -->
+- Results should look like this:
+{% include figure.html image="/assets/module_6/paircount.png" %}
+{% include figure.html image="/assets/module_6/splitcount.png" %}
+To filter, let's take all fusions with a pair read count of at least 2 and a split read count of at least 5:
 ```R
-# Convert the unfiltered reads from .json to tab-delimited
-suffix = "filtered.json"
-JSON_files = list.files(path = "/workspace/rnaseq/fusion", pattern = paste0("*",suffix))
-Ids = gsub(suffix, "", JSON_files)
-lapply(Ids, function(x) GetFusionz_and_namez(x, suffix=suffix))
-
-# Exit R and save the workspace
-quit()
-Save workspace image? [y/n/c]:
-y
-
-# Merge the unfiltered reads
-awk ' FNR==1 && NR!=1 { while (/^<header>/) getline; } 1 {print}' **un_fusions*.txt >all-fusions.txt
+nrow(allfusions)
+[1] 239
+allfusions=allfusions[which(allfusions$paircount >= 2 & allfusions$splitcount >= 5),]
+nrow(allfusions)
+[1] 27
+write.table(allfusions, "allfusions.txt")
 ```
-
+<!-- -->
 # Visualization:
 Chimeraviz is an R package for visualizing fusions from RNA-seq data. The chimeraviz package has import functions built in for a variety of fusion-finder programs, but not for pizzly. We will have to load our own import function that you downloaded above:
 
@@ -148,13 +175,11 @@ library(chimeraviz)
 source("./import_Pizzly.R")
 #  You can view the function by calling it without variables
 importPizzly
-fusions = importPizzly("./all-fusions.txt","hg38")
-fusion=fusions[1:100]
-pdf("chr17-fuse-circ.pdf")
-plot_circle(fusion)
+fusions = importPizzly("./allfusions.txt","hg38")
+pdf("chr617-fuse-circ.pdf")
+plot_circle(fusions)
 dev.off()
 ```
-```
 
-
-{% include figure.html image="/assets/module_6/chr17-fuse-circ.png" %}
+The resulting circos plot shows our filtered gene fusions (blue for inter-chromosomal and red for intra-chromosomal) 
+{% include figure.html image="/assets/module_6/chr617-fuse-circ.png" %}
