@@ -74,4 +74,4 @@ chr6    156876266
 
 chr6    86719474
 
-{% include figure.html image="/assets/module_5/insertion_igv.png" position="left" %}
+{% include figure.html image="/assets/module_5/inversion_igv.png" position="left" %}
