@@ -89,7 +89,7 @@ Nice job, that was pretty easy! But not so fast, there are two obvious biases wh
 The [copyCat](https://github.com/chrisamiller/copyCat) package is able to adjust for these biases in WGS data and is what we'll start with. To start with [copyCat](https://github.com/chrisamiller/copyCat) we need to obtain GC content and mapability scores for our data. Fortunately the author of copyCat has a script to create these annotation files. As our first step let's go ahead and download the script into the `workspace/bin` directory and extract the contents.
 
 ```bash
-cd /workspace/setup/bin
+cd /workspace/bin
 wget -c http://genomedata.org/pmbio-workshop/misc/createCustomAnnotations.zip
 unzip createCustomAnnotations.zip
 ```
@@ -178,6 +178,8 @@ runPairedSampleAnalysis(annotationDirectory="/workspace/somatic/copycat_wgs/copy
                         purity=1,
                         normalSamtoolsFile=NULL,
                         tumorSamtoolsFile=NULL)
+# exit R
+q()
 ```
 
 The analysis will take a few minutes to complete however once it's done there are a few files that we care about. First you'll notice there is now a plots directory at `/workspace/somatic/copycat_wgs/plots`, inside we can view the graphs [copyCat](https://github.com/chrisamiller/copyCat) created to visualize the gc bias correction, they should look something like this:
@@ -220,6 +222,8 @@ ggplot() + geom_point(data=cna_bin[cna_bin$Chr == "chr6",], aes(x=Pos, y=CNA, co
     scale_y_continuous(limits=c(0, 15), oob=squish) + scale_color_viridis(limits=c(0, 4), option="plasma", oob=squish) + theme_bw() +
     geom_hline(yintercept = c(1, 2, 3), linetype="longdash")
 dev.off()
+# exit R
+q()
 ```
 
 {% include figure.html image="/assets/module_5/copyCat_final.png" %}
@@ -246,14 +250,14 @@ Our next step is to calculate the regions of the genome which are inaccessible t
 
 ```bash
 # Calculate the regions of the genome which are inaccessible to sequencing
-cnvkit.py access ~/references/genome/ref_genome.fa -x ~/workspace/somatic/copycat_wgs/copyCat_annotation/gaps.bed -o ~/workspace/inputs/references/genome/access-excludes.hg38.bed
+cnvkit.py access ~/workspace/inputs/references/genome/ref_genome.fa -x ~/workspace/somatic/copycat_wgs/copyCat_annotation/gaps.bed -o ~/workspace/inputs/references/genome/access-excludes.hg38.bed
 
 # cnvkit will complain if access-excludes contains chromosomes not in the bam file
 # we subset to chr6 and chr17 here to avoid this error later
 grep "chr6\|chr17" ~/workspace/inputs/references/genome/access-excludes.hg38.bed > ~/workspace/inputs/references/genome/access-excludes.hg38.chr6_and_17.bed
 ```
 
-With our accessibility file created we can run `cnvkit.py batch' which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
+With our accessibility file created we can run `cnvkit.py batch` which will run the entire cnvkit pipeline for us, though we could of course run each command in the pipeline separetly if we wanted more control. The parameters to run this pipeline are as follows:
 
 1. Path to tumor bam file
 2. --normal: Path to normal bam file (to run in paired mode)
@@ -272,7 +276,7 @@ We will also convert the pdf diagram and scatter plots to png so that they load 
 
 ```bash
 # cnvkit will complain if chromosomes are in the bed file but not the bam, we fix this here
-grep "chr6\|chr17" ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.bed > ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.chr6_and_17.bed
+grep "chr6\|chr17" ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.sort.merge.bed > ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.chr6_and_17.bed
 
 # run the entire cnvkit workflow for the exome data
 cnvkit.py batch ~/workspace/align/Exome_Tumor_sorted_mrkdup_bqsr.bam --normal ~/workspace/align/Exome_Norm_sorted_mrkdup_bqsr.bam --targets ~/workspace/inputs/references/exome/SeqCap_EZ_Exome_v3_hg38_primary_targets.v2.chr6_and_17.bed --fasta ~/workspace/inputs/references/genome/ref_genome.fa --access ~/workspace/inputs/references/genome/access-excludes.hg38.chr6_and_17.bed --output-reference ~/workspace/inputs/references/genome/my_reference.cnn --output-dir ~/workspace/somatic/cnvkit_exome/ --method hybrid -p 8 --diagram --scatter --drop-low-coverage

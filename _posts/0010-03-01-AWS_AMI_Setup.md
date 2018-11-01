@@ -93,7 +93,7 @@ sudo bash
 
 # general tools for installation and use
 cd /usr/local/bin
-apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall
+apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall inkscape librsvg2
 
 # allow the ubuntu user to use docker
 usermod -a -G docker ubuntu
@@ -137,7 +137,7 @@ apt-get update -y && apt-get install -y \
 wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
 tar -zxvf R-3.5.1.tar.gz
 cd R-3.5.1
-./configure --prefix=/usr/local/ --with-x=no
+./configure --prefix=/usr/local/ --with-x=no –-enable-R-shlib
 make
 make install
 
@@ -328,8 +328,9 @@ unzip 93.5.zip
 cd ensembl-vep-release-93.5/
 /usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
 
-# make a symlink
+# make symlinks to vep and filter_vep in /usr/local/bin/
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
+ln -s /usr/local/bin/ensembl-vep-release-93.5/filter_vep /usr/local/bin/filter_vep
 
 # Install required data for plugins
 mkdir -p /opt/vep_cache/data
@@ -1033,6 +1034,24 @@ svviz
 # exit sudo shell
 exit
 
+```
+
+#### svviz2 - NOTE I WAS UNABLE TO GET THIS INSTALLATION TO WORK - SOME KIND OF DEPENDENCY HELL WITH PYSAM - try again later
+Installation of svviz2, used in the course to visualize structural variation
+```bash
+# start sudo shell
+sudo bash
+
+#install the tool
+pip install rpy2
+pip install -U git+git://github.com/nspies/svviz2.git
+pip install --upgrade --force-reinstall genomeview
+
+# test installation
+svviz2
+
+#exit sudo shell
+exit
 ```
 
 

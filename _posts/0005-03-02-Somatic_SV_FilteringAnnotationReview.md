@@ -74,4 +74,36 @@ chr6    156876266
 
 chr6    86719474
 
-{% include figure.html image="/assets/module_5/insertion_igv.png" position="left" %}
+{% include figure.html image="/assets/module_5/inversion_igv.png" position="left" %}
+
+#### Visualizing with svviz
+
+Use a docker image to run svviz2
+```bash
+
+# create a directory for the svviz2 results
+cd /workspace/somatic/manta_wgs/results/variants/
+mkdir svviz2 
+
+# use svviz2 within a docker image to produce visualiatons for our manta SV results
+docker pull sridnona/svviz2:v2
+
+# test the docker installation
+docker run sridnona/svviz2:v2 /usr/local/bin/svviz2 --help
+
+# start an interactive session with this docker image. make sure the /workspace volume is accessible inside the docker containers and mounted at the same path
+docker run -i -v /workspace:/workspace -t sridnona/svviz2:v2 /bin/bash
+
+# make sure we can run docker inside the container
+svviz2 --help
+
+# run svviz on the manta SV results, supplying the VCF, reference genome, normal WGS BAM, and tumor WGS BAM
+svviz2 --ref /workspace/inputs/references/genome/ref_genome.fa --variants /workspace/somatic/manta_wgs/results/variants/somaticSV.vcf.gz /workspace/align/WGS_Norm_merged_sorted_mrkdup_bqsr.bam /workspace/align/WGS_Tumor_merged_sorted_mrkdup_bqsr.bam --outdir /workspace/somatic/manta_wgs/results/variants/svviz2
+
+# leave the docker interactive session
+exit
+```
+
+{% include figure.html image="/assets/module_5/svviz-del-example.png" position="left" %}
+
+
