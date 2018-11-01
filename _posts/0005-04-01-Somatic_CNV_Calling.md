@@ -89,7 +89,7 @@ Nice job, that was pretty easy! But not so fast, there are two obvious biases wh
 The [copyCat](https://github.com/chrisamiller/copyCat) package is able to adjust for these biases in WGS data and is what we'll start with. To start with [copyCat](https://github.com/chrisamiller/copyCat) we need to obtain GC content and mapability scores for our data. Fortunately the author of copyCat has a script to create these annotation files. As our first step let's go ahead and download the script into the `workspace/bin` directory and extract the contents.
 
 ```bash
-cd /workspace/setup/bin
+cd /workspace/bin
 wget -c http://genomedata.org/pmbio-workshop/misc/createCustomAnnotations.zip
 unzip createCustomAnnotations.zip
 ```
