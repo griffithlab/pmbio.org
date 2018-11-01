@@ -122,10 +122,11 @@ fastqc -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
 fastqc -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 java -jar $PICARD CollectRnaSeqMetrics I=/workspace/rnaseq/alignments/RNAseq_Norm.bam O=/workspace/rnaseq/alignments/RNAseq_Norm.RNA_Metrics REF_FLAT=/workspace/inputs/references/transcriptome/ref_flat.txt STRAND=SECOND_READ_TRANSCRIPTION_STRAND RIBOSOMAL_INTERVALS=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list
+java -jar $PICARD CollectRnaSeqMetrics I=/workspace/rnaseq/alignments/RNAseq_Tumor.bam O=/workspace/rnaseq/alignments/RNAseq_Tumor.RNA_Metrics REF_FLAT=/workspace/inputs/references/transcriptome/ref_flat.txt STRAND=SECOND_READ_TRANSCRIPTION_STRAND RIBOSOMAL_INTERVALS=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list
 
 mkdir post_align_qc
 cd post_align_qc
-multiqc /workspace/rnaseq/alignments
+multiqc /workspace/rnaseq/alignments/
 ```
 
 ### Indexing BAMs
@@ -196,17 +197,17 @@ mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm
 
 cd /workspace/rnaseq/ballgown
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_Lane1_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_Lane2_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 # Runtime: ~6min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_Lane1_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_Lane2_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 # Runtime: ~6min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
 
