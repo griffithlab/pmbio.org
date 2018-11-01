@@ -328,8 +328,9 @@ unzip 93.5.zip
 cd ensembl-vep-release-93.5/
 /usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
 
-# make a symlink
+# make symlinks to vep and filter_vep in /usr/local/bin/
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
+ln -s /usr/local/bin/ensembl-vep-release-93.5/filter_vep /usr/local/bin/filter_vep
 
 # Install required data for plugins
 mkdir -p /opt/vep_cache/data
