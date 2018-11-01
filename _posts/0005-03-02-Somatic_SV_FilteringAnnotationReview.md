@@ -104,3 +104,6 @@ svviz2 --ref /workspace/inputs/references/genome/ref_genome.fa --variants /works
 exit
 ```
 
+{% include figure.html image="/assets/module_5/svviz-del-example.png" position="left" %}
+
+
