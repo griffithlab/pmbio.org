@@ -178,6 +178,8 @@ runPairedSampleAnalysis(annotationDirectory="/workspace/somatic/copycat_wgs/copy
                         purity=1,
                         normalSamtoolsFile=NULL,
                         tumorSamtoolsFile=NULL)
+# exit R
+q()
 ```
 
 The analysis will take a few minutes to complete however once it's done there are a few files that we care about. First you'll notice there is now a plots directory at `/workspace/somatic/copycat_wgs/plots`, inside we can view the graphs [copyCat](https://github.com/chrisamiller/copyCat) created to visualize the gc bias correction, they should look something like this:
