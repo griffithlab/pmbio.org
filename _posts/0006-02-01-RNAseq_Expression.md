@@ -209,3 +209,26 @@ stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /worksp
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
+
+#### Run a simplified "reference only" StringTie expression approach
+In the above workflow we are following the StringTie developer's recommendations to: (1) first perform reference guided transcript compilation (aka transcript assembly) on each individual sample, (2) merge transcript predictions from all samples into a single model of the transcriptome, (3) annotate this predicted transcriptome with known transcriptome information, (4) estimate abundance for each of the transcripts in this final transcriptome model in each sample.  In the final result we have abundance for all the same transcripts across all samples.  This includes a combination of predicted and known transcripts.  In our output files these appear as transcripts with names like `MSTRG.204.5` and `ENST00000421865` respectively.
+
+It is sometimes convenient to have a more simplified workflow where we only have values for known transcripts from the beginning. This is particularly true in species where we already have comprehensive high quality transcriptome annotations and there is less of a focus on de novo transcript discovery.
+
+The following workflow produces a "reference-only" result by using the `-G ref_transcriptome.gtf` AND `-e` option directly instead of producing a combined GTF predicted from the RNA-seq data and using that. We will also use the `-A` option to get simple gene abundance tables.
+
+In this next section we will perform these abundance calculations on each lane of data individually.
+
+```bash
+cd /workspace/rnaseq
+mkdir ref-only-expression
+cd ref-only-expression
+
+stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
+stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -A -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+
+```
+
+
