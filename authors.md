@@ -31,7 +31,7 @@ Dr. Obi Griffith is Assistant Professor of Medicine and Assistant Director at th
 <a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
 {% endfor %}
 </nav>
-{% include figure.html image="/assets/Authors/MalachiGriffith.jpg" position="right" class="rounded-circle" %}
+{% include figure.html image="/assets/Authors/MalachiGriffith.png" position="right" class="rounded-circle" %}
 Dr. Malachi Griffith is an Assistant Director of the McDonnell Genome Institute and an Assistant Professor in the Department of Medicine. Dr. Griffith's research is focused on the development of genomics, bioinformatics and statistical methods as they apply to the study of cancer biology and medicine. A particular focus of his work is in the translation of genomics data from whole genome, exome and transcriptome sequencing into clinically actionable observations and personalized cancer therapies.
  Dr. Griffith is a regular instructor for the Canadian Bioinformatics Workshops series and Cold Spring Harbor Laboratories. Dr. Griffith is currently supported by an NIH R00 pathway to independence grant. Before coming to Washington University Dr. Griffith was a bioinformatics post-doctoral fellow at the BC Cancer Agency Genome Sciences center in Vancouver, British Columbia. He received his Ph.D. (Medical Genetics, 2009) from the University of British Columbia and B.S. (Biochemistry and Biology with Honors, 2002) from the University of Winnipeg.
 
@@ -52,13 +52,13 @@ Zachary Skidmore is a staff scientist at the McDonell Genome Institute at Washin
 
 ### Huiming Xia
 <nav class="nav  nav--social">
-{% for link in site.contact_zach %}
+{% for link in site.contact_huiming %}
     {% assign id = link[0] | downcase %}
     {% capture refer %}{{link[1]}}{% endcapture %}
 <a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
 {% endfor %}
 </nav>
-{% include figure.html image="/assets/Authors/HuimingXia.JPG" position="right" class="rounded-circle" %}
+{% include figure.html image="/assets/Authors/HuimingXia.png" position="right" class="rounded-circle" %}
 Huiming Xia is a graduate student in the Computational Systems & Biology program at Washington University in St. Louis. She graduated from Carnegie Mellon University in 2017 with a dual degree in Computational Biology and Chemistry. She is interested in developing machine learning models for improving current strategies of neoantigen design for cancer immunotherapy.<br><br><br><br>
 
 ***
@@ -84,14 +84,14 @@ Erica Barnell is an MD/PhD candidate at the Washington University School of Medi
 <a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
 {% endfor %}
 </nav>
-{% include figure.html image="/assets/Authors/SharonFreshour.jpg" position="right" class="rounded-circle" %}
+{% include figure.html image="/assets/Authors/SharonFreshour.png" position="right" class="rounded-circle" %}
 Sharon Freshour is a graduate student in the Human and Statistical Genetics program at Washington University in St. Louis. She received her B.S. in Mathematics from St. Edward's University in 2016. She is interested in uncovering mechanisms of immunotherapy resistance in cancer. <br><br><br><br><br>
 
 ***
 
 ### Jeff Szymanski
 <nav class="nav  nav--social">
-{% for link in site.contact_sharon %}
+{% for link in site.contact_jeff %}
     {% assign id = link[0] | downcase %}
     {% capture refer %}{{link[1]}}{% endcapture %}
 <a class="link" target="_blank" href="{{refer}}" title="{{link[0]}}">{% include icon.html id=id %}</a>
