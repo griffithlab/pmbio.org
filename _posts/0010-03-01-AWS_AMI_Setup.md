@@ -93,7 +93,7 @@ sudo bash
 
 # general tools for installation and use
 cd /usr/local/bin
-apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall inkscape
+apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall inkscape librsvg2
 
 # allow the ubuntu user to use docker
 usermod -a -G docker ubuntu
