@@ -22,7 +22,11 @@ layout: "home"
 * [Module 09](/assets/lectures/PMBIO_Module09_CWL.pdf) - Intro to the Common Workflow Language
 
 ### Getting help after the course
-We will try our best to respond to personal requests for advise via email (but we can't make any guarantees). Apart from just Googling your question, there are some active online forums that are very good for asking questions and finding answers:
+We will try our best to respond to personal requests for advise via email (but we can't make any guarantees). 
+
+If you have a question, comment or suggestion specifically relating to the content of this course you can submit a github issue: [pmbio issues](https://github.com/griffithlab/pmbio.org/issues).
+
+Apart from just Googling your question, there are some active online forums that are very good for asking questions and finding answers:
 
 * [Biostars](https://www.biostars.org/) (bioinformatics focused, probably the best resource for those kinds of issues)
 * [SeqAnswers](http://seqanswers.com/) (genomics focused with discussion of molecular biology as well as analysis)
@@ -44,3 +48,4 @@ We will try our best to respond to personal requests for advise via email (but w
 
 #### Somatic CNV Calling
 [Article on WGS CNV calling](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4394692/)
+
