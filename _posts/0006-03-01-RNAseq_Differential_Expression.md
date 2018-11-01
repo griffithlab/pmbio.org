@@ -10,6 +10,7 @@ date: 0006-03-01
 
 
 #### Running Ballgown for differential expression
+We will use `Ballgown` to perform differential expression analysis on the HISAT/StringTie abundance estimates for each of our samples "replicates"?
 
 ```bash
 # change working directory
