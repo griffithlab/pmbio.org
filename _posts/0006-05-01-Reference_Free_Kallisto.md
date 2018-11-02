@@ -104,7 +104,11 @@ kallisto_stringtie_tpm <- merge(kallisto_transcript_tpm, stringtie_transcript_tp
 ########### plot the result ######################
 
 pdf(file="transcript_stringtie_v_kallisto.pdf", height=8, width=8)
-ggplot(data=kallisto_stringtie_tpm, aes(x=value.kallisto, y=value.stringtie)) + geom_point(alpha=.25) + facet_wrap(~variable) + xlim(0,100) + ylim(0, 100) + theme_bw()
+ggplot(data=kallisto_stringtie_tpm, aes(x=log2(value.kallisto + .1), y=log2(value.stringtie + .1))) + geom_point(alpha=.1) + facet_wrap(~variable) + theme_bw()
+dev.off()
+
+pdf(file="transcript_stringtie_v_kallisto_density_hex.pdf", height=8, width=8)
+ggplot(data=kallisto_stringtie_tpm, aes(x=log2(value.kallisto + .1), y=log2(value.stringtie + .1))) + geom_point(alpha=.1) + facet_wrap(~variable) + theme_bw() + stat_binhex() + scale_fill_continuous(trans="sqrt")
 dev.off()
 
 ```
