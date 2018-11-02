@@ -21,7 +21,7 @@ cd kallisto
 
 # first check that the GTF and Fasta file are present
 head /workspace/inputs/references/transcriptome/ref_transcriptome.gtf
-head /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_clean.fa 
+head /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_clean.fa
 
 # now check for the kallisto index that we previously created
 ls /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_kallisto_index
@@ -36,7 +36,7 @@ cat /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_clean.
 As we did with StringTie we will generate transcript abundances for each of our demonstration samples using Kallisto. Here we are treating the two lanes for each sample as if they were independent samples.
 
 ```bash
-cd /workspace/rnaseq/kallisto/ 
+cd /workspace/rnaseq/kallisto/
 mkdir quants
 cd quants
 
@@ -81,6 +81,48 @@ Now load files and summarize results from each approach in R
 # example code here:
 # https://github.com/griffithlab/rnaseq_tutorial/blob/master/scripts/Tutorial_comparisons.R
 
+# start R
+R
+
+# set proper working directory and load libraries
+setwd("/workspace/rnaseq/kallisto/quants")
+library(ggplot2)
+
+# read in data
+kallisto_transcript_tpm <- read.delim("transcript_tpms_all_samples.tsv")
+stringtie_transcript_tpm <- read.delim("/workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf", skip=2, header=FALSE)
+
+########### reformat kallisto ####################
+
+kallisto_transcript_tpm <- kallisto_transcript_tpm[,c("target_id", "RNAseq_Tumor_Lane1")]
+colnames(kallisto_transcript_tpm) <- c("transcriptID", "tpm")
+
+########### reformat the stringtie gtf ###########
+
+# subset to only transcript features
+stringtie_transcript_tpm <- stringtie_transcript_tpm[stringtie_transcript_tpm$V3 == "transcript",]
+
+# extract the tpm
+stringtie_transcript_tpm$tpm <- as.character(lapply(strsplit(as.character(stringtie_transcript_tpm$V9), ";"), function(x) return(x[length(x)])))
+stringtie_transcript_tpm$tpm <- gsub(" TPM ", "", stringtie_transcript_tpm$tpm)
+
+# extract the transcript id
+stringtie_transcript_tpm$transcriptID <- as.character(lapply(strsplit(as.character(stringtie_transcript_tpm$V9), ";"), function(x) x[2]))
+stringtie_transcript_tpm$transcriptID <- gsub(" transcript_id ", "", stringtie_transcript_tpm$transcriptID)
+
+# filter to only the columns we care about
+stringtie_transcript_tpm <- stringtie_transcript_tpm[,c("tpm", "transcriptID")]
+
+########## merge the stringtie and kallisto dataframes ############
+
+stringtie_kallisto_tpm <- merge(kallisto_transcript_tpm, stringtie_transcript_tpm, by=c("transcriptID"), suffixes=c(".kallisto", ".stringtie"))
+
+########## plot the result #############
+
+pdf(file="test.pdf", height=8, width=8)
+ggplot(stringtie_kallisto_tpm, aes(x=tpm.kallisto, y=tpm.stringtie)) + geom_point()
+dev.off()
+
 ```
 
 ### Exercise: Create a custom Kallisto index for a selected subset of gene. Calculate abundances for this set only
@@ -88,5 +130,3 @@ For example, you could create a custom GTF of rRNA genes, or cancer genes. Then 
 
 ### Exercise: Use Sleuth to perform differential expression analysis with Kallisto output
 You may need to refer to the Sleuth documentation to determine if kallisto needs to be rerun in some specific way...
-
-
