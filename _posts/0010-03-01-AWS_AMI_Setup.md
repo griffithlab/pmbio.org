@@ -1165,4 +1165,10 @@ exit
 ```
 
 ### TO ADD
-- bedops is used for converting gtf to bed file as input to picard collectRNAmetrics command 
+- bedops is used for converting gtf to bed file as input to picard collectRNAmetrics command
+- install R package for plotting:
+  sudo R
+  install.package("hexbin")
+  67
+- add filter vep path to PATH
+- 
