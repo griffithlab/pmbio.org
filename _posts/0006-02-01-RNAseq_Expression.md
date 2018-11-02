@@ -7,7 +7,7 @@ categories:
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0006-02-01
 ---
-
+TODO: Figure out if our RNA data has already been trimmed.
 
 ### Adapter Trimming FASTQ files
 The purpose of adapter trimming is to remove sequences in our data that correspond to the Illumina sequence adapters.  The most common adapter trimming scenario is the removal of adapter sequences that occur at the end of read sequences. This happens when a DNA (or cDNA) fragment is shorter than the read length.  For example if we sequence our RNA-seq fragments to 150 base length and a fragment is only 140 bases long the read will end with 10 bases of adapter sequence. Since this adapter sequence does not correspond to the genome, it will not align. Too much adapter sequence can actually prevent reads from aligning at all. Adapter trimming may therefore sometime improve the overall alignment success rate for an RNA-seq data set.  Adapter trimming involves a simplistic alignment itself and therefore can be computationally expensive.
@@ -53,7 +53,6 @@ cd /workspace/rnaseq/alignments
 # Runtime: ~15 min each run
 TUMOR_DATA_1_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895626107.XXXXXXXXXXXX`
 hisat2 -p 8 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895626107 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-GCCAAT.4 --rg LB:rna_tumor_lib1 --rg SM:HCC1395_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Tumor/trimmed/RNAseq_Tumor_Lane1_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Tumor/trimmed/RNAseq_Tumor_Lane1_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 8 -m 32G --tmpdir $TUMOR_DATA_1_TEMP -o /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /dev/stdin
-rmdir $TUMOR_DATA_1_TEMP/* $TUMOR_DATA_1_TEMP
 
 TUMOR_DATA_2_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895626112.XXXXXXXXXXXX`
 hisat2 -p 8 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895626112 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-GCCAAT.5 --rg LB:rna_tumor_lib1 --rg SM:HCC1395_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Tumor/trimmed/RNAseq_Tumor_Lane2_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Tumor/trimmed/RNAseq_Tumor_Lane2_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 8 -m 32G --tmpdir $TUMOR_DATA_2_TEMP -o /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam /dev/stdin
@@ -61,11 +60,11 @@ rmdir $TUMOR_DATA_2_TEMP/* $TUMOR_DATA_2_TEMP
 
 NORMAL_DATA_1_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895625992.XXXXXXXXXXXX`
 hisat2 -p 8 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895625992 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.4 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Norm/trimmed/RNAseq_Norm_Lane1_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Norm/trimmed/RNAseq_Norm_Lane1_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 8 -m 32G --tmpdir $NORMAL_DATA_1_TEMP -o /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam /dev/stdin
-rmdir $NORMAL_DATA_1_TEMP/* $NORMAL_DATA_1_TEMP
+
 
 NORMAL_DATA_2_TEMP=`mktemp -d /workspace/rnaseq/alignments/2895626097.XXXXXXXXXXXX`
 hisat2 -p 8 --dta -x /workspace/inputs/references/transcriptome/ref_genome --rg-id 2895626097 --rg PL:ILLUMINA --rg PU:H3MYFBBXX-CTTGTA.5 --rg LB:rna_norm_lib1 --rg SM:HCC1395BL_RNA --rna-strandness RF -1 /workspace/inputs/data/fastq/RNAseq_Norm/trimmed/RNAseq_Norm_Lane2_R1.fastq.gz -2  /workspace/inputs/data/fastq/RNAseq_Norm/trimmed/RNAseq_Norm_Lane2_R2.fastq.gz | sambamba view -S -f bam -l 0 /dev/stdin | sambamba sort -t 8 -m 32G --tmpdir $NORMAL_DATA_1_TEMP -o /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam /dev/stdin
-rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
+
 ```
 
 ### Merging BAMs
@@ -73,7 +72,7 @@ Since we have multiple BAMs of each sample that just represent additional data f
 
 ```bash
 cd /workspace/rnaseq/alignments
-# Runtime: ~ 8m each merging command
+#Runtime: ~ 8m each merging command
 sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 
 sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
@@ -82,11 +81,12 @@ sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rna
 ### Post-alignment QC
 ```bash
 cd /workspace/rnaseq/
-# Runtime: ~2min
+#Run samtools flagstat
+#Runtime: ~2min
 samtools flagstat /workspace/rnaseq/alignments/RNAseq_Norm.bam > /workspace/rnaseq/alignments/RNAseq_Norm_flagstat.txt
 samtools flagstat /workspace/rnaseq/alignments/RNAseq_Tumor.bam > /workspace/rnaseq/alignments/RNAseq_Tumor_flagstat.txt
 
-# Install bedops
+#Install bedops for later converting gtf format to bed format
 sudo bash
 cd /usr/local/bin/
 wget -c https://github.com/bedops/bedops/releases/download/v2.4.35/bedops_linux_x86_64-v2.4.35.tar.bz2
@@ -96,11 +96,14 @@ mv bin/* bedops
 rmdir bin
 export PATH=$PATH:/usr/local/bin/bedops/
 
+# This is later used for converting gtf to a ref_flat.txt required by the picard CollectRnaSeqMetrics command
 wget -c http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/gtfToGenePred
 chmod a+x gtfToGenePred
 #test installation
 gtfToGenePred
 exit
+
+# Generating the necessary input files for picard CollectRnaSeqMetrics
 
 cd /workspace/inputs/references/transcriptome
 grep -i rrna ref_transcriptome.gtf > ref_ribosome.gtf
@@ -115,9 +118,11 @@ mv ref_flat_final.txt ref_flat.txt
 
 cd /workspace/rnaseq/alignments
 
+#Runtime: ~12 min
 fastqc -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
 fastqc -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
+# Runtime: 26min
 java -jar $PICARD CollectRnaSeqMetrics I=/workspace/rnaseq/alignments/RNAseq_Norm.bam O=/workspace/rnaseq/alignments/RNAseq_Norm.RNA_Metrics REF_FLAT=/workspace/inputs/references/transcriptome/ref_flat.txt STRAND=SECOND_READ_TRANSCRIPTION_STRAND RIBOSOMAL_INTERVALS=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list
 java -jar $PICARD CollectRnaSeqMetrics I=/workspace/rnaseq/alignments/RNAseq_Tumor.bam O=/workspace/rnaseq/alignments/RNAseq_Tumor.RNA_Metrics REF_FLAT=/workspace/inputs/references/transcriptome/ref_flat.txt STRAND=SECOND_READ_TRANSCRIPTION_STRAND RIBOSOMAL_INTERVALS=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list
 
@@ -154,10 +159,10 @@ Specific exercises:
 We are now going to use `stringtie` to perform a reference guided transcriptome assembly and then determine transcript abundance estimates for those transcript. The so called "reference guided" mode is specified with `-G ref_transcriptome.gtf`.  If you would like to constrain StringTie to just calculate abundance estimates for those transcripts we already konw about (in the GTF) you would also add the `-e` option. This simplifies the output, makes it easier to integrate expression values with variant data for known genes and is faster.  
 
 ```bash
-# Runtime: ~8min
+#Runtime: ~8min
 stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/RNAseq_Tumor.gtf -p 8 -l RNAseq_Tumor /workspace/rnaseq/alignments/RNAseq_Tumor.bam
 
-# Runtime: ~5min
+#Runtime: ~5min
 stringtie -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/inputs/references/transcriptome/RNAseq_Norm.gtf -p 8 -l RNAseq_Norm /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
@@ -193,17 +198,17 @@ mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2
 mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm
 
 cd /workspace/rnaseq/ballgown
-# Runtime: ~3min
+#Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_Lane1_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
-# Runtime: ~3min
+#Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_Lane2_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
-# Runtime: ~6min
+#Runtime: ~6min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
-# Runtime: ~3min
+#Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_Lane1_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
-# Runtime: ~3min
+#Runtime: ~3min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_Lane2_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
-# Runtime: ~6min
+#Runtime: ~6min
 stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
