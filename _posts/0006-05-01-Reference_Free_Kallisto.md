@@ -29,6 +29,7 @@ ls /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_kallist
 # create a list of all transcript IDs for later use:
 cd /workspace/rnaseq/kallisto/
 cat /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_clean.fa | grep ">" | perl -ne '$_ =~ s/\>//; print $_' | sort | uniq > transcript_id_list.txt
+head transcript_id_list.txt
 
 ```
 
