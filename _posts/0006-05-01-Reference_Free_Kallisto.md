@@ -29,7 +29,6 @@ ls /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_kallist
 # create a list of all transcript IDs for later use:
 cd /workspace/rnaseq/kallisto/
 cat /workspace/inputs/references/transcriptome/kallisto/ref_transcriptome_clean.fa | grep ">" | perl -ne '$_ =~ s/\>//; print $_' | sort | uniq > transcript_id_list.txt
-head transcript_id_list.txt
 
 ```
 
@@ -88,40 +87,24 @@ R
 # set proper working directory and load libraries
 setwd("/workspace/rnaseq/kallisto/quants")
 library(ggplot2)
+library(reshape2)
 
 # read in data
 kallisto_transcript_tpm <- read.delim("transcript_tpms_all_samples.tsv")
-stringtie_transcript_tpm <- read.delim("/workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf", skip=2, header=FALSE)
+stringtie_transcript_tpm <- read.delim("~/workspace/rnaseq/ref-only-expression/transcript_tpm_all_samples.tsv")
 
-########### reformat kallisto ####################
+# minor reformatting
+kallisto_transcript_tpm <- kallisto_transcript_tpm[,-2]
+kallisto_transcript_tpm <- melt(kallisto_transcript_tpm, id.vars=c("target_id"))
+stringtie_transcript_tpm <- melt(stringtie_transcript_tpm, id.vars=c("Transcript_ID"))
 
-kallisto_transcript_tpm <- kallisto_transcript_tpm[,c("target_id", "RNAseq_Tumor_Lane1")]
-colnames(kallisto_transcript_tpm) <- c("transcriptID", "tpm")
+# merge the data
+kallisto_stringtie_tpm <- merge(kallisto_transcript_tpm, stringtie_transcript_tpm, by.x=c("target_id", "variable"), by.y=c("Transcript_ID", "variable"), suffixes=c(".kallisto", ".stringtie"))
 
-########### reformat the stringtie gtf ###########
+########### plot the result ######################
 
-# subset to only transcript features
-stringtie_transcript_tpm <- stringtie_transcript_tpm[stringtie_transcript_tpm$V3 == "transcript",]
-
-# extract the tpm
-stringtie_transcript_tpm$tpm <- as.character(lapply(strsplit(as.character(stringtie_transcript_tpm$V9), ";"), function(x) return(x[length(x)])))
-stringtie_transcript_tpm$tpm <- gsub(" TPM ", "", stringtie_transcript_tpm$tpm)
-
-# extract the transcript id
-stringtie_transcript_tpm$transcriptID <- as.character(lapply(strsplit(as.character(stringtie_transcript_tpm$V9), ";"), function(x) x[2]))
-stringtie_transcript_tpm$transcriptID <- gsub(" transcript_id ", "", stringtie_transcript_tpm$transcriptID)
-
-# filter to only the columns we care about
-stringtie_transcript_tpm <- stringtie_transcript_tpm[,c("tpm", "transcriptID")]
-
-########## merge the stringtie and kallisto dataframes ############
-
-stringtie_kallisto_tpm <- merge(kallisto_transcript_tpm, stringtie_transcript_tpm, by=c("transcriptID"), suffixes=c(".kallisto", ".stringtie"))
-
-########## plot the result #############
-
-pdf(file="test.pdf", height=8, width=8)
-ggplot(stringtie_kallisto_tpm, aes(x=tpm.kallisto, y=tpm.stringtie)) + geom_point()
+pdf(file="transcript_stringtie_v_kallisto.pdf", height=8, width=8)
+ggplot(data=kallisto_stringtie_tpm, aes(x=value.kallisto, y=value.stringtie)) + geom_point(alpha=.25) + facet_wrap(~variable) + xlim(0,100) + ylim(0, 100) + theme_bw()
 dev.off()
 
 ```
