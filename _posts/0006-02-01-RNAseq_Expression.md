@@ -104,8 +104,8 @@ gtfToGenePred
 exit
 
 # Generating the necessary input files for picard CollectRnaSeqMetrics
-
 cd /workspace/inputs/references/transcriptome
+
 grep -i rrna ref_transcriptome.gtf > ref_ribosome.gtf
 gff2bed < /workspace/inputs/references/transcriptome/ref_ribosome.gtf > ref_ribosome.bed
 java -jar $PICARD BedToIntervalList I=/workspace/inputs/references/transcriptome/ref_ribosome.bed O=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list SD=/workspace/inputs/references/genome/ref_genome.dict

@@ -47,7 +47,7 @@ results_transcripts = data.frame(transcriptNames=ballgown::transcriptNames(bg_fi
 # Add common gene names on
 tmp <- unique(results_transcripts[,c("geneNames", "geneIDs")])
 results_genes <- merge(results_genes, tmp, by.x=c("id"), by.y=c("geneIDs"), all.x=TRUE)
-results_genes = data.frame(geneNames=ballgown::geneNames(bg_filt),geneIDs=ballgown::geneIDs(bg_filt), results_genes)
+#results_genes = data.frame(geneNames=ballgown::geneNames(bg_filt),geneIDs=ballgown::geneIDs(bg_filt), results_genes)
 
 # Sort from the smallest P value to largest
 results_transcripts = arrange(results_transcripts,pval)
