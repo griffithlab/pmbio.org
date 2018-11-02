@@ -51,7 +51,7 @@ tree
 
 ```
 
-Occasionally some tools might expects our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/inputs/references/genome/ref_genome_split/` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
+Occasionally some tools might expect our genome fasta file to be split by chromosome, we can achieve this with the [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) utility. Go ahead and make a new directory called `/workspace/inputs/references/genome/ref_genome_split/` to store the result of the split. We then run [faSplit](https://bioconda.github.io/recipes/ucsc-fasplit/README.html) and give it the following positional parameters:
 
 - byname: tells the program to split the fasta by each record name (i.e. chromosome)
 - ref_genome.fa: location of the multi-record fasta
