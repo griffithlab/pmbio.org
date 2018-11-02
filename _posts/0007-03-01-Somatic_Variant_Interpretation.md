@@ -56,7 +56,17 @@ http://127.0.0.1:4000/module-07-clinical/0007/03/01/Somatic_Variant_Interpretati
 
 # Additional useful tools and resources for somatic cancer variant interpretation
 
+
+
+### Exercise
+Start with our final list of somatic variants and select a priority set.  For example, start with the variants here:
+* /workspace/somatic/final/
+
+Many of the resource below could be helpful in this exercise. 
+
+
 The following tools are generally applicable to understanding cancer variants. There are hundreds of such tools.  These are ones we particularly recommend:
+
 * [OncoKB](http://oncokb.org/#/) - Annotates oncogenic and predictive/prognositc variants ([Paper](http://ascopubs.org/doi/full/10.1200/PO.17.00011))
 * [VICC knowledgebase aggregator](https://cancervariants.org/) (Variant Interpretation for Cancer Consortium) - Provides a data model standard to aggregate information from cancer variant knowledgebases. 
 * [CBioPortal](http://www.cbioportal.org/) - Web interface to explore and visualize multi-omics data from large cancer studies such as [TCGA](https://cancergenome.nih.gov/) ([Paper](https://doi.org/10.1126/scisignal.2004088))
@@ -65,4 +75,17 @@ The following tools are generally applicable to understanding cancer variants. T
 * [COSMIC](https://cancer.sanger.ac.uk/cosmic (Catalog of Somatic Mutations in Cancer) - Comprehensive database of literature-reported cancer variants
 * [Cancer Gene Census](https://cancer.sanger.ac.uk/census#cl_overview) - Curated list of genes causally implicated in oncogenesis and their assocaited variants ([Paper](https://doi.org/10.1038/nrc1299))
 * [ProteinPaint](https://pecan.stjude.cloud/home) - Interactive visualizations of pediatric cancer mutations
+
+* CIViC - A resource for Clinical Interpreation of Variants in Cancer (WASHU). Based on expert curation of the literature.
+* OncoKB - Another resource for Clinical Interpretation of Variant in Cancer (MSKCC). Based on expert curation of the literature.
+* VICC knowledgebase aggregator - A search engine and normalization approach/database that pulls together knowledge from several resources including CIViC and OncoKB.
+* DGIdb - A drug gene interaction database. Can be used to identify inhibitors of activated genes.
+* CRAVAT - A resource for functional and oncogenic analysis of somatic variants.
+* CBioPortal - Analysis of large cohorts of cancer data including the Cancer Genome Atlas (TCGA).
+* ICGC - A data portal summarizing results from the International Cancer Genome Consortium
+* GDC - A data portal allowing access to the harmonized analysis results for the TCGA.
+* COSMIC - Probably the largest collection of observations of somatic mutations in tumors.
+* Cancer Gene Census - A curate list of cancer relevant genes.
+* ProteinPaint - A visualization interface for placing an observed amino acid change in the context of protein domains and mutation hotspots according to COSMIC, as well as ClinVar observations.
+
 

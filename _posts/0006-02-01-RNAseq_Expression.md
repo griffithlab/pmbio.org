@@ -35,8 +35,14 @@ mv ~/workspace/inputs/data/fastq/RNAseq_Norm/RNAseq_Norm_Lane1_2.fastq.gz ~/work
 mv ~/workspace/inputs/data/fastq/RNAseq_Norm/RNAseq_Norm_Lane2_1.fastq.gz ~/workspace/inputs/data/fastq/RNAseq_Norm/trimmed/RNAseq_Norm_Lane2_R1.fastq.gz
 mv ~/workspace/inputs/data/fastq/RNAseq_Norm/RNAseq_Norm_Lane2_2.fastq.gz ~/workspace/inputs/data/fastq/RNAseq_Norm/trimmed/RNAseq_Norm_Lane2_R2.fastq.gz
 ```
+### FastQC analysis on post-trimmed RNAseq fastq filters
+```bash
+cd ~/workspace/inputs/data/fastq/RNAseq_Tumor/trimmed
+fastqc RNAseq_Tumor_Lane1_R1.fastq.gz
+# Compare with previous pretrimmed result in /workspace/inputs/data/fastq/RNAseq_Tumor/RNAseq_Tumor_Lane1_R1_fastqc.html
+```
 
-#### Alignment
+### Alignment
 First, we will assign a path for temporary directories:
 ```bash
 mkdir -p /workspace/rnaseq/alignments
@@ -65,17 +71,65 @@ rmdir $NORMAL_DATA_2_TEMP/* $NORMAL_DATA_2_TEMP
 
 ```
 
-#### Merging BAMss
+### Merging BAMss
 Since we have multiple BAMs of each sample that just represent additional data for the same sequence library, we should combine them into a single BAM for convenience before proceeding.
 
 ```bash
+cd /workspace/rnaseq/alignments
 # Runtime: ~ 8m each merging command
 sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 
 sambamba merge -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 ```
 
-#### Indexing BAMs
+### Post-alignment QC
+```bash
+cd /workspace/rnaseq/
+# Runtime: ~2min
+samtools flagstat /workspace/rnaseq/alignments/RNAseq_Norm.bam > /workspace/rnaseq/alignments/RNAseq_Norm_flagstat.txt
+samtools flagstat /workspace/rnaseq/alignments/RNAseq_Tumor.bam > /workspace/rnaseq/alignments/RNAseq_Tumor_flagstat.txt
+
+# Install bedops
+sudo bash
+cd /usr/local/bin/
+wget -c https://github.com/bedops/bedops/releases/download/v2.4.35/bedops_linux_x86_64-v2.4.35.tar.bz2
+tar jxvf bedops_linux_x86_64-vx.y.z.tar.bz2
+mkdir -p bedops
+mv bin/* bedops
+rmdir bin
+export PATH=$PATH:/usr/local/bin/bedops/
+
+wget -c http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/gtfToGenePred
+chmod a+x gtfToGenePred
+#test installation
+gtfToGenePred
+exit
+
+cd /workspace/inputs/references/transcriptome
+grep -i rrna ref_transcriptome.gtf > ref_ribosome.gtf
+gff2bed < /workspace/inputs/references/transcriptome/ref_ribosome.gtf > ref_ribosome.bed
+java -jar $PICARD BedToIntervalList I=/workspace/inputs/references/transcriptome/ref_ribosome.bed O=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list SD=/workspace/inputs/references/genome/ref_genome.dict
+
+gtfToGenePred -genePredExt /workspace/inputs/references/transcriptome/ref_transcriptome.gtf /workspace/inputs/references/transcriptome/ref_flat.txt
+
+cat ref_flat.txt | awk '{print $12"\t"$0}' | cut -d$'\t' -f1-11 > ref_flat_final.txt
+
+mv ref_flat_final.txt ref_flat.txt
+
+cd /workspace/rnaseq/alignments
+
+fastqc -t 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
+fastqc -t 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
+
+java -jar $PICARD CollectRnaSeqMetrics I=/workspace/rnaseq/alignments/RNAseq_Norm.bam O=/workspace/rnaseq/alignments/RNAseq_Norm.RNA_Metrics REF_FLAT=/workspace/inputs/references/transcriptome/ref_flat.txt STRAND=SECOND_READ_TRANSCRIPTION_STRAND RIBOSOMAL_INTERVALS=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list
+java -jar $PICARD CollectRnaSeqMetrics I=/workspace/rnaseq/alignments/RNAseq_Tumor.bam O=/workspace/rnaseq/alignments/RNAseq_Tumor.RNA_Metrics REF_FLAT=/workspace/inputs/references/transcriptome/ref_flat.txt STRAND=SECOND_READ_TRANSCRIPTION_STRAND RIBOSOMAL_INTERVALS=/workspace/inputs/references/transcriptome/ref_ribosome.interval_list
+
+mkdir post_align_qc
+cd post_align_qc
+multiqc /workspace/rnaseq/alignments/
+```
+
+### Indexing BAMs
 In order to be able to view our BAM files in IGV, as usual we need to index them
 ```bash
 cd  /workspace/rnaseq/alignments/
@@ -84,7 +138,7 @@ samtools index RNAseq_Tumor.bam
 
 ```
 
-#### IGV exercise
+### IGV exercise
 Since we have RNA alignments now, we should compare these to the DNA alignments we generated previously. Open IGV and load six BAM files:
 * Normal Exome BAM: http://s#.pmbio.org/align/Exome_Norm_sorted_mrkdup_bqsr.bam
 * Tumor Exome BAM: http://s#.pmbio.org/align/Exome_Tumor_sorted_mrkdup_bqsr.bam
@@ -143,16 +197,54 @@ mkdir -p /workspace/rnaseq/ballgown/RNAseq_Norm
 
 cd /workspace/rnaseq/ballgown
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_Lane1_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane1/RNAseq_Tumor_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_Lane2_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor_Lane2/RNAseq_Tumor_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
 # Runtime: ~6min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Tumor_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Tumor/RNAseq_Tumor.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Tumor.bam
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_Lane1_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane1/RNAseq_Norm_Lane1.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
 # Runtime: ~3min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_Lane2_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm_Lane2/RNAseq_Norm_Lane2.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
 # Runtime: ~6min
-stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
+stringtie -e -B -G /workspace/rnaseq/transcripts/gffcmp.annotated.gtf -A RNAseq_Norm_gene_abundance.out -o /workspace/rnaseq/ballgown/RNAseq_Norm/RNAseq_Norm.gtf -p 8 /workspace/rnaseq/alignments/RNAseq_Norm.bam
 
 ```
+
+#### Run a simplified "reference only" StringTie expression approach
+In the above workflow we are following the StringTie developer's recommendations to: (1) first perform reference guided transcript compilation (aka transcript assembly) on each individual sample, (2) merge transcript predictions from all samples into a single model of the transcriptome, (3) annotate this predicted transcriptome with known transcriptome information, (4) estimate abundance for each of the transcripts in this final transcriptome model in each sample.  In the final result we have abundance for all the same transcripts across all samples.  This includes a combination of predicted and known transcripts.  In our output files these appear as transcripts with names like `MSTRG.204.5` and `ENST00000421865` respectively.
+
+It is sometimes convenient to have a more simplified workflow where we only have values for known transcripts from the beginning. This is particularly true in species where we already have comprehensive high quality transcriptome annotations and there is less of a focus on de novo transcript discovery.
+
+The following workflow produces a "reference-only" result by using the `-G ref_transcriptome.gtf` AND `-e` option directly instead of producing a combined GTF predicted from the RNA-seq data and using that. We will also use the `-A` option to get simple gene abundance tables.
+
+In this next section we will perform these abundance calculations on each lane of data individually.
+
+```bash
+cd /workspace/rnaseq
+mkdir ref-only-expression
+cd ref-only-expression
+
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Tumor_Lane2/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Tumor_Lane2.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane1/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane1.bam
+stringtie -p 8 -e -G /workspace/inputs/references/transcriptome/ref_transcriptome.gtf -o /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/transcripts.gtf -A /workspace/rnaseq/ref-only-expression/RNAseq_Norm_Lane2/gene_abundances.tsv /workspace/rnaseq/alignments/RNAseq_Norm_Lane2.bam
+
+```
+
+Create a tidy expression matrix files for the StringTie results. This will be done at both the gene and transcript level and also will take into account the various expression measures produced: coverage, FPKM, and TPM.
+
+```bash
+cd /workspace/rnaseq/ref-only-expression
+wget https://raw.githubusercontent.com/griffithlab/rnaseq_tutorial/master/scripts/stringtie_expression_matrix.pl
+chmod +x stringtie_expression_matrix.pl
+
+./stringtie_expression_matrix.pl --expression_metric=TPM --result_dirs='RNAseq_Norm_Lane1,RNAseq_Norm_Lane2,RNAseq_Tumor_Lane1,RNAseq_Tumor_Lane2' --transcript_matrix_file=transcript_tpm_all_samples.tsv --gene_matrix_file=gene_tpm_all_samples.tsv
+./stringtie_expression_matrix.pl --expression_metric=FPKM --result_dirs='RNAseq_Norm_Lane1,RNAseq_Norm_Lane2,RNAseq_Tumor_Lane1,RNAseq_Tumor_Lane2' --transcript_matrix_file=transcript_fpkm_all_samples.tsv --gene_matrix_file=gene_fpkm_all_samples.tsv
+./stringtie_expression_matrix.pl --expression_metric=Coverage --result_dirs='RNAseq_Norm_Lane1,RNAseq_Norm_Lane2,RNAseq_Tumor_Lane1,RNAseq_Tumor_Lane2' --transcript_matrix_file=transcript_coverage_all_samples.tsv --gene_matrix_file=gene_coverage_all_samples.tsv
+
+head transcript_tpm_all_samples.tsv gene_tpm_all_samples.tsv
+
+```
+
+These simplified files will be used later to help compare between the different expression abundance estimation tools we use.
