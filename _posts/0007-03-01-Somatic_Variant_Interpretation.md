@@ -22,9 +22,9 @@ Similar to germline variant interpretation, we can perform additional filtering 
 
 ```bash
 cd /workspace/somatic/
-wget /V86_38_MUTANTCENSUS-breast.csv
+wget https://raw.githubusercontent.com/griffithlab/pmbio.org/master/assets/module_7/V86_38_MUTANTCENSUS-breast.csv
 cat V86_38_MUTANTCENSUS-breast.csv | cut -f1 -d , | uniq > breast-ca-gene-list.txt
-filter_vep --format vcf -i /workspace/somatic/exome.annotated.vcf -o /workspace/somatic/tumor-exome-clinfilt.vcf --filter "(MAX_AF < 0.01 or not MAX_AF) and FILTER = PASS and SYMBOL in /workspace/somatic/breast-ca-gene-list.tex" --force_overwrite
+filter_vep --format vcf -i /workspace/somatic/exome.annotated.vcf -o /workspace/somatic/tumor-exome-clinfilt.vcf --filter "(MAX_AF < 0.01 or not MAX_AF) and FILTER = PASS and SYMBOL in /workspace/somatic/breast-ca-gene-list.txt" --force_overwrite
 cat exome.annotated.vcf | grep "^chr" | wc -l
 cat tumor-exome-clinfilt.vcf | grep "^chr" | wc -l
 ```
@@ -35,26 +35,50 @@ cat tumor-exome-clinfilt.vcf | grep "^chr" | wc -l
 
 * "FILTER = PASS" selects VCF lines that passed previous quality filters. 
 
-* And SYMBOL in /workspace/somatic/breast-ca-gene-list.tex will limit our results by the list of breast cancer genes from the Cancer Gene Census.
+* And SYMBOL in /workspace/somatic/breast-ca-gene-list.txt will limit our results by the list of breast cancer genes from the Cancer Gene Census.
 
 * Filtering reduced our variants of interest from 1,456 to 51. For a clinical sequencing study, this is a reasonable number of variants to carry forward to manual review.  
 
 # Highlighted Tools
 
-#### DGIdb
-[DGIdb](http://www.dgidb.org/) (Drug Gene Interaction Database) is a  [Paper](https://doi.org/10.1093/nar/gkx1143)
-
-#### CIViC
-[CIViC](https://civicdb.org/home) (Clinical Interpretation of Variants in Cancer) provides a platform for crowdsourced, curated interpretations of cancer variants ([Paper](https://www.nature.com/articles/ng.3774))
 
 #### CRAVAT
-[CRAVAT](http://cravat.us/CRAVAT/) (Cancer-Related Analysis of VAriants Toolkit) is a web-based interface for predictive sorting of potenitally pathogenic variants ([Paper](https://doi.org/10.1093/bioinformatics/btt017))
+[CRAVAT](http://cravat.us/CRAVAT/) (Cancer-Related Analysis of VAriants Toolkit) is a web-based interface for predictive sorting of potenitally pathogenic variants ([Paper](https://doi.org/10.1093/bioinformatics/btt017)). To get an overview of our filtered resutls, lets view them in CRAVAT. Access your VCF at http://s#.pmbio.org/somatic/tumor-exome-clinfilt.vcf and then load it into the CRAVAT web interface. Choose "Breast" under the CHASM-3.1 dropdown and submit the report to your email address.
 
-http://127.0.0.1:4000/module-07-clinical/0007/03/01/Somatic_Variant_Interpretation/#Additional useful tools
+{% include figure.html image="/assets/module_7/cravat.png" position="right" width="450" %}
 
-http://127.0.0.1:4000/module-07-clinical/0007/03/01/Somatic_Variant_Interpretation/#linktest
+CRAVAT will run two analysis programs [CHASM]("http://cravat.us/CRAVAT/help.jsp?chapter=analysis_tools&article=vest#chasm-3.1") which predicts the functional significance of somatic missense variants, and [VEST]("http://cravat.us/CRAVAT/help.jsp?chapter=analysis_tools&article=vest#vest-4") which is a machine learning algorithm to predict variant pathogenicity.
 
-# Additional useful tools and resources for somatic cancer variant interpretation
+Open the results in the web-based interactive results viewer. Compare the top pathogenic genes by VEST and CHASM. Be sure to check out the additinal tabs for Gene and Variant info as well. 
+
+{% include figure.html image="/assets/module_7/cravat-res.png" position="left" width="450" %}
+
+{% include figure.html image="/assets/module_7/cravat-res2.png" position="center" width="2000" %}
+<br>
+
+
+#### DGIdb
+[DGIdb](http://www.dgidb.org/) (Drug Gene Interaction Database) is drug gene interaction database which can be used to identify inhibitors of activated genes [Paper](https://doi.org/10.1093/nar/gkx1143). We could begin investigating our results by passing a list of filtered genes into DGIdb. Like many cancer variant interpretation tools, DGIdb can be quered either through a web interface or at the command line using an application program interface (API). We will try both methods for the VEST-identified pathogenic variants:
+
+First, enter the genes into the web interface as below:
+
+{% include figure.html image="/assets/module_7/dgidb.png" position="center" width="1000" %}
+
+Back on the EC2 instance, call the API:
+```bash
+curl http://dgidb.org/api/v2/interactions.json?genes=TP53,ARID1B,NF1 | python -mjson.tool > dgidb-search.txt
+```
+
+We don't know exactly what chemotherapy this patient recieved, but typical pre-operative chemotherapy for a triple-negative breast cancer might include doxorubicin and paclitaxel. 
+
+```bash
+cat dgidb-search.txt | grep -E 'DOXORUBICIN|PACLITAXEL'
+```
+
+There is one specific interaction for each drug. 
+
+#### CIViC
+[CIViC](https://civicdb.org/home) (Clinical Interpretation of Variants in Cancer) is a resource for Clinical Interpreation of Variants in Cancer (WASHU) ([Paper](https://www.nature.com/articles/ng.3774)). 
 
 
 
@@ -62,30 +86,16 @@ http://127.0.0.1:4000/module-07-clinical/0007/03/01/Somatic_Variant_Interpretati
 Start with our final list of somatic variants and select a priority set.  For example, start with the variants here:
 * /workspace/somatic/final/
 
-Many of the resource below could be helpful in this exercise. 
 
+# Additional useful tools and resources for somatic cancer variant interpretation
 
 The following tools are generally applicable to understanding cancer variants. There are hundreds of such tools.  These are ones we particularly recommend:
 
-* [OncoKB](http://oncokb.org/#/) - Annotates oncogenic and predictive/prognositc variants ([Paper](http://ascopubs.org/doi/full/10.1200/PO.17.00011))
-* [VICC knowledgebase aggregator](https://cancervariants.org/) (Variant Interpretation for Cancer Consortium) - Provides a data model standard to aggregate information from cancer variant knowledgebases. 
-* [CBioPortal](http://www.cbioportal.org/) - Web interface to explore and visualize multi-omics data from large cancer studies such as [TCGA](https://cancergenome.nih.gov/) ([Paper](https://doi.org/10.1126/scisignal.2004088))
-* [ICGC](https://dcc.icgc.org/) (International Cancer Genome Consortium) - Aggregates tumor genome variant data from worldwide clinical sequencing studes 
-* [GDC](https://portal.gdc.cancer.gov/) (Genomic Data Commons Data Portal) - Full, granular data access from cancer genomics studies submitted to the NCI 
+* [OncoKB](http://oncokb.org/#/) - Annotates oncogenic and predictive/prognositc variants based on expert curation of the literature ([Paper](http://ascopubs.org/doi/full/10.1200/PO.17.00011))
+* [VICC knowledgebase aggregator](https://cancervariants.org/) (Variant Interpretation for Cancer Consortium) - A search engine and normalization approach/database that pulls together knowledge from several resources including CIViC and OncoKB. 
+* [CBioPortal](http://www.cbioportal.org/) - Analysis of large cohorts of cancer data including the Cancer Genome Atlas ([TCGA](https://cancergenome.nih.gov/)) ([Paper](https://doi.org/10.1126/scisignal.2004088))
+* [ICGC](https://dcc.icgc.org/) (International Cancer Genome Consortium) - ICGC - A data portal summarizing results from the International Cancer Genome Consortium. 
+* [GDC](https://portal.gdc.cancer.gov/) (Genomic Data Commons Data Portal) - A data portal allowing access to the harmonized analysis results for the TCGA
 * [COSMIC](https://cancer.sanger.ac.uk/cosmic (Catalog of Somatic Mutations in Cancer) - Comprehensive database of literature-reported cancer variants
 * [Cancer Gene Census](https://cancer.sanger.ac.uk/census#cl_overview) - Curated list of genes causally implicated in oncogenesis and their assocaited variants ([Paper](https://doi.org/10.1038/nrc1299))
-* [ProteinPaint](https://pecan.stjude.cloud/home) - Interactive visualizations of pediatric cancer mutations
-
-* CIViC - A resource for Clinical Interpreation of Variants in Cancer (WASHU). Based on expert curation of the literature.
-* OncoKB - Another resource for Clinical Interpretation of Variant in Cancer (MSKCC). Based on expert curation of the literature.
-* VICC knowledgebase aggregator - A search engine and normalization approach/database that pulls together knowledge from several resources including CIViC and OncoKB.
-* DGIdb - A drug gene interaction database. Can be used to identify inhibitors of activated genes.
-* CRAVAT - A resource for functional and oncogenic analysis of somatic variants.
-* CBioPortal - Analysis of large cohorts of cancer data including the Cancer Genome Atlas (TCGA).
-* ICGC - A data portal summarizing results from the International Cancer Genome Consortium
-* GDC - A data portal allowing access to the harmonized analysis results for the TCGA.
-* COSMIC - Probably the largest collection of observations of somatic mutations in tumors.
-* Cancer Gene Census - A curate list of cancer relevant genes.
-* ProteinPaint - A visualization interface for placing an observed amino acid change in the context of protein domains and mutation hotspots according to COSMIC, as well as ClinVar observations.
-
-
+* [ProteinPaint](https://pecan.stjude.cloud/home) - A visualization interface for placing an observed amino acid change in the context of protein domains and mutation hotspots according to COSMIC, as well as ClinVar observations.
