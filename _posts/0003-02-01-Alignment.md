@@ -148,6 +148,9 @@ Why that the BQSR commands below limit the modeling step to chr1-22. This is whe
 
 First, calculate the BQSR table.
 
+NOTE: For exome data, we should modify the below to use the `--intervals` (`-L`) option. "This excludes off-target sequences and sequences that may be poorly mapped, which have a higher error rate. Including them could lead to a skewed model and bad recalibration." https://software.broadinstitute.org/gatk/documentation/article.php?id=4133
+
+
 ```bash
 cd /workspace/align
 gatk --java-options '-Xmx60g' BaseRecalibrator -R /workspace/inputs/references/genome/ref_genome.fa -I /workspace/align/Exome_Norm_sorted_mrkdup.bam -O /workspace/align/Exome_Norm_sorted_mrkdup_bqsr.table --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.dbsnp138.vcf.gz --known-sites /workspace/inputs/references/gatk/Homo_sapiens_assembly38.known_indels.vcf.gz --known-sites /workspace/inputs/references/gatk/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --preserve-qscores-less-than 6 --disable-bam-index-caching $GATK_REGIONS
