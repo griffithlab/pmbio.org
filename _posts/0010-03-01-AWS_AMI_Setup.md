@@ -35,6 +35,9 @@ Instead of each student using their instances public IP address or public DNS, w
 - student1, A, 1h, 18.220.123.159
 - student1, CNAME, 1h, ec2-18-220-123-159.us-east-2.compute.amazonaws.com
 
+Example configuration in Google Domains dashboard for pmbio.org
+![DNS example setup to use a subdomain for each student instance](/assets/dns_example.png)
+
 ### Before doing anything, do a basic upgrade of packages to ensure latest security patches are applied
 ```bash
 # sudo apt-get update -y && sudo apt-get upgrade -y
