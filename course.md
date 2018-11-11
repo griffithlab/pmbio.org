@@ -1,7 +1,7 @@
 ---
 feature_text: |
-  ## Precision Mecicine
-  Tutorial series for precision medicine data analysis
+  ## Precision Medicine Bioinformatics
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 
 layout: categories
 excerpt: "Category index"
