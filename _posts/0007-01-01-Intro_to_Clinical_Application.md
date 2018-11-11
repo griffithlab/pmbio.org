@@ -16,5 +16,5 @@ date: 0007-01-01
 * Germline pathogenicity assessment (demonstrate concepts with some example variants using ClinGen Variant Curation Interface)
 * Biological function or oncogenicity (demonstrate concepts by uploading a filtered VCF into CRAVAT)
 * Somatic clinical actionability (demonstrate concepts with some example variants using CIViC)
-
-
+* Variant interpretation using (Exomiser)[https://www.sanger.ac.uk/science/tools/exomiser]
+* Literature mining tools such as (Mastermind)[https://mastermind.genomenon.com]
