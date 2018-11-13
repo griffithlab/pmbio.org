@@ -1,8 +1,8 @@
 ---
 title: Authors
 feature_text: |
-  ## Genomic Data Visualization and Interpretation
-  Tutorial series for visualizing and interpreting omic data
+  ## Precision Medicine Bioinformatics
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 excerpt: ""
 layout: "home"

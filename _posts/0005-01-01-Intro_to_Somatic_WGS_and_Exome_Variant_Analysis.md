@@ -1,6 +1,7 @@
 ---
 feature_text: |
-  ## Precision Medicine
+  ## Precision Medicine Bioinformatics
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 title: Intro to Somatic WGS and Exome Variant Analysis
 categories:
     - Module-05-Somatic

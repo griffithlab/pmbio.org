@@ -1,6 +1,7 @@
 ---
 feature_text: |
-  ## Precision Medicine
+  ## Precision Medicine Bioinformatics
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 title: Reference Free Expression Analysis with Kallisto
 categories:
     - Module-06-RNAseq
