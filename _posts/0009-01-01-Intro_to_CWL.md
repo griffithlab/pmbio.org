@@ -16,7 +16,7 @@ date: 0009-01-01
 * ...
 
 ### Lecture
-* [PMBIO_Module09_CWL.pdf](/assets/lectures/PMBIO_Module09_CWL.pdf)
+* [PMBIO_Module09_CWL.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module09_CWL.pdf)
 
 
 ### Background and Rationale for a Common Workflow Language

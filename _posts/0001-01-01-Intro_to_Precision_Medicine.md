@@ -31,6 +31,6 @@ Analysis of high throughput genome and transcriptome data is major component of 
 * Install bioinformatics tools that will be used for genomics analysis.
 
 ### Lectures
-* [PMBIO_Module00_Introductions.pdf](/assets/lectures/PMBIO_Module00_Introductions.pdf)
-* [PMBIO_Module01_Setup.pdf](/assets/lectures/PMBIO_Module01_Setup.pdf)
+* [PMBIO_Module00_Introductions.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module00_Introductions.pdf)
+* [PMBIO_Module01_Setup.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module01_Setup.pdf)
 

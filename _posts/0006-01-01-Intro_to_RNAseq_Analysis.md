@@ -24,5 +24,5 @@ date: 0006-01-01
 * Identify an example of allele specific expression
 
 ### Lecture
-* [PMBIO_Module06_RNAseq.pdf](/assets/lectures/PMBIO_Module06_RNAseq.pdf)
+* [PMBIO_Module06_RNAseq.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module06_RNAseq.pdf)
 

@@ -24,5 +24,5 @@ date: 0005-01-01
 * Manually review variants of each type to better understand how variant callers use read alignment data to identify variants
 
 ### Lecture
-* [PMBIO_Module05_Somatic.pdf](/assets/lectures/PMBIO_Module05_Somatic.pdf)
+* [PMBIO_Module05_Somatic.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module05_Somatic.pdf)
 

@@ -18,4 +18,4 @@ date: 0004-01-01
 * Compare single sample germline variant calling to cohort based calling
 
 ### Lecture
-* [PMBIO_Module04_Germline.pdf](/assets/lectures/PMBIO_Module04_Germline.pdf)
+* [PMBIO_Module04_Germline.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module04_Germline.pdf)

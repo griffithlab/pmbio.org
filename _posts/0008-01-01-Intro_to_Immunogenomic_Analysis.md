@@ -17,7 +17,7 @@ date: 0008-01-01
 * Become familiar with the pvactools software for neoantigen identification, prioritization, selection, and DNA vector design
 
 ### Lecture
-* [PMBIO_Module08_Immune.pdf](/assets/lectures/PMBIO_Module08_Immune.pdf)
+* [PMBIO_Module08_Immune.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module08_Immune.pdf)
 
 ### Introduction to Immunogenomics
 Nonsynonymous coding mutations alter the amino acid sequences of endogenous proteins. Proteins are naturally processed by the immunoproteasome, and the lysed peptides are loaded into the antigen presentation complexes on the surface of the cell. Sometimes, mutant peptides due to nonsynonmyous mutations have increased affinity to the antigen presentation complex, effectively eliciting a tumor-specific adaptive immune and T cell response. These peptides are called *neoantigens* and can be inferred for a patient's tumor by their genomic and somatic profiles. The interaction between neoantigens and tumor-specific T cells has led to the discovery of personalized therapeutics (e.g. personalized cancer vaccines) and mechanisms of immunotherapeutic response.

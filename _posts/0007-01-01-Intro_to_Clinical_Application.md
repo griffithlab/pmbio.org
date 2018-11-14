@@ -21,4 +21,5 @@ date: 0007-01-01
 * Literature mining tools such as (Mastermind)[https://mastermind.genomenon.com]
 
 ### Lecture
-* [PMBIO_Module07_Clinical.pdf](/assets/lectures/PMBIO_Module07_Clinical.pdf)
+* [PMBIO_Module07_Clinical.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module07_Clinical.pdf)
+

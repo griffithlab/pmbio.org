@@ -20,5 +20,5 @@ date: 0002-01-01
 * Perform a raw data quality assessment and discuss any data quality issues that are observed. What are their implications for interpretation of the results?
 
 ### Lecture
-* [PMBIO_Module02_Inputs.pdf](/assets/lectures/PMBIO_Module02_Inputs.pdf)
+* [PMBIO_Module02_Inputs.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module02_Inputs.pdf)
 

@@ -20,5 +20,5 @@ date: 0003-01-01
 * Perform a quality assessment using the aligned data
 
 ### Lecture
-* [PMBIO_Module03_Align.pdf](/assets/lectures/PMBIO_Module03_Align.pdf)
+* [PMBIO_Module03_Align.pdf](https://github.com/griffithlab/pmbio.org/raw/master/assets/lectures/PMBIO_Module03_Align.pdf)
 
