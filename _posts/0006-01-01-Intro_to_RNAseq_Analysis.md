@@ -10,7 +10,7 @@ date: 0006-01-01
 ---
 
 ### Key concepts
-* RNA-seq, library strategies, RNA splicing, genes and transcripts, transcription strand, gene/transcript abundance estimation, FPKM and TPM, differential expression (DE) analysis, normalization, batch effects. [Lecture File: PMBIO_Module06_RNAseq.pdf](/assets/lectures/PMBIO_Module06_RNAseq.pdf)
+* RNA-seq, library strategies, RNA splicing, genes and transcripts, transcription strand, gene/transcript abundance estimation, FPKM and TPM, differential expression (DE) analysis, normalization, batch effects.
 
 ### Learning objectives
 * Perform alignment of RNA-seq data and a basic QC analysis of the resulting alignments
@@ -22,4 +22,7 @@ date: 0006-01-01
 * Assess expression of specific gene markers of relevance (e.g. HER2, ER, PR)
 * Assess the expression of specific variants identified in previous sections.
 * Identify an example of allele specific expression
+
+### Lecture
+* [PMBIO_Module06_RNAseq.pdf](/assets/lectures/PMBIO_Module06_RNAseq.pdf)
 

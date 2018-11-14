@@ -15,6 +15,10 @@ date: 0009-01-01
 ### Learning objectives
 * ...
 
+### Lecture
+* [PMBIO_Module09_CWL.pdf](/assets/lectures/PMBIO_Module09_CWL.pdf)
+
+
 ### Background and Rationale for a Common Workflow Language
 
 Often in data analysis a collection of programmatic tools and resources are required to perform a specific task. This can take the form of bash scripts linking tools together, however bash scripts offer no standardization and often need to be tweaked from one project to the next. The Common Workflow Language (CWL) is a specification for designing portable and scalable workflows. It is open source and available on [github](https://github.com/common-workflow-language/common-workflow-language) under an Apache 2.0 license. Using CWL instead of bash offers a number of advantages, these include:

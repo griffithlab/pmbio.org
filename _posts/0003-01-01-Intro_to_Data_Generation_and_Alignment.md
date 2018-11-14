@@ -19,3 +19,6 @@ date: 0003-01-01
 * Learn to use a genome viewer
 * Perform a quality assessment using the aligned data
 
+### Lecture
+* [PMBIO_Module03_Align.pdf](/assets/lectures/PMBIO_Module03_Align.pdf)
+

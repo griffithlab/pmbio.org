@@ -21,12 +21,16 @@ Analysis of high throughput genome and transcriptome data is major component of 
 * While this course uses a hypothetical cancer precision medicine case for demonstration purposes, the concepts covered here should be generally applicable to other human diseases as well as other organisms and experimental systems. Similarly, while we focus on Whole Genome, Exome and RNA-seq data, many of the concepts covered here will be informative for analyses involving other assay types (particularly those that involve sequencing on the Illumina platform).
 
 ### Key concepts
-* Introduction to the intructors, course overview, precision medicine. [Lecture File: PMBIO_Module00_Introductions.pdf](/assets/lectures/PMBIO_Module00_Introductions.pdf) 
-* Cloud computing, UNIX/Linux OS, bioinformatics tool installation, course website review. [Lecture File: PMBIO_Module01_Setup.pdf](/assets/lectures/PMBIO_Module01_Setup.pdf)
+* Introduction to the intructors, course overview, precision medicine. 
+* Cloud computing, UNIX/Linux OS, bioinformatics tool installation, course website review.
 
 ### Learning objectives
-
 * Navigation of the course website and other online learning resources.
 * Start a cloud compute instance and log into it.
 * Become familiar with basic Linux terminal commands (the "command line").
 * Install bioinformatics tools that will be used for genomics analysis.
+
+### Lectures
+* [PMBIO_Module00_Introductions.pdf](/assets/lectures/PMBIO_Module00_Introductions.pdf)
+* [PMBIO_Module01_Setup.pdf](/assets/lectures/PMBIO_Module01_Setup.pdf)
+
