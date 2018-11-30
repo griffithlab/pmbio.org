@@ -289,6 +289,9 @@ You should see various summary tables and graphics such as the following breakdo
 * How many variants were processed by VEP?
 * What is the most common kind of variant and variant consequence?
 
+### Next steps
+
+Note: We will continue exploring the annotated germline variants created above in a later section on [germline variant interpretation](/module-07-clinical/0007/02/01/Germline_Variant_Interpretation/), specifically in a clinical context.
 
 ### Acknowledgements and citations
 
