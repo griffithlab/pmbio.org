@@ -291,7 +291,7 @@ You should see various summary tables and graphics such as the following breakdo
 
 ### Next steps
 
-Note: We will continue exploring the annotated germline variants created above in a later section on [germline variant interpretation](/module-07-clinical/0007/02/01/Germline_Variant_Interpretation/), specifically in a clinical context. But, for now lets proceed to somatic variant calling.
+Note: We will continue exploring the annotated germline variants created above in a later section on [germline variant interpretation](/module-07-clinical/0007/02/01/Germline_Variant_Interpretation/), specifically in a clinical context. But, for now let's proceed to somatic variant calling.
 
 ### Acknowledgements and citations
 
