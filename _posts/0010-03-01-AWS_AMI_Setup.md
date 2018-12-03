@@ -9,7 +9,7 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-03-01
 ---
 
-This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necesary bioinformatics files.
+This module is primarily for the course developers to document how the AWS AMI was developed for the course. Students will start from an AMI where some system setup will be done already, but students will still learn to install all necessary bioinformatics files.
 
 ***
 
@@ -20,15 +20,16 @@ The AMI has already been built using the following intructions and is available 
 
 ### Initial AWS setup for development and testing purposes
 
-For development purposes we started with a very large instance (overkill). Future experimentation is needed to determine the appropriate size for actual student instances.
+For development purposes we started with a very large instance (overkill). Future experimentation is needed to determine the appropriate size for actual student instances. To setup an EC2 instance:
 
-- Launch an EC2 instance:
 - Select Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
 - Choose r5.2xlarge (8 vCPUs, 64 GiB Memory, up to 10 Gigabit Network Performance)
 - Increase root storage to 500GB
 - Add storage: 2,000 GiB (~2TB) EBS volume, not encrypted
 - Configure security: Allow SSH and HTTP access
-- Login with key the usual way (e.g., ssh -i pmbio.pem ubuntu@18.217.114.211)
+- Download PEM file when prompted and set appropriate rights (_e.g._ chmod 400) 
+- Launch instance
+- Login with key the usual way (_e.g._ ssh -i pmbio.pem ubuntu@18.217.114.211) 
 
 ### Note on creating DNS records for students to use
 Instead of each student using their instances public IP address or public DNS, we can create pmbio.org sub-domains for them to use that point to the AWS instance (e.g. `student1.pmbio.org`). If we want to shut down instances during the course and spin them up later, since the IP address will change we could update the DNS record and the student could continue to use the same DNS name to log in. This can be done in the Google Domains dashboard for pmbio.org in two ways:
@@ -43,6 +44,7 @@ Example configuration in Google Domains dashboard for pmbio.org
 ```bash
 # sudo apt-get update -y && sudo apt-get upgrade -y
 # Note that this can lead to a grub update and possibly some confusion about the boot device. Avoid this for now...
+# Have not found a good solution that avoids the grub config dialog window- JS 12/3/18
 
 ```
 
@@ -59,21 +61,18 @@ lsblk
 cd /
 mkdir workspace
 
-# format the mount
+# format the mount (WARNING- assumes empty volume. Will reformat any existing file structure or data.) 
 mkfs -t ext4 /dev/xvdb
 
 # mount the drive with the allocated space
 mount /dev/xvdb /workspace
 chown -R ubuntu:ubuntu /workspace
 
-# Make storage mounts persistent using a simple approach
-#echo -e "LABEL=cloudimg-rootfs / ext4 defaults,discard 0 0\n/dev/xvdb /workspace ext4 defaults,nofail 0 2" | tee /etc/fstab
-
-#Note that setting up a volume like that can occasionaly result in an unbootable state. Using the following device volume is safer
+# make storage mounts persistent 
 sudo file -s /dev/xvdb
 sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /workspace ext4 defaults,nofail 0 2\n"}'
 
-#Add a line like the following to fstab using vim editor. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
+# add the resulting line to mounting configuration file fstab. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
 #sudo vim /etc/fstab
 #UUID=UUID-goes-here       /data   ext4    defaults,nofail        0       2
 
@@ -87,17 +86,17 @@ exit
 ```
 
 ### Software Dependencies
-Many of the tools used also have underlying dependencies, in many linux distributions these packages will already be installed and available. In this AMI setup however we start from a very basic Ubuntu distrubtion and we will have to install these dependencies. Ubuntu is based on the Debian operating system and so we can use the Debian based package manager `apt-get` for installation. Below the stand-alone dependencies required for each bioinformatic tool used in the course are supplied. In this we will use the normal linux convention where our own compiled binaries and executables are installed in `/usr/local/bin`.
+Many of the software tools used have underlying dependencies, and linux distributions can have these packages already installed and available. In this AMI setup however we start from a very basic Ubuntu distribution, and we will have to install some dependencies. Ubuntu is based on the Debian operating system, and we can use the Debian based package manager `apt-get` for installation. Below, installation of the stand-alone dependencies required for each bioinformatic tool used in the course is described. 
 
 #### Pre-Installation
-Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed. Also a few general use tools are listed as well.
+Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed. A few general use tools are also listed.
 ```bash
 # start sudo shell
 sudo bash
 
 # general tools for installation and use
 cd /usr/local/bin
-apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io build-dep imagemagick checkinstall inkscape librsvg2
+apt-get update -y && apt-get install -y wget bzip2 unzip git curl tree docker docker.io && apt-get build-dep imagemagick checkinstall inkscape librsvg2-2
 
 # allow the ubuntu user to use docker
 usermod -a -G docker ubuntu
@@ -112,7 +111,11 @@ source ~/.bashrc
 #BYOBU_PYTHON=/usr/bin/python3
 
 # the imagemagick page has a bug in its convert functionality that requires an edit to its config
-# edit the PDF section in the config file `sudo vim /etc/ImageMagick-6/policy.xml` and change the PDF rights from `none` to `read|write`
+# edit the PDF section in the config file, /etc/ImageMagick-6/policy.xml, and change the PDF rights from
+<policy domain="coder" rights="none" pattern="PDF" />
+to
+<policy domain="coder" rights="read|write" pattern="PDF" />
+
 
 # exit sudo shell
 exit
@@ -137,7 +140,7 @@ apt-get update -y && apt-get install -y \
   liblzma-dev \
   openjdk-8-jdk
 
-# Install R
+# install R
 wget https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
 tar -zxvf R-3.5.1.tar.gz
 cd R-3.5.1
@@ -148,11 +151,12 @@ make install
 # test R installation
 /usr/local/bin/Rscript
 
-# devtools and BiocManager dependencies
+# install devtools and BiocManager dependencies
 apt-get update -y && apt-get install -y \
   libssl-dev \
   libxml2-dev
 
+# install devtools and BiocManager
 R --vanilla -e 'install.packages(c("devtools", "BiocManager"), repos="http://cran.us.r-project.org")'
 
 # change write permissions so students can install additional packages
