@@ -85,7 +85,7 @@ exit
 
 ```
 
-### Software Tool and Dependency Installation
+### Installation of Software Tools and Their Dependencies
 The software tools used in this course have underlying dependencies. Many of these are not included in the basic Ubuntu distribution, and we will have to install them. Ubuntu is based on the Debian operating system, and we can use the Debian based package manager `apt-get` for installation. Below, installation of bioinformatics tools and their stand-alone dependencies is described. Note that because each tool installation is described independently, there is some redundancy in commands for dependency installation.
 
 #### Pre-Installation
@@ -321,8 +321,8 @@ perl INSTALL.pl --CACHEDIR /opt/vep_cache
 # NOTE at this step, follow instructions above for install prompts
 
 # make symlinks to vep and filter_vep in /usr/local/bin/
-ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
-ln -s /usr/local/bin/ensembl-vep-release-93.5/filter_vep /usr/local/bin/filter_vep
+ln -s /usr/local/bin/ensembl-vep-release-94/vep /usr/local/bin/vep
+ln -s /usr/local/bin/ensembl-vep-release-94/filter_vep /usr/local/bin/filter_vep
 
 # Install required data for plugins
 mkdir -p /opt/vep_cache/data
@@ -331,6 +331,7 @@ wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genot
 wget -c ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad.exomes.r2.0.1.sites.GRCh38.noVEP.vcf.gz.tbi
 
 # Install the WildType plugin
+mkdir -p /opt/vep_cache/Plugins
 cd /opt/vep_cache/Plugins
 wget Wildtype.pm https://raw.githubusercontent.com/griffithlab/pVAC-Seq/master/pvacseq/VEP_plugins/Wildtype.pm --no-check-certificate
 
