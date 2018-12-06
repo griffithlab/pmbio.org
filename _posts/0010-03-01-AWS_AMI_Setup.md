@@ -72,7 +72,7 @@ chown -R ubuntu:ubuntu /workspace
 sudo file -s /dev/xvdb
 sudo file -s /dev/xvdb | perl -ne 'chomp; if ($_ =~ /UUID\=(\S+)/){print "\nUUID=$1 /workspace ext4 defaults,nofail 0 2\n"}'
 
-# add the resulting line to mounting configuration file fstab. Add the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
+# add the resulting line to mounting configuration file, fstab. Include the UUID you identified above (looks like: 6f18f18a-b1d7-4c7a-8a2a-05bb3ca97a3a)
 #sudo vim /etc/fstab
 #UUID=UUID-goes-here       /data   ext4    defaults,nofail        0       2
 
@@ -85,8 +85,8 @@ exit
 
 ```
 
-### Software Dependencies
-Many of the software tools used have underlying dependencies, and linux distributions can have these packages already installed and available. In this AMI setup however we start from a very basic Ubuntu distribution, and we will have to install some dependencies. Ubuntu is based on the Debian operating system, and we can use the Debian based package manager `apt-get` for installation. Below, installation of the stand-alone dependencies required for each bioinformatic tool used in the course is described. 
+### Software Tool and Dependency Installation
+The software tools used in this course have underlying dependencies. Many of these are not included in the basic Ubuntu distribution, and we will have to install them. Ubuntu is based on the Debian operating system, and we can use the Debian based package manager `apt-get` for installation. Below, installation of bioinformatics tools and their stand-alone dependencies is described. Note that because each tool installation is described independently, there is some redundancy in commands for dependency installation.
 
 #### Pre-Installation
 Describes the general system wide dependencies required for downloading and decompressing source and binary files related to the tools to be installed. A few general use tools are also listed.
@@ -252,7 +252,7 @@ exit
 ```
 
 #### GATK 4.0.2.1
-Describes dependencies and installation for GATK 4.0.2.1, used in this course for .....
+Describes dependencies and installation for GATK 4.0.2.1, used in this course for variant discovery.
 ```bash
 # start sudo shell
 sudo bash
@@ -288,11 +288,9 @@ exit
 #### VEP 93.4
 Describes dependencies for VEP 93.4, used in this course for variant annotation. When running the VEP installer follow the prompts specified:
 
-1. Do you wish to exit so you can get updates (y) or continue (n): n [ENTER]
-2. Do you want to continue installing the API (y/n)? y [ENTER]
-3. Do you want to install any cache files (y/n)? y [ENTER] (select number for homo_sapiens_vep_93_GRCh38.tar.gz) [ENTER]
-4. Do you want to install any FASTA files (y/n)? y [ENTER] (select number for homo_sapiens) [ENTER]
-5. Do you want to install any plugins (y/n)? n [ENTER]
+1. Do you want to install any cache files (y/n)? y [ENTER] (select number for homo_sapiens_vep_93_GRCh38.tar.gz) [ENTER]
+2. Do you want to install any FASTA files (y/n)? y [ENTER] (select number for homo_sapiens) [ENTER]
+3. Do you want to install any plugins (y/n)? n [ENTER]
 
 - Note: VEP natively supports gnomad allele frequencies but it is unclear if this works for all variants or only for dbSNP subset of variants.
 See: http://useast.ensembl.org/info/docs/tools/vep/script/vep_other.html#assembly
@@ -313,28 +311,14 @@ apt-get update -y && apt-get install -y \
   libmodule-build-perl \
   cpanminus
 
-cpanm -i Bio::Root::Version #note this seems to install a ton of .pl scripts in the current dir (/usr/local/bin) which is annoying. Do we really need this? Can it be installed in a tidier version. Doesn't this install it for system Perl anyway instead of the custom Perl below?
-
-# Installing perl version 5.22.0
-# NOTE if we upgrade to the latest version of VEP this may no longer be needed
-wget https://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
-tar -xzvf perl-5.22.0.tar.gz
-cd perl-5.22.0
-./Configure -des -Dprefix=$HOME/localperl
-make
-make test
-make install
-
-# install DBI dependency
-/usr/local/bin/perl-5.22.0/perl -MCPAN -e 'install DBI'
-
 # install vep with the various plugins
 cd /usr/local/bin
 mkdir -p /opt/vep_cache
-wget https://github.com/Ensembl/ensembl-vep/archive/release/93.5.zip
-unzip 93.5.zip
-cd ensembl-vep-release-93.5/
-/usr/local/bin/perl-5.22.0/perl INSTALL.pl --CACHEDIR /opt/vep_cache # install cache, hg38:vep(186)
+wget https://github.com/Ensembl/ensembl-vep/archive/release/94.zip
+unzip 94.zip
+cd ensembl-vep-release-94/
+perl INSTALL.pl --CACHEDIR /opt/vep_cache
+# NOTE at this step, follow instructions above for install prompts
 
 # make symlinks to vep and filter_vep in /usr/local/bin/
 ln -s /usr/local/bin/ensembl-vep-release-93.5/vep /usr/local/bin/vep
