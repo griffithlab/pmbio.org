@@ -202,4 +202,11 @@ rmdir final/
 
 ```
 
-See docs here: https://github.com/genome/cancer-genomics-workflow/wiki/Alignment
+### Exercise
+
+Use samtools and [SAM Flags](https://broadinstitute.github.io/picard/explain-flags.html) to extract and count the number of reads that are: aligned, primary, not duplicate, and properly paired. 
+
+
+### Acknowledgements
+
+* Parts of the section were inspired by examples [here](https://github.com/genome/cancer-genomics-workflow/wiki/Alignment).
