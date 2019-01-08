@@ -523,7 +523,7 @@ Describes dependencies and installation for CNVnator, used in this course for ex
 # start sudo shell
 sudo bash
 
-# Install CNVnator dependency root
+# install CNVnator dependency root
 cd /usr/local/bin
 apt-get update -y && apt-get install -y \
   build-essential \
@@ -531,15 +531,16 @@ apt-get update -y && apt-get install -y \
   zlib1g-dev \
   libbz2-dev \
   liblzma-dev \
-  build-essential \
   libxpm4
 wget https://root.cern.ch/download/root_v6.14.04.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
 tar -xzvf root_v6.14.04.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+
+# set required variables
 export ROOTSYS=/usr/local/bin/root
 export PATH=$ROOTSYS/bin:$PATH
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 
-# Install CNVnator dependency yeppp
+# install CNVnator dependency yeppp
 wget http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2
 tar -xvjf yeppp-1.0.0.tar.bz2
 export YEPPPLIBDIR=/usr/local/bin/yeppp-1.0.0/binaries/linux/x86_64
@@ -565,7 +566,7 @@ exit
 ```
 
 #### cnvkit
-Describes dependencies and installation for cnvkit, used in this course for ...
+Describes dependencies and installation for cnvkit, used in this course for calling copy number variants from hybrid capture data such as exomes. 
 ```bash
 # start sudo shell
 sudo bash
@@ -1029,7 +1030,7 @@ exit
 
 ```
 
-#### svviz2 - NOTE I WAS UNABLE TO GET THIS INSTALLATION TO WORK - SOME KIND OF DEPENDENCY HELL WITH PYSAM - try again later
+#### svviz2 
 Installation of svviz2, used in the course to visualize structural variation
 ```bash
 # start sudo shell
@@ -1038,7 +1039,7 @@ sudo bash
 #install the tool
 pip install rpy2
 pip install -U git+git://github.com/nspies/svviz2.git
-pip install --upgrade --force-reinstall genomeview
+pip install -U git+https://github.com/nspies/genomeview.git
 
 # test installation
 svviz2
