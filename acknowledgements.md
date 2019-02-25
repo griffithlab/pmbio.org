@@ -2,7 +2,7 @@
 title: Acknowledgments
 feature_text: |
   ## Precision Medicine Bioinformatics
-  Introduction to bioinformatics for DNA and RNA sequence analysis 
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 excerpt: ""
 layout: "home"
@@ -18,7 +18,8 @@ This work would not be possible without building upon what others have contribut
 
 Creation of the section on Amazon AWS EC2 and the cost of student instances was generously supported by [Amazon AWS Education grants](http://aws.amazon.com/grants/).
 
+This research benefited from the use of credits from the National Institutes of Health (NIH) Cloud Credits Model Pilot, a component of the NIH Big Data to Knowledge (BD2K) program.
+
 In addition to the main [Authors](/authors) of this workshop (Obi Griffith, Malachi Griffith, Zachary Skidmore, Huiming Xia, Jeff Szymanski, Sharon Freshour, Erica Barnell, and Katie Campbell), we would also like to thank the following researchers who contributed to lecture or exercise materials that inspired some aspects of this workshop: Aaron Quinlan, Elaine Mardis, Andrew Farrell, Maryn Meltz Steinberg, Sorana Morrissy, Jim Robinson, Ben Ainscough,Cody Ramirez, Jason Walker, Jasreet Hundal, and many more.
 
 Finally, we would like to thank the students who participated and contributed in many ways to development of these materials.
-
