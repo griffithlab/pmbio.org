@@ -1,3 +1,5 @@
+https://zenodo.org/badge/DOI/10.5281/zenodo.2583272.svg
+
 ## Overview
 
 This is the github repo for the Precision Medicine Workshop [website](http://pmbio.org). The website uses the static site generator [jekyll](https://jekyllrb.com/) and is based on the [Alembic theme](https://github.com/daviddarnes/alembic). Development occurs on the dev branch, the live site is located on the master branch.
