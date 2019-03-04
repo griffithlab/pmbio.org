@@ -1,4 +1,5 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2583272.svg)](https://doi.org/10.5281/zenodo.2583272)
+<a href="https://doi.org/10.5281/zenodo.2583272"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.2583272.svg" alt="DOI"></a>
+
 
 ## Overview
 
