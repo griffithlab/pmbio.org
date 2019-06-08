@@ -18,10 +18,4 @@ Students will start with raw sequence data for a hypothetical patient case, lear
 
 This website provides a current version of all course materials (including copies of presentations, practical exercises, data files, and example scripts prepared by the instructing team). This website is meant to accompany an in-person workshop delivered by the researchers who created it. However, anyone is free to use this site to learn these concepts on their own. Please navigate to [Course](http://pmbio.org/course/) to begin.
 
-These materials have been developed with the support of [PR Informatics](https://www.prinformatics.com/). The first in-person workshop was held in Glasgow, Scotland, UK, 29. Oct - 2 Nov. 2018 ([course page](https://www.prinformatics.com/course/introduction-to-bioinformatics-for-dna-and-rna-sequence-analysis-ibdr01/)). For future offerings by PR Informatics (including this workshop) please visit the [upcoming courses page](https://www.prinformatics.com/courses/).
-
-{% include figure.html image="/assets/prinfo-logo.png" position="left" width="225" %}
-
-PR Informatics provides training courses and workshops in bioinformatics and associated fields. Each course we deliver comprises of a carefully thought out combination of lectures, group discussions and hands on practicals. We believe it is this combination of teaching mediums that underpins the success of our courses and workshops.
-
 **We are constantly improving the course material, if you notice a problem or have a suggestion for improvement please let us know by making a github issue at:** [https://github.com/griffithlab/pmbio.org/issues](https://github.com/griffithlab/pmbio.org/issues)
