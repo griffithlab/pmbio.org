@@ -20,3 +20,7 @@ wget /data/path
 
 
 ```
+
+```bash
+this is a test of this markdown
+```
