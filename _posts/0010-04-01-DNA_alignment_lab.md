@@ -9,3 +9,14 @@ feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-04-01
 ---
 
+
+
+### Obtain fastq data
+
+We will be downloading some data
+
+```bash
+wget /data/path
+
+
+```
