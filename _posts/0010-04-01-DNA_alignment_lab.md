@@ -1,6 +1,7 @@
 ---
 feature_text: |
   ## Precision Medicine Bioinformatics Introduction to bioinformatics for DNA and RNA sequence analysis
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 title: DNA alignment lab
 categories:
     - Module-10-Appendix
