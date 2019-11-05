@@ -11,8 +11,8 @@ date: 0010-04-01
 First you want to create a directory in your workspace for all your results of this exercise  (e.g. alignment_exercise).  Within that directory make three subdirectories: 
 
 - /workspace/username/align_lab/alignment_results
-- /workspace/username/align_lab/fastq_files 
-- /workspace/username/align_lab/reference_sequences 
+- /workspace/username/align_lab/fastq_files
+- /workspace/username/align_lab/reference_sequences
 
 ### Obtain sequence data for alignment (fastq files) 
 ```bash
