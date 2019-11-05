@@ -11,8 +11,8 @@ date: 0010-04-01
 First you want to create a directory in your workspace for all your results of this exercise  (e.g. alignment_exercise).  Within that directory make three subdirectories: 
 
 - /workspace/username/align_lab/alignment_results
-- /workspace/username/align_lab/fastq_files 
--/workspace/username/align_lab/reference_sequences 
+- /workspace/username/align_lab/fastq_files
+- /workspace/username/align_lab/reference_sequences
 
 ### Obtain sequence data for alignment (fastq files) 
 ```bash
@@ -29,7 +29,7 @@ cd /workspace/username/align_lab/reference_sequences
 
 wget -r -l1 -np -nd -A dict,fa,fai http://genomedata.org/seq-tec-workshop/references/human/chr21
 ````
-Now that we have our data we need to create the files necessary to create an alignment 
+Now that we have our data, we need to create the files necessary to create an alignment.  
 The first thing we need to do is index our reference sequence. Indexing your reference sequence allows the alignment program to narrow down the potential origin of a query sequence within the genome, saving both time and memory.
 
 ### Index reference file with bwa 
@@ -46,8 +46,8 @@ cd /workspace/username/align_lab/alignment_results
 
 bwa mem -t 8 -o /workspace/username/align_lab/alignment_results/2891351068.sam /workspace/username/align_lab/reference_sequences/chr21_references.fa /workspace/username/align_lab/fastq_files/2891351068_1.fastq.gz /workspace/username/align_lab/fastq_files/2891351068_2.fastq.gz
 ````
-We've got an alignment, but we have several post processing steps to complete. 
-The first step is to convert your large .sam file, to compressed binary.bam file
+We've got an alignment!  But we have several post processing steps to complete. 
+The first step is to convert your large .sam file  to compressed .bam file
 
 ### Convert sam to bam format
 ```bash
