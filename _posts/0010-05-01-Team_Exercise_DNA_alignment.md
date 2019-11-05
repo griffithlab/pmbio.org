@@ -53,7 +53,7 @@ In order to perform alignment, teams will also need to identify the correct refe
 
 ```bash
 cd ~/workspace/dna_alignment_exercise
-mkdir references human mouse
+mkdir references references/human references/mouse
 
 # Human reference files
 cd ~/workspace/dna_alignment_exercise/references/human
