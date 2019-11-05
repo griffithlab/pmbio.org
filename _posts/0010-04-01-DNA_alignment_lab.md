@@ -29,8 +29,8 @@ cd /workspace/username/align_lab/reference_sequences
 
 wget -r -l1 -np -nd -A dict,fa,fai http://genomedata.org/seq-tec-workshop/references/human/chr21
 ````
-Now that we have our data, we need to create the files necessary to create an alignment.  
-The first thing we need to do is index our reference sequence. Indexing your reference sequence allows the alignment program to narrow down the potential origin of a query sequence within the genome, saving both time and memory.
+Now that we have our data, we need to create the files necessary for to run an alignment.   
+The first thing we need to do is index our reference sequence. Indexing your reference sequence allows the aligner to narrow down the potential origin of the query sequence within the genome, saving both time and memory.
 
 ### Index reference file with bwa 
 ````bash
@@ -68,7 +68,7 @@ Next we need to mark the duplicate reads within our data. Duplicate reads are ty
 cd /workspace/username/align_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar MarkDuplicates I=2891351068_namesorted_picard.bam  O=2891351068_namesorted_picard_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=2891351068_mrk_dup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
-## This  command will also print out a txt file that gives you some metrics about the number of duplicates identified 
+## This command will also print out a txt file that gives you some metrics about the number of duplicates identified 
 ````
 Next we need to position sort the bam file. For indexing and other possible subsequent steps a position-sorted bam is required. 
 
@@ -77,12 +77,12 @@ cd /workspace/username/align_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=2891351068_namesorted_picard_mrkdup.bam O=2891351068_pos_sorted_mrkdup_picard.bam SO=coordinate
 ````
-In order to efficiently load and search a bam file, downstream applications typically require an index.  This is very similar to the index you created of your reference file
+In order to efficiently load and search a bam file, downstream applications typically require an index. This is very similar to the index you created of your reference file
 
-###index bam file 
+### Index bam file 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=2891351068_pos_sorted_mrkdup_picard.bam
 
-View your alignment!!! 
+View your alignment
 Go to IGV - we will provide instructions for this.  This is the URL you will use to view your bam
 ````bash
 http://34.239.1.158/workspace/username/align_lab/alignment_results/2891351068_pos_sorted_mrkdup_picard.bam
