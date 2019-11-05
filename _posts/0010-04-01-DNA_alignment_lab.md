@@ -8,7 +8,7 @@ categories:
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
 date: 0010-04-01
 ---
-First you want to create a directory in your workspace for all your results of this exercise  (e.g. alignment_exercise).  Within that directory make three subdirectories: 
+First you want to create a directory in your workspace for all your results (e.g. alignment_exercise).  Within that directory make three subdirectories: 
 
 - /workspace/username/align_lab/alignment_results
 - /workspace/username/align_lab/fastq_files
@@ -34,7 +34,7 @@ The first thing we need to do is index our reference sequence. Indexing your ref
 
 ### Index reference file with bwa 
 ````bash
-cd cd /workspace/username/align_lab/reference_sequences 
+cd /workspace/username/align_lab/reference_sequences 
 
 bwa index chr21_references.fa
 ````
@@ -63,7 +63,7 @@ cd /workspace/username/align_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=2891351068.bam O=2891351068_namesorted_picard.bam SO=queryname
 ````
-Next we need to mark the duplicate reads within our data. Duplicate reads are typically defined as reads with identical start and stop alignment positions. These reads are likely to be exact copies of a single DNA molecule. These reads introduce bias in your variant calling. If you did not mark duplicates, you risk over-representing areas that preferentially amplified during PCR. 
+Next we need to mark the duplicate reads within our data. Duplicate reads are typically defined as reads with identical start and stop alignment positions. These reads are likely to be exact copies of a single DNA molecule. These reads introduce bias in your variant calling. If you did not mark duplicates, you risk over-representing areas that are preferentially amplified during PCR. 
 ```bash
 cd /workspace/username/align_lab/alignment_results
 
@@ -85,8 +85,8 @@ cd /workspace/username/align_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=2891351068_pos_sorted_mrkdup_picard.bam
 ````
-View your alignment
-Go to IGV - we will provide instructions for this.  This is the URL you will use to view your bam
+View your alignment - go to IGV  
+We will provide instructions for this.  This is the URL you will use to view your bam
 ````bash
 http://34.239.1.158/workspace/username/align_lab/alignment_results/2891351068_pos_sorted_mrkdup_picard.bam
 ````
