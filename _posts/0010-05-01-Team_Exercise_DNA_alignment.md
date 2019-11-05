@@ -2,11 +2,11 @@
 feature_text: |
   ## Precision Medicine Bioinformatics
   Introduction to bioinformatics for DNA and RNA sequence analysis
-title: Team Exercise: DNA Alignment & IGV
+title: Team Exercise DNA alignment
 categories:
     - Module-10-Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0010-04-01
+date: 0010-05-01
 ---
 
 The goal of this DNA alignment lab is to familiarize students with the steps of DNA alignment as well as visualizing their data in IGV.
