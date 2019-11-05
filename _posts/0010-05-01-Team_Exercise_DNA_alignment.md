@@ -2,7 +2,7 @@
 feature_text: |
   ## Precision Medicine Bioinformatics
   Introduction to bioinformatics for DNA and RNA sequence analysis
-title: DNA alignment lab
+title: Team Exercise: DNA Alignment & IGV
 categories:
     - Module-10-Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
@@ -80,6 +80,6 @@ Note: These datasets have been subsetted for optimized runtimes. Human data subs
 
 When teams are confident with the result they have found, please send the instructors/TAs the ip address of the instance where the aligned bam and index files are located.
 
-At the end of this exercise, teams will reveal their answer and present the pieces of supporting evidence (e.g. IGV) to the class. 
+At the end of this exercise, teams will reveal their answer and present the pieces of supporting evidence (e.g. IGV) to the class.
 
 ###
