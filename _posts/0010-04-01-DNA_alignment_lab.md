@@ -22,14 +22,14 @@ cd /workspace/username/align_lab/fastq_files
 wget  http://genomedata.org/seq-tec-workshop/read_data/dna_alignment_exercise/dataset_lab/2891351068_1.fastq.gz
 wget  http://genomedata.org/seq-tec-workshop/read_data/dna_alignment_exercise/dataset_lab/2891351068_2.fastq.gz
 ````
-### Obtain a reference for seq data
+### Obtain a reference sequence
 ````bash 
 #download ref data 
 cd /workspace/username/align_lab/reference_sequences 
 
 wget -r -l1 -np -nd -A dict,fa,fai http://genomedata.org/seq-tec-workshop/references/human/chr21
 ````
-Now that we have our data, we need to create the files necessary for to run an alignment.   
+Now that we have our data, we need to create the files necessary to run an alignment.   
 The first thing we need to do is index our reference sequence. Indexing your reference sequence allows the aligner to narrow down the potential origin of the query sequence within the genome, saving both time and memory.
 
 ### Index reference file with bwa 
@@ -80,8 +80,11 @@ java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=2891351068_namesorted_pi
 In order to efficiently load and search a bam file, downstream applications typically require an index. This is very similar to the index you created of your reference file
 
 ### Index bam file 
-java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=2891351068_pos_sorted_mrkdup_picard.bam
+````bash
+cd /workspace/username/align_lab/alignment_results
 
+java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=2891351068_pos_sorted_mrkdup_picard.bam
+````
 View your alignment
 Go to IGV - we will provide instructions for this.  This is the URL you will use to view your bam
 ````bash
