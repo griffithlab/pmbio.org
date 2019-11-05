@@ -1,7 +1,7 @@
 ---
 feature_text: |
-  ## Cold Spring Harbor Advanced Sequencing Technologies and Applications
-  Introduction to bioinformatics
+  ## Precision Medicine Bioinformatics
+  Introduction to bioinformatics for DNA and RNA sequence analysis
 title: DNA alignment lab
 categories:
     - Module-10-Appendix
