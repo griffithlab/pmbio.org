@@ -2,7 +2,7 @@
 feature_text: |
   ## Precision Medicine Bioinformatics
   Introduction to bioinformatics for DNA and RNA sequence analysis
-title: Team Exercise: DNA Alignment & IGV
+title: Team Exercise DNA alignment
 categories:
     - Module-10-Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
