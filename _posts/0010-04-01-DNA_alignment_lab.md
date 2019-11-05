@@ -70,7 +70,7 @@ cd /workspace/username/align_lab/alignment_results
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar MarkDuplicates I=2891351068_namesorted_picard.bam  O=2891351068_namesorted_picard_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=2891351068_mrk_dup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 ## This command will also print out a txt file that gives you some metrics about the number of duplicates identified 
 ````
-Next we need to position sort the bam file. For indexing and other possible subsequent steps a position-sorted bam is required. 
+Next we need to position sort the bam file. Indexing requires a position-sorted bam is required. 
 
 ```bash
 cd /workspace/username/align_lab/alignment_results
