@@ -86,8 +86,24 @@ cd /workspace/dna_alignment_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=2891351068_pos_sorted_mrkdup_picard.bam
 ```
+
+### Clean up un-needed sam/bam files
+
+Keep final sorted, duplicated marked, bam/bai files and mrkdup.txt files. Delete everything else.
+
+```bash
+cd /workspace/dna_alignment_lab/alignment_results
+
+mkdir final
+mv 2891351068_pos_sorted_mrkdup_picard.* final/
+mv *.txt final/
+
+rm *.sam
+rm *.bam
+```
+
 View your alignment - go to IGV  
 We will provide instructions for this. This is the URL you will use to view your bam
 ```bash
-http://student.i.p.address/workspace/dna_alignment_lab/alignment_results/2891351068_pos_sorted_mrkdup_picard.bam
+http://student.i.p.address/workspace/dna_alignment_lab/alignment_results/final/2891351068_pos_sorted_mrkdup_picard.bam
 ```
