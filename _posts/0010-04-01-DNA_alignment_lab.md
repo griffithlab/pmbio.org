@@ -21,11 +21,8 @@ First, let's create a directory in your workspace for all your results (e.g. dna
 
 ```bash
 cd /workspace
-
 mkdir dna_alignment_lab
-
 cd dna_alignment_lab
-
 mkdir alignment_results
 mkdir fastq_files
 mkdir reference_sequences
@@ -33,9 +30,9 @@ mkdir reference_sequences
 
 ### Obtain sequence data for alignment (fastq files) 
 
-We have provided a sample dataset for this exercise. This data represents paired (2x100bp) raw DNA sequence data in fastq format. DNA was isolated from a breast cancer cell line (HCC1395). We have provided sequence reads that have been limited to chromosome 21. 
+We have provided a sample dataset for this exercise. This data represents paired (2 x 100bp) DNA exome sequence data in fastq format. DNA was isolated from a breast cancer cell line (HCC1395). We have provided sequence reads that have been limited to chromosome 21. 
 
-{% include question.html question="How could raw sequence data be limited to chr21?" answer='We previously aligned the complete dataset, extracted only chr21 alignments, then reverted back to the raw (unaligned) reads' %}
+{% include question.html question="How could raw sequence data be limited to chr21?" answer='We previously aligned the complete dataset, extracted only chr21 alignments, then reverted back to the raw (unaligned) reads.' %}
 
 ```bash
 #download seq data 
