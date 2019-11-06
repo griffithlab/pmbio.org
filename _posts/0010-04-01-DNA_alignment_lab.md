@@ -87,6 +87,13 @@ cd /workspace/dna_alignment_lab/alignment_results
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=2891351068_pos_sorted_mrkdup_picard.bam
 ```
 
+There are many different ways to assess the quality of an alignment. We are going to use one method to get a fast summary of some common alignment statistics
+```bash 
+cd /workspace/dna_alignment_lab/alignment_results
+
+samtools flagstat 2891351068_pos_sorted_mrkdup_picard.bam > 2891351068_pos_sorted_mrkdup_picard_flagstat.flagstat
+```
+
 ### Clean up un-needed sam/bam files
 
 Keep final sorted, duplicated marked, bam/bai files and mrkdup.txt files. Delete everything else.
@@ -97,6 +104,7 @@ cd /workspace/dna_alignment_lab/alignment_results
 mkdir final
 mv 2891351068_pos_sorted_mrkdup_picard.* final/
 mv *.txt final/
+mv *.flagstat
 
 rm *.sam
 rm *.bam
