@@ -40,6 +40,7 @@ cd /workspace/dna_alignment_lab/fastq_files
 
 wget http://genomedata.org/seq-tec-workshop/read_data/dna_alignment_exercise/dataset_lab/HCC1395_Exome_chr21_R1.fastq.gz
 wget http://genomedata.org/seq-tec-workshop/read_data/dna_alignment_exercise/dataset_lab/HCC1395_Exome_chr21_R2.fastq.gz
+
 ```
 ### Obtain a reference sequence
 
@@ -50,6 +51,7 @@ For convenience, we also provide a reference genome file, limited to chromosome 
 cd /workspace/dna_alignment_lab/reference_sequences 
 
 wget http://genomedata.org/seq-tec-workshop/references/human/chr21/chr21_references.fa
+
 ```
 
 ### Index reference file with bwa 
@@ -60,6 +62,7 @@ Now that we have our data, we need to create the files necessary to run an align
 cd /workspace/dna_alignment_lab/reference_sequences 
 
 bwa index chr21_references.fa
+
 ```
 
 ### Run bwa mem to create an alignment 
@@ -70,6 +73,7 @@ OK, now that we have an indexed reference sequence we are ready to create an ali
 cd /workspace/dna_alignment_lab/alignment_results
 
 bwa mem -t 8 -o /workspace/dna_alignment_lab/alignment_results/HCC1395_Exome_chr21.sam /workspace/dna_alignment_lab/reference_sequences/chr21_references.fa /workspace/dna_alignment_lab/fastq_files/HCC1395_Exome_chr21_R1.fastq.gz /workspace/dna_alignment_lab/fastq_files/HCC1395_Exome_chr21_R2.fastq.gz
+
 ```
 
 ### Convert sam to bam format
@@ -80,6 +84,7 @@ We've got an alignment! But we have several post processing steps to complete. T
 cd /workspace/dna_alignment_lab/alignment_results
 
 samtools view -@ 8 -h -b -o HCC1395_Exome_chr21.bam HCC1395_Exome_chr21.sam
+
 ```
 
 ### Query name sort bam files
@@ -90,6 +95,7 @@ Next we need to sort the reads by their read names. This is expected for the nex
 cd /workspace/dna_alignment_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=HCC1395_Exome_chr21.bam O=HCC1395_Exome_chr21_namesorted_picard.bam SO=queryname
+
 ```
 
 ### Perform duplicate marking
@@ -100,6 +106,7 @@ Next we need to mark the duplicate reads within our data. Duplicate reads are ty
 cd /workspace/dna_alignment_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar MarkDuplicates I=HCC1395_Exome_chr21_namesorted_picard.bam  O=HCC1395_Exome_chr21_namesorted_picard_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=HCC1395_Exome_chr21_mrk_dup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+
 # This command will also print out a txt file that gives you some metrics about the number of duplicates identified 
 ```
 
@@ -110,6 +117,7 @@ Next we need to position sort the bam file. Indexing requires a position-sorted 
 cd /workspace/dna_alignment_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=HCC1395_Exome_chr21_namesorted_picard_mrkdup.bam O=HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam SO=coordinate
+
 ```
 
 ### Index bam file 
@@ -120,6 +128,7 @@ In order to efficiently load and search a bam file, downstream applications typi
 cd /workspace/dna_alignment_lab/alignment_results
 
 java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam
+
 ```
 
 ### Generate a flagstat report for bam file
@@ -130,6 +139,7 @@ There are many different ways to assess the quality of an alignment. We are goin
 cd /workspace/dna_alignment_lab/alignment_results
 
 samtools flagstat HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam > HCC1395_Exome_chr21_pos_sorted_mrkdup_picard_flagstat.flagstat
+
 ```
 
 ### Clean up un-needed sam/bam files
