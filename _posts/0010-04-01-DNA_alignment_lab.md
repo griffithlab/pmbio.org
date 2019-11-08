@@ -67,19 +67,7 @@ bwa index chr21_references.fa
 
 ### Run bwa mem to create an alignment 
 
-Okay, now that we have an indexed reference sequence, we are ready to create an alignment. To make the commands a little easier to run, we've setup an environment variable to point to the Picard executable file. We've done so by adding the following line to the `~/.bashrc file`.
-
-```bash
-export PICARD=/home/ubuntu/bin/picard.jar
-```
-
-You can verify that this exists in your `~/.bashrc file` by running the following.
-
-```bash
-grep PICARD ~/.bashrc
-```
-
-Now we can align our data by running the following command.
+Okay, now that we have an indexed reference sequence, we are ready to create an alignment. 
 
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
