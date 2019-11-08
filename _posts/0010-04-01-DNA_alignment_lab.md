@@ -164,7 +164,7 @@ cd /workspace/dna_alignment_lab/alignment_results
 mkdir final
 mv HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.* final/
 mv *.txt final/
-mv *.flagstat
+mv *.flagstat final/
 
 rm *.sam
 rm *.bam
