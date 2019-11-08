@@ -80,6 +80,6 @@ Note: These datasets have been subsetted for optimized runtimes. Human data subs
 
 When teams are confident with the result they have found, please send the instructors/TAs the ip address of the instance where the aligned bam and index files are located.
 
-At the end of this exercise, teams will reveal their answer and present the pieces of supporting evidence (e.g. IGV) to the class.
+### Present Your Results
 
-###
+At the end of this exercise, teams will reveal their answer and present the pieces of supporting evidence (e.g. IGV) to the class. 
