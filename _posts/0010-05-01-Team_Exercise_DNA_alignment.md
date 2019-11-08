@@ -57,11 +57,11 @@ mkdir references references/human references/mouse
 
 # Human reference files
 cd ~/workspace/dna_alignment_exercise/references/human
-wget -c http://genomedata.org/seq-tec-workshop/references/human/chr21/*
+wget -c http://genomedata.org/seq-tec-workshop/references/human/chr22/chr22_references.fa
 
 # Mouse reference files
 cd ~/workspace/dna_alignment_exercise/references/mouse
-wget -c http://genomedata.org/seq-tec-workshop/references/mouse/chr19/*
+wget -c http://genomedata.org/seq-tec-workshop/references/mouse/chr19/chr19_references.fa
 
 ```
 
@@ -80,6 +80,6 @@ Note: These datasets have been subsetted for optimized runtimes. Human data subs
 
 When teams are confident with the result they have found, please send the instructors/TAs the ip address of the instance where the aligned bam and index files are located.
 
-At the end of this exercise, teams will reveal their answer and present the pieces of supporting evidence (e.g. IGV) to the class.
+### Present Your Results
 
-###
+At the end of this exercise, teams will reveal their answer and present the pieces of supporting evidence (e.g. IGV) to the class.
