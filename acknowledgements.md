@@ -16,6 +16,8 @@ PR informatics provides training courses and workshops in bioinformatics and ass
 
 This work would not be possible without building upon what others have contributed to the bioinformatics community. We would like to thank the authors of the bioinformatic tools and resources upon which this tutorial is based.
 
+Some of the methods/tools used in this course (e.g. pvactools and regtools) were supported by funding to Malachi Griffith from the [V Foundation for Cancer Research](https://www.jimmyv.org/).
+
 Creation of the section on Amazon AWS EC2 and the cost of student instances was generously supported by [Amazon AWS Education grants](http://aws.amazon.com/grants/).
 
 This research benefited from the use of credits from the National Institutes of Health (NIH) Cloud Credits Model Pilot, a component of the NIH Big Data to Knowledge (BD2K) program.
