@@ -85,9 +85,7 @@ Rscript macs_callpeak_model.r
 
 In an ideal case, the pdf file that it creates will look something like this, representing the bimodal pattern of the shift size.
 
-![model-macs.png](model-macs.png)
-
-<sub>(image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html)<sub>
+{% include figure.html image="/assets/module_10/model-macs.png" %}
 
 In this case, since we're using a small subset of the genome, the data is sparse and a little more choppy, but you can see the same essential shape.
 
