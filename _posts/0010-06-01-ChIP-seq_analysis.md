@@ -68,8 +68,9 @@ macs2 callpeak -t alz_H3K4me3_rep1.bam alz_H3K4me3_rep2.bam -c alz_input_rep1.ba
 MACS creates outputs in several different formats that can be useful in different contexts:
 
 - `macs_callpeak_peaks.narrowPeak` a modified bed format that includes information about the coordinates, size and significance of each peak:
+
 <img src="https://hbctraining.github.io/Intro-to-ChIPseq/img/narrowPeak.png?raw=true" alt="narrowPeak.png" width="750" />
-<sub>(image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05\_peak\_calling\_macs.html CC-N)<sub>
+(image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05\_peak\_calling\_macs.html CC-N)
 
 - `macs_callpeak_summits.bed` each peak can contain one or more "summits" that mark a local maximum. This bed file contains these locations.
 
