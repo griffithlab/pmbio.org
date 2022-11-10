@@ -68,6 +68,7 @@ MACS creates outputs in several different formats that can be useful in differen
 - `macs_callpeak_peaks.narrowPeak` a modified bed format that includes information about the coordinates, size and significance of each peak:
 
 <img src="https://hbctraining.github.io/Intro-to-ChIPseq/img/narrowPeak.png?raw=true" alt="narrowPeak.png" width="750" />
+
 (image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05\_peak\_calling\_macs.html CC-N)
 
 - `macs_callpeak_summits.bed` each peak can contain one or more "summits" that mark a local maximum. This bed file contains these locations.
