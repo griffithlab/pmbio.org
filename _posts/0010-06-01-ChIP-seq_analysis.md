@@ -15,14 +15,12 @@ This exercise uses H3K4me3 ChIPseq data from the brain tissue of a Alzheimer's d
 
 Notice that ENCODE enforces rigorous QC standards and displays that information prominently on their page. When analyzing your own ChIP-seq data, their [data quality standards](https://www.encodeproject.org/chip-seq/histone-encode4/#standards) are a great benchmark to use.  This lesson doesn't cover doing ChIP-seq QC, but it's incredibly important, given that ChIP-seq experiments are more finicky than many other sequencing approaches. There are many resources available for more information, including the excellent [Intro to ChIPseq using HPC](https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html) online course.
 
-To get started with analyzing this data, download the pre-aligned sequences in bam format:
+To get started with analyzing this data, the pre-aligned sequences (e.g. alz_H3K4me3_rep1.bam) in bam format have been pre-downloaded to your instance:
 
 ```bash
-wget alz_H3K4me3_rep1.bam
-wget alz_H3K4me3_rep2.bam
-wget alz_input_rep1.bam
-wget alz_input_rep2.bam
+cd ~/workspace/chipseq_data
 
+ls 
 ```
 
 These are small bam files that have been subset to just the first 10Mb of chr17 to speed up this analysis.
