@@ -58,7 +58,7 @@ Looks like they removed the duplicate reads already as part of their filtering p
 As your next step, go ahead and try running MACS on this data. Note that you're providing the ChIP data along with "input" data that serves as background.  Having such input data is essential to distinguishing true signal from noise.
 
 ``` bash
-docker run -v /home/ubuntu/workspace/chipseq_data:/docker_workspace fooliu/macs2 callpeak -t /docker_workspace/alz_H3K4me3_rep1.bam /docker_workspace/alz_H3K4me3_rep2.bam -c /docker_workspace/alz_input_rep1.bam /docker_workspace/alz_input_rep2.bam -f BAM --call-summits -p 0.01 -n /docker_workspace/macs_callpeak
+docker run -v /home/ubuntu/workspace/chipseq_data:/home/ubuntu/workspace/chipseq_data fooliu/macs2 callpeak -t /home/ubuntu/workspace/chipseq_data/alz_H3K4me3_rep1.bam /home/ubuntu/workspace/chipseq_data/alz_H3K4me3_rep2.bam -c /home/ubuntu/workspace/chipseq_data/alz_input_rep1.bam /home/ubuntu/workspace/chipseq_data/alz_input_rep2.bam -f BAM --call-summits -p 0.01 -n /home/ubuntu/workspace/chipseq_data/macs_callpeak
 ```
 
 ### MACS outputs
