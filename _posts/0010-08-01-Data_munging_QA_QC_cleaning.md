@@ -6,7 +6,7 @@ title: Data munging / cleaning
 categories:
     - Module-10-Appendix
 feature_image: "assets/genvis-dna-bg_optimized_v1a.png"
-date: 0010-06-01
+date: 0010-08-01
 ---
 
 Adapted from the [NCEAS dataviz module](https://nceas.github.io/oss-lessons/dataviz-and-interactive-tools/module-1-ggplot2.html) and [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html)
