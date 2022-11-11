@@ -91,10 +91,10 @@ In this case, since we're using a small subset of the genome, the data is sparse
 
 ### Manual review
 
-ChIP-seq library preparation is notoriously finicky and it's important to dig in to the raw data and really get a feel for how it looks before believing that your results are solid. IGV is great for this, but it's rather hard to load up 4 bam files to review on a laptop screen (and it certainly doesn't scale to experiments with a dozen or more samples!).  Since the essential feature that we care about with ChIP-seq is the depth, we can use a format more suited to that: bigwig. 
+ChIP-seq library preparation is notoriously finicky and it's important to dig in to the raw data and really get a feel for how it looks before believing that your results are solid. IGV is great for this, but it's rather hard to load up 4 bam files to review on a laptop screen (and it certainly doesn't scale to experiments with a dozen or more samples!).  Since the essential feature that we care about with ChIP-seq is the depth, we can use a format more suited to that: bigwig.
 
 ```bash
-bam2bw -a -r reference.fa --i $i -o $(basename $i .bam).bw
+docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bam -o /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bw
 ```
 
 A bigwig file is a compressed format that contains genomic coordinates and values associated with each. In this case, it will be depth over the entire genome.  It's important to remember that when making peak calls, MACS isn't using the raw depth, but is applying normalization to the data.  Nonetheless, this is often a reasonable way to examine the data, especially when the experiments are similar in terms of depth and quality.
