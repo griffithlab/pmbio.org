@@ -46,16 +46,16 @@ ls -1 *.bam | xargs -n 1 samtools index
 
 ### Calling peaks
 
-MACS is a package for ChIP-seq analysis that has many utilities. You can see these for yourself by running
+MACS is a package for ChIP-seq analysis that has many utilities. Instead of using a pre-installed version of this software, we will take advantage of a docker container made by the authors of the package. You can see the utilities in MACS for yourself by running-
 
 ``` bash
-macs2 --help
+docker run fooliu/macs2 --help
 ```
 
 Today, we're interested in using the `callpeak` utility to find peaks in our ChIP-seq data that correspond to H3K4me3 marks in this sample. Let's see what inputs are needed:
 
 ``` bash
-macs2 callpeak --help
+docker run fooliu/macs2 callpeak --help
 ```
 
 Woah, that's a lot of options. MACS is highly configurable, and different types of ChIP-seq experiments might require different tweaks.  Luckily for you, it has sensible defaults that will work well for the data type that you're exploring today. 
