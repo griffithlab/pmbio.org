@@ -22,7 +22,7 @@ mkdir -p ~/workspace/chipseq_data
 cd ~/workspace/chipseq_data
 ```
 
-We will use a bash script to download and organize the data for us. Bash scripts allow us to take commands we would run in a terminal and combine them together in a single script so that we can execute them easily. After downloading the script, explore it using the `less` command. 
+We will use a bash script to download and organize the data. Bash scripts allow us to take commands we would run in the command line and combine them into a single script so that we can execute them easily. After downloading the script, explore it using the `less` command. 
 
 ```bash
 wget https://raw.githubusercontent.com/ksinghal28/pmbio.org/master/assets/course_scripts/download_and_organize_chipseq_data.sh
@@ -30,6 +30,7 @@ less download_and_organize_chipseq_data.sh
 ```
 
 Now that you understand how we download the tar file containing the pre-aligned BAM files, untar it, move and clean up the contents, try running the script and use `ls` to see the contents.
+
 ```bash
 bash download_and_organize_chipseq_data.sh
 ls
