@@ -15,12 +15,24 @@ This exercise uses H3K4me3 ChIPseq data from the brain tissue of a Alzheimer's d
 
 Notice that ENCODE enforces rigorous QC standards and displays that information prominently on their page. When analyzing your own ChIP-seq data, their [data quality standards](https://www.encodeproject.org/chip-seq/histone-encode4/#standards) are a great benchmark to use.  This lesson doesn't cover doing ChIP-seq QC, but it's incredibly important, given that ChIP-seq experiments are more finicky than many other sequencing approaches. There are many resources available for more information, including the excellent [Intro to ChIPseq using HPC](https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html) online course.
 
-To get started with analyzing this data, the pre-aligned sequences (e.g. alz_H3K4me3_rep1.bam) in bam format have been pre-downloaded to your instance:
+To get started with analyzing this data, start by making a directory where we will do the analysis.
 
 ```bash
+mkdir -p ~/workspace/chipseq_data
 cd ~/workspace/chipseq_data
+```
 
-ls 
+We will use a bash script to download and organize the data for us. Bash scripts allow us to take commands we would run in a terminal and combine them together in a single script so that we can execute them easily. After downloading the script, explore it using the `less` command. 
+
+```bash
+wget https://raw.githubusercontent.com/ksinghal28/pmbio.org/master/assets/course_scripts/download_and_organize_chipseq_data.sh
+less download_and_organize_chipseq_data.sh
+```
+
+Now that you understand how we download the tar file containing the pre-aligned BAM files, untar it, move and clean up the contents, try running the script and use `ls` to see the contents.
+```bash
+bash download_and_organize_chipseq_data.sh
+ls
 ```
 
 These are small bam files that have been subset to just the first 10Mb of chr17 to speed up this analysis.
