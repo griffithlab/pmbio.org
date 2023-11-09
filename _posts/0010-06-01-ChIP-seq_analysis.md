@@ -38,10 +38,23 @@ ls
 
 These are small bam files that have been subset to just the first 10Mb of chr17 to speed up this analysis.
 
-In order for tools to access the data in these bams, you'll need to create an index file for each. Instead of running that command 4 different times, use xargs:
+In order for tools to access the data in these bams, you'll need to create an index file for each. Instead of running that command 4 different times, use xargs and then use `ls` to check if the index files were generated:
 
 ```bash
 ls -1 *.bam | xargs -n 1 samtools index
+ls
+```
+
+Neat! But how did it work?
+`ls -1` lists all files ending with the .bam extension. 
+`xargs` or 'extended arguments' allows us to build and execute commands from the standard input. Here, it helps us take the files output from `ls -1` and use that as an input to `samtools index`. The `-n 1` argument ensures that each file is considered separately.
+
+Here's a toy example comparing how xargs works for counting lines in a BAM file-
+```bash
+ls -1 *.bam | xargs -n 1 wc -l
+ls -1 *.bam | xargs -n 2 wc -l
+ls -1 *.bam | xargs -n 3 wc -l
+ls -1 *.bam | xargs -n 4 wc -l
 ```
 
 ### Calling peaks
@@ -60,7 +73,7 @@ docker run fooliu/macs2 callpeak --help
 
 Woah, that's a lot of options. MACS is highly configurable, and different types of ChIP-seq experiments might require different tweaks.  Luckily for you, it has sensible defaults that will work well for the data type that you're exploring today. 
 
-One step that's frequently done in ChIP-seq is the removal of duplicate reads. In the above MACS options, there are some for handling dups appropriately, but we need to know what we're dealing with first. Let's check this bam file for duplicate reads:
+One step that's frequently done in ChIP-seq is the removal of duplicate reads. In the MACS options below, there are some for handling dups appropriately, but we need to know what we're dealing with first. Thanks to the [Explain Sam Flags site](https://broadinstitute.github.io/picard/explain-flags.html), we know that duplicate reads have a flag of 1024 set. Let's check this bam file for duplicate reads:
 
 ``` bash
 samtools view -f 1024 alz_H3K4me3_rep1.bam | wc -l
@@ -105,9 +118,15 @@ In this case, since we're using a small subset of the genome, the data is sparse
 ### Manual review
 
 ChIP-seq library preparation is notoriously finicky and it's important to dig in to the raw data and really get a feel for how it looks before believing that your results are solid. IGV is great for this, but it's rather hard to load up 4 bam files to review on a laptop screen (and it certainly doesn't scale to experiments with a dozen or more samples!).  Since the essential feature that we care about with ChIP-seq is the depth, we can use a format more suited to that: bigwig.
-
+The command below is how you can run it on 1 BAM file, but instead of running it once for each BAM file, we can run it all together in 1 for loop!
 ```bash
+#example command
 docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bam -o /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bw
+
+for i in *.bam;do
+  echo "converting file $i"
+  docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/$i -o /docker_workspace/chipseq_data/$(basename $i .bam).bw
+done
 ```
 
 A bigwig file is a compressed format that contains genomic coordinates and values associated with each. In this case, it will be depth over the entire genome.  It's important to remember that when making peak calls, MACS isn't using the raw depth, but is applying normalization to the data.  Nonetheless, this is often a reasonable way to examine the data, especially when the experiments are similar in terms of depth and quality.
