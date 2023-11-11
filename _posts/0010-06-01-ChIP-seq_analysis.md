@@ -112,9 +112,8 @@ Rscript macs_callpeak_model.r
 
 In an ideal case, the pdf file that it creates will look something like this, representing the bimodal pattern of the shift size.
 
-[<img src="/assets/module_10/model-macs.png">]
-
-<sub>(image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html)<sub>
+<img src="https://hbctraining.github.io/Intro-to-ChIPseq/img/model-macs.png" alt="narrowPeak.png" width="450" />
+<sub>(image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html)</sub>
 
 
 In this case, since we're using a small subset of the genome, the data is sparse and a little more choppy, but you can see the same essential shape.
@@ -122,11 +121,12 @@ In this case, since we're using a small subset of the genome, the data is sparse
 ### Manual review
 
 ChIP-seq library preparation is notoriously finicky and it's important to dig into the raw data and really get a feel for how it looks before believing that your results are solid. IGV is great for this, but it's rather hard to load up 4 bam files to review on a laptop screen (and it certainly doesn't scale to experiments with a dozen or more samples!).  Since the essential feature that we care about with ChIP-seq is the read depth, we can use a format more suited to that: bigwig.
-The command below is how you can run it on 1 BAM file, but instead of running it once for each BAM file, we can run it all together in 1 for loop!
+The example command below is how you can run it on 1 BAM file, but instead of running it once for each BAM file, we can run it all together in 1 for loop!
 ```bash
 #example command
 #docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bam -o /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bw
 
+#using a for loop instead
 for i in *.bam;do
   echo "converting file $i"
   docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/$i -o /docker_workspace/chipseq_data/$(basename $i .bam).bw
