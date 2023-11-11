@@ -112,7 +112,7 @@ Rscript macs_callpeak_model.r
 
 In an ideal case, the pdf file that it creates will look something like this, representing the bimodal pattern of the shift size.
 
-![model-macs.png](model-macs.png)
+[<img src="/assets/module_10/model-macs.png">]
 
 <sub>(image from https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html)<sub>
 
