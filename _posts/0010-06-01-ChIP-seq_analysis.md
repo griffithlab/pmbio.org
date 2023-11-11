@@ -29,7 +29,8 @@ wget https://raw.githubusercontent.com/ksinghal28/pmbio.org/master/assets/course
 less download_and_organize_chipseq_data.sh
 ```
 
-Now that you understand how we download the tar file containing the pre-aligned BAM files, untar it, move and clean up the contents, try running the script and use `ls` to see the contents.
+The bash script downloads the tar file containing the pre-aligned BAM files, untars it, moves some files and cleans up the contents. 
+Try running the script and use `ls` to see the files that are generated.
 
 ```bash
 bash download_and_organize_chipseq_data.sh
@@ -38,18 +39,18 @@ ls
 
 These are small bam files that have been subset to just the first 10Mb of chr17 to speed up this analysis.
 
-In order for tools to access the data in these bams, you'll need to create an index file for each. Instead of running that command 4 different times, use xargs and then use `ls` to check if the index files were generated:
+In order for tools to access the data in these bams, you'll need to create an index file for each. Instead of running that command 4 different times, use `xargs` and then use `ls` to check if the index files were generated:
 
 ```bash
 ls -1 *.bam | xargs -n 1 samtools index
 ls
 ```
 
-Neat! But how did it work?
-`ls -1` lists all files ending with the .bam extension. 
-`xargs` or 'extended arguments' allows us to build and execute commands from the standard input. Here, it helps us take the files output from `ls -1` and use that as an input to `samtools index`. The `-n 1` argument ensures that each file is considered separately.
+Neat! But how did that work?
+`ls -1 *.bam` lists all files ending with the .bam extension, with the `-1` part ensuring they go to their own line. 
+`xargs` or 'extended arguments' allows us to build and execute commands from the standard input. Here, it helps us take the files output from `ls -1 *.bam` and use that as an input to `samtools index`. The `-n 1` argument ensures that each file is considered separately.
 
-Here's a toy example comparing how xargs works for counting lines in a BAM file-
+Here's a toy example comparing how xargs works for counting lines in a BAM file and changing the `-n` argument-
 ```bash
 ls -1 *.bam | xargs -n 1 wc -l
 ls -1 *.bam | xargs -n 2 wc -l
@@ -117,11 +118,11 @@ In this case, since we're using a small subset of the genome, the data is sparse
 
 ### Manual review
 
-ChIP-seq library preparation is notoriously finicky and it's important to dig in to the raw data and really get a feel for how it looks before believing that your results are solid. IGV is great for this, but it's rather hard to load up 4 bam files to review on a laptop screen (and it certainly doesn't scale to experiments with a dozen or more samples!).  Since the essential feature that we care about with ChIP-seq is the depth, we can use a format more suited to that: bigwig.
+ChIP-seq library preparation is notoriously finicky and it's important to dig into the raw data and really get a feel for how it looks before believing that your results are solid. IGV is great for this, but it's rather hard to load up 4 bam files to review on a laptop screen (and it certainly doesn't scale to experiments with a dozen or more samples!).  Since the essential feature that we care about with ChIP-seq is the read depth, we can use a format more suited to that: bigwig.
 The command below is how you can run it on 1 BAM file, but instead of running it once for each BAM file, we can run it all together in 1 for loop!
 ```bash
 #example command
-docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bam -o /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bw
+#docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bam -o /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bw
 
 for i in *.bam;do
   echo "converting file $i"
