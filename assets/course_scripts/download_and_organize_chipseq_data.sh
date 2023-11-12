@@ -15,7 +15,15 @@ rm -r chipseq_data
 
 # The BAM files downloaded will be restricted to the permissions set by the original file owner
 # We can reset these permissions using `chmod` so that we can download them and work with them easily.
+
+# Start by checking the correct permissions
+ls -l
+# Change the permissions using chmod
 chmod ugo+r *.bam
+# Check the modified permissions
+ls -l
+
+
 
 
 
