@@ -13,12 +13,9 @@ mv chipseq_data/* .
 # Delete the now empty chipseq_data folder
 rm -r chipseq_data
 
-# Make a directory to hold the reference
-mkdir references
-
-# Download the hg38 reference that corresponds to this data to the reference folder
-wget -O references/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta.gz "https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/@@download/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta.gz"
-
+# The BAM files downloaded will be restricted to the permissions set by the original file owner
+# We can reset these permissions using `chmod` so that we can download them and work with them easily.
+chmod ugo+r *.bam
 
 
 
