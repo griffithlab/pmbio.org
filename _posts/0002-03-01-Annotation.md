@@ -10,7 +10,7 @@ date: 0002-03-01
 ---
 
 ### Obtain Additional GATK resource files needed
-Use Google’s gsutil to download various annotation files that will be used by GATK and other resources. gsutil will be used to download these file from Google cloud storage. They could also be downloaded using wget from the course file server from here: http://genomedata.org/pmbio-workshop/references/gatk/.
+Use Google’s gsutil to download various annotation files that will be used by GATK and other resources. gsutil will be used to download these file from Google cloud storage. 
 
 ```bash
 cd /workspace/inputs/references/
