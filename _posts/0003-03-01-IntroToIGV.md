@@ -33,13 +33,13 @@ First, lets familiarize ourselves with it.
 
 #### Load a Genome and some Data Tracks
 
-By default, IGV loads Human (hg19). If you work with another version of the human genome, or another organism altogether, you can change the genome by clicking the drop down menu in the upper-left. For this lab, we will be using Human (hg19).
+By default, IGV loads Human (hg38). Our data is older, and will require you to load **Human genome build hg19**.  To change the genome, click the drop down menu in the upper-left, choose "More..." and then pick Human (hg19) to download the necessary reference. If you work with another version of the human genome, or another organism altogether, you could also download those here. 
 
 We will also load additional tracks from the IGV **Server** using (`File` -> `Load from Server...`):
 
 * Ensembl genes (or your favourite source of gene annotations)
 * GC Percentage
-* dbSNP 1.3.1 or 1.3.7
+* SNPs track from dbSNP - version 1.4.2 (or similar)
 
 **Load hg19 genome and additional data tracks**
 {% include figure.html image="/assets/IGV/load.data.tracks.png" width="450" %}
