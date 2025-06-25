@@ -33,16 +33,18 @@ First, lets familiarize ourselves with it.
 
 #### Load a Genome and some Data Tracks
 
-By default, IGV loads Human (hg38). Our data is older, and will require you to load **Human genome build hg19**.  To change the genome, click the drop down menu in the upper-left, choose "More..." and then pick Human (hg19) to download the necessary reference. If you work with another version of the human genome, or another organism altogether, you could also download those here. 
+By default, IGV loads Human (hg38). Our data is older, and will require you to load **Human genome build hg19**.  To change the genome, click the drop down menu in the upper-left, choose "More..." and then pick Human (hg19) to download the necessary reference. If you work with another version of the human genome, or another organism altogether, you could also download those here. Note: for newer version of IGV (2.19.4), to change the genome, go to `Genomes` -> `Download Hosted Genomes...` instead. 
 
 We will also load additional tracks from the IGV **Server** using (`File` -> `Load from Server...`):
 
 * Ensembl genes (or your favourite source of gene annotations)
 * GC Percentage
-* SNPs track from dbSNP - version 1.4.2 (or similar)
+* SNPs track from dbSNP - version 1.4.7 (or similar)
 
 **Load hg19 genome and additional data tracks**
 {% include figure.html image="/assets/IGV/load.data.tracks.png" width="450" %}
+Note: screenshot for IGV version 2.19.4 has an option to select 'Refseq Select'. IGV of previous versions don't have 'Refseq Select' option, but the Refseq track will be automatically loaded when you load the corresponding genome.
+
 
 #### Navigation
 
