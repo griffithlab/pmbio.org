@@ -72,7 +72,7 @@ Okay, now that we have an indexed reference sequence, we are ready to create an 
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
 
-bwa mem -t 8 -o /workspace/dna_alignment_lab/alignment_results/HCC1395_Exome_chr21.sam /workspace/dna_alignment_lab/reference_sequences/chr21_references.fa /workspace/dna_alignment_lab/fastq_files/HCC1395_Exome_chr21_R1.fastq.gz /workspace/dna_alignment_lab/fastq_files/HCC1395_Exome_chr21_R2.fastq.gz
+bwa mem -t 4 -o /workspace/dna_alignment_lab/alignment_results/HCC1395_Exome_chr21.sam /workspace/dna_alignment_lab/reference_sequences/chr21_references.fa /workspace/dna_alignment_lab/fastq_files/HCC1395_Exome_chr21_R1.fastq.gz /workspace/dna_alignment_lab/fastq_files/HCC1395_Exome_chr21_R2.fastq.gz
 
 ```
 
@@ -83,7 +83,7 @@ We've got an alignment! But we have several post-processing steps to complete. T
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
 
-samtools view -@ 8 -h -b -o HCC1395_Exome_chr21.bam HCC1395_Exome_chr21.sam
+samtools view -@ 4 -h -b -o HCC1395_Exome_chr21.bam HCC1395_Exome_chr21.sam
 
 ```
 
@@ -94,7 +94,7 @@ Next we need to sort the reads by their read names. This is expected for the nex
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
 
-java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=HCC1395_Exome_chr21.bam O=HCC1395_Exome_chr21_namesorted_picard.bam SO=queryname
+java -Xmx12g -jar /home/ubuntu/bin/picard.jar SortSam I=HCC1395_Exome_chr21.bam O=HCC1395_Exome_chr21_namesorted_picard.bam SO=queryname
 
 ```
 
@@ -105,7 +105,7 @@ Next we need to mark the duplicate reads within our data. Duplicate reads are ty
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
 
-java -Xmx60g -jar /home/ubuntu/bin/picard.jar MarkDuplicates I=HCC1395_Exome_chr21_namesorted_picard.bam  O=HCC1395_Exome_chr21_namesorted_picard_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=HCC1395_Exome_chr21_mrk_dup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+java -Xmx12g -jar /home/ubuntu/bin/picard.jar MarkDuplicates I=HCC1395_Exome_chr21_namesorted_picard.bam  O=HCC1395_Exome_chr21_namesorted_picard_mrkdup.bam ASSUME_SORT_ORDER=queryname METRICS_FILE=HCC1395_Exome_chr21_mrk_dup_metrics.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 
 # This command will also print out a txt file that gives you some metrics about the number of duplicates identified 
 ```
@@ -116,7 +116,7 @@ Next we need to position sort the bam file. Indexing requires a position-sorted 
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
 
-java -Xmx60g -jar /home/ubuntu/bin/picard.jar SortSam I=HCC1395_Exome_chr21_namesorted_picard_mrkdup.bam O=HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam SO=coordinate
+java -Xmx12g -jar /home/ubuntu/bin/picard.jar SortSam I=HCC1395_Exome_chr21_namesorted_picard_mrkdup.bam O=HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam SO=coordinate
 
 ```
 
@@ -127,7 +127,7 @@ In order to efficiently load and search a bam file, downstream applications typi
 ```bash
 cd /workspace/dna_alignment_lab/alignment_results
 
-java -Xmx60g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam
+java -Xmx12g -jar /home/ubuntu/bin/picard.jar BuildBamIndex I=HCC1395_Exome_chr21_pos_sorted_mrkdup_picard.bam
 
 ```
 
