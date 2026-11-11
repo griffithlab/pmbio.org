@@ -22,8 +22,10 @@ Java is necessary to run IGV, you can download the java runtime environment (JRE
 ### Data Set for IGV
 We will be using publicly available Illumina sequence data from the HCC1143 cell line. The HCC1143 cell line was generated from a 52 year old caucasian woman with breast cancer. Additional information on this cell line can be found [here](http://www.atcc.org/products/all/CRL-2321.aspx): (tumor, TNM stage IIA, grade 3, primary ductal carcinoma) and [HCC1143/BL](http://www.atcc.org/products/all/CRL-2362.aspx) (matched normal EBV transformed lymphoblast cell line). Reads within these cell lines have been filtered to Chromosome 21: 19,000,000-20,000,000 in order to reduce file sizes.
 
-* [HCC1143.normal.21.19M-20M.bam](http://genomedata.org/gen-viz-workshop/IGV/HCC1143.normal.21.19M-20M.bam)
-* [HCC1143.normal.21.19M-20M.bam.bai](http://genomedata.org/gen-viz-workshop/IGV/HCC1143.normal.21.19M-20M.bam.bai)
+
+* [HCC1143.normal.21.19M-20M.bam](https://rnabio.org/assets/module_2/HCC1143.normal.21.19M-20M.bam)
+* [HCC1143.normal.21.19M-20M.bam.bai](https://rnabio.org/assets/module_2/HCC1143.normal.21.19M-20M.bam.bai)
+
 
 ### Visualization Part 1: Getting familiar with IGV
 
