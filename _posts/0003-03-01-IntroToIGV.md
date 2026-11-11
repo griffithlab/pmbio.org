@@ -172,6 +172,7 @@ Navigate to position `chr21:19,611,925-19,631,555`. Note that the range contains
 * Use `Collapsed` view
 * Use `Color alignments by` -> `insert size and pair orientation`
 * See concordance of coverage with GC content
+* Extremely low or high GC content can introduce biases during library preparation, PCR amplification, or sequencing, potentially resulting in reduced coverage.
 
 {% include figure.html image="/assets/IGV/example3.png" width="750" %}
 
@@ -188,6 +189,8 @@ Navigate to region `chr21:19,666,833-19,667,007`
 
 **Note:**
 * There is no linkage between alleles for these two SNPs because reads covering both only contain one or the other
+* In cis: Both alternative alleles are on the same chromosome copy, leaving the other copy unaffected at these positions.
+* In trans: The alternative alleles are on different chromosome copies, potentially affecting both copies of a gene if the variants are damaging.
 
 #### Low mapping quality
 
@@ -230,6 +233,7 @@ Navigate to region `chr21:19,102,154-19,103,108`
 * This is a position where AluY element causes mis-alignment.
 * Misaligned reads have mismatches to the reference and well-aligned reads have partners on other chromosomes where additional ALuY elements are encoded.
 * Zoom out until you can clearly see the contrast between the difficult alignment region (corresponding to an AluY) and regions with clean alignments on either side
+* Alu elements are a family of SINEs (Short Interspersed Nuclear Elements). Their highly similar sequences across the genome can cause reads to map ambiguously or incorrectly.
 
 #### Translocation
 
@@ -247,6 +251,7 @@ Navigate to region `chr21:19,089,694-19,095,362`
 * Read pairs in RL pattern (instead of LR pattern)
 * Region is flanked by reads with poor mapping quality (white instead of grey)
 * Presence of reads with pairs on other chromosomes (coloured reads at the bottom when scrolling down)
+* L (Left) and R (Right) describe the orientation of paired-end reads. LR indicates the expected inward-facing orientation (→ ←), while RL indicates an outward-facing orientation (← →), which may suggest a structural rearrangement.
 
 ### Visualization Part 3: Automating Tasks in IGV
 
