@@ -256,8 +256,10 @@ We can use the Tools menu to invoke running a batch script. Batch scripts are de
 * We also need to provide sample attribute file as described here: [http://software.broadinstitute.org/software/igv/DisplayOptionsAttributes](http://software.broadinstitute.org/software/igv/DisplayOptionsAttributes)
 
 Download the batch script and the attribute file for our dataset:
-* Batch script: [Run_batch_IGV_snapshots.txt](http://genomedata.org/gen-viz-workshop/IGV/Run_batch_IGV_snapshots.txt)
-* Attribute file: [Igv_HCC1143_attributes.txt](http://genomedata.org/gen-viz-workshop/IGV/Igv_HCC1143_attributes.txt)
+
+* Batch script: [Run_batch_IGV_snapshots.txt](https://github.com/griffithlab/rnabio.org/raw/master/assets/scripts/Run_batch_IGV_snapshots.txt)
+* Attribute file: [Igv_HCC1143_attributes.txt](https://github.com/griffithlab/rnabio.org/raw/master/assets/scripts/Igv_HCC1143_attributes.txt)
+
 
 Now run the file from the `Tools` menu:
 
