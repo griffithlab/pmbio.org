@@ -51,7 +51,6 @@ We will also load the following tracks individually using `File` -> `Load from U
 
 **Load hg19 genome and additional data tracks**
 {% include figure.html image="/assets/IGV/load.data.tracks.igv2.19.8.png" width="650" %}
-Note: screenshot for IGV version 2.19.8 has an option to select 'Refseq Select'. IGV of previous versions don't have 'Refseq Select' option, but the Refseq track will be automatically loaded when you load the corresponding genome.
 
 
 #### Navigation
