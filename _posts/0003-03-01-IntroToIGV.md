@@ -33,17 +33,23 @@ First, lets familiarize ourselves with it.
 
 #### Load a Genome and some Data Tracks
 
-By default, IGV loads Human (hg38). Our data is older, and will require you to load **Human genome build hg19**.  To change the genome, click the drop down menu in the upper-left, choose "More..." and then pick Human (hg19) to download the necessary reference. If you work with another version of the human genome, or another organism altogether, you could also download those here. Note: for newer version of IGV (2.19.4), to change the genome, go to `Genomes` -> `Download Hosted Genomes...` instead. 
+By default, IGV loads Human (hg38). Our data is older, and will require you to load **Human genome build hg19**.  To change the genome, click the drop down menu in the upper-left, choose "More..." and then pick Human (hg19) to download the necessary reference. If you work with another version of the human genome, or another organism altogether, you could also download those here. Note: for newer version of IGV (2.19.8), to change the genome, go to `Genomes` -> `Download Hosted Genomes...` instead. 
 
-We will also load additional tracks from the IGV **Server** using (`File` -> `Load from Server...`):
+We will first load additional annotation tracks from the IGV server using `File` -> `Load from Server...`:
 
-* Ensembl genes (or your favourite source of gene annotations)
-* GC Percentage
-* SNPs track from dbSNP - version 1.4.7 (or similar)
+* GENCODE v47lift37 (or your preferred source of gene annotations)
+* dbSNP Common SNPs
+
+We will also load the following tracks individually using `File` -> `Load from URL...`:
+
+* GC Percentage: `https://hgdownload-test.gi.ucsc.edu/goldenPath/hg19/bigZips/hg19.gc5Base.bw`
+* hg19 Repeat Annotations: `https://jbrowse.org/genomes/hg19/repeats.bb`
+
+
 
 **Load hg19 genome and additional data tracks**
-{% include figure.html image="/assets/IGV/load.data.tracks.png" width="450" %}
-Note: screenshot for IGV version 2.19.4 has an option to select 'Refseq Select'. IGV of previous versions don't have 'Refseq Select' option, but the Refseq track will be automatically loaded when you load the corresponding genome.
+{% include figure.html image="/assets/IGV/load.data.tracks.igv2.19.8.png" width="650" %}
+Note: screenshot for IGV version 2.19.8 has an option to select 'Refseq Select'. IGV of previous versions don't have 'Refseq Select' option, but the Refseq track will be automatically loaded when you load the corresponding genome.
 
 
 #### Navigation
@@ -154,7 +160,7 @@ Navigate to position `chr21:19,518,412-19,518,497`
 **Notes:**
 * The alt allele is either a deletion or insertion of one or two `T`s
 * The remaining bases are mismatched, because the alignment is now out of sync
-* The dpSNP entry at this location (rs74604068) is an A->T, and in all likelihood an artifact
+* The dbSNP entry at this location (rs74604068) is an A->T, and in all likelihood an artifact
 * i.e. the common variants from dbSNP include some cases that are actually common misalignments caused by repeats
 
 ## Coverage by GC
@@ -164,7 +170,6 @@ Navigate to position `chr21:19,611,925-19,631,555`. Note that the range contains
 **Example 3**
 * Use `Collapsed` view
 * Use `Color alignments by` -> `insert size and pair orientation`
-* Load GC track
 * See concordance of coverage with GC content
 
 {% include figure.html image="/assets/IGV/example3.png" width="750" %}
@@ -186,16 +191,15 @@ Navigate to region `chr21:19,666,833-19,667,007`
 #### Low mapping quality
 
 Navigate to region `chr21:19,800,320-19,818,162`
-* Load repeat track (`File` -> `Load from server...`)
-
-**Load repeats**<br>
-{% include figure.html image="/assets/IGV/load_repeats.png" width="450" %}
 
 **Example 5**
 {% include figure.html image="/assets/IGV/example5.png" width="750" %}
 
 **Notes:**
-* Mapping quality plunges in all reads (white instead of grey).  Once we load repeat elements, we see that there are two LINE elements that cause this.
+* Mapping quality drops substantially in this region (reads appear white rather than grey), suggesting that the reads cannot be mapped confidently to a unique genomic location.
+* Repetitive elements can cause ambiguous alignments because similar sequences occur at multiple genomic locations.
+* LINEs (Long Interspersed Nuclear Elements) are a major class of repetitive DNA. LINE-1 (L1) includes subfamilies such as L1PA and L1HS.
+* Examine the repeat annotation track to determine whether the low-mapping-quality region overlaps LINE elements.
 
 #### Homozygous deletion
 
