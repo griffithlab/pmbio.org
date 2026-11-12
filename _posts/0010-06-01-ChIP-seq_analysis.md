@@ -11,7 +11,11 @@ date: 0010-06-01
 
 # ChIP-seq analysis
 
-This exercise uses H3K4me3 ChIPseq data from the brain tissue of a Alzheimer's disease patient that was produced by the ENCODE consortium (accession [ENCBS748EGF](https://www.encodeproject.org/biosamples/ENCBS748EGF/)) First, click through to that ENCODE page and compare it to another H3K4me3 experiment on the portal: [ENCSR539TKY](https://www.encodeproject.org/experiments/ENCSR539TKY/)
+This exercise uses H3K4me3 ChIP-seq data from brain tissue of a patient with Alzheimer's disease, provided by the ENCODE consortium.
+
+First, explore the [ENCODE biosample page (ENCBS748EGF)](https://www.encodeproject.org/biosamples/ENCBS748EGF/) to see the tissue type, disease status, and donor information.
+
+You can also explore the associated [H3K4me3 ChIP-seq experiment (ENCSR252TQC)](https://www.encodeproject.org/experiments/ENCSR252TQC/) to learn about the experimental design and available sequencing files.
 
 Notice that ENCODE enforces rigorous QC standards and displays that information prominently on their page. When analyzing your own ChIP-seq data, their [data quality standards](https://www.encodeproject.org/chip-seq/histone-encode4/#standards) are a great benchmark to use.  This lesson doesn't cover doing ChIP-seq QC, but it's incredibly important, given that ChIP-seq experiments are more finicky than many other sequencing approaches. There are many resources available for more information, including the excellent [Intro to ChIPseq using HPC](https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html) online course.
 
