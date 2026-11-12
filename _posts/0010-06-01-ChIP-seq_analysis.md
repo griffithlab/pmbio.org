@@ -191,7 +191,7 @@ A bigwig file is a compressed format that contains genomic coordinates and value
 - This is an exceptionally clean experiment and the peaks generally look great, but in less clear cases, you might want to do additional filtering.  To adjust the stringency of these calls, go back to the narrowPeaks file and filter it to only include calls that exceed a -log10(pvalue) of 10.  Here's an example of using awk to filter a tab-separated file on the first column of a file - adapt it to your needs.
 
 ```bash
-awk '{if($1>5){print $0}}' infile >outfile'
+awk '$8 > 10' macs_callpeak_peaks.narrowPeak > filtered_peaks.narrowPeak
 ```
 
 - Save the result as another narrowPeaks file and load it in IGV. 
