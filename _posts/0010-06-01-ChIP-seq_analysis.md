@@ -89,8 +89,31 @@ Looks like they removed the duplicate reads already as part of their filtering p
 As your next step, go ahead and try running MACS on this data. Note that you're providing the ChIP data along with "input" data that serves as background.  Having such input data is essential to distinguishing true signal from noise.
 
 ``` bash
-docker run -v /home/ubuntu/workspace/chipseq_data:/home/ubuntu/workspace/chipseq_data fooliu/macs2 callpeak -t /home/ubuntu/workspace/chipseq_data/alz_H3K4me3_rep1.bam /home/ubuntu/workspace/chipseq_data/alz_H3K4me3_rep2.bam -c /home/ubuntu/workspace/chipseq_data/alz_input_rep1.bam /home/ubuntu/workspace/chipseq_data/alz_input_rep2.bam -f BAM --call-summits -p 0.01 -n /home/ubuntu/workspace/chipseq_data/macs_callpeak
+docker run \
+  -v /home/ubuntu/workspace/chipseq_data:/home/ubuntu/workspace/chipseq_data \
+  fooliu/macs2 callpeak \
+  -t /home/ubuntu/workspace/chipseq_data/alz_H3K4me3_rep1.bam \
+     /home/ubuntu/workspace/chipseq_data/alz_H3K4me3_rep2.bam \
+  -c /home/ubuntu/workspace/chipseq_data/alz_input_rep1.bam \
+     /home/ubuntu/workspace/chipseq_data/alz_input_rep2.bam \
+  -f BAM \
+  --call-summits \
+  -p 0.01 \
+  -n /home/ubuntu/workspace/chipseq_data/macs_callpeak
 ```
+
+| Argument                      | Description                                                                  |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| `docker run`                  | Run MACS2 inside a Docker container.                                         |
+| `-v host_path:container_path` | Mount the local directory so Docker can access input files and save outputs. |
+| `fooliu/macs2`                | Docker image containing MACS2.                                               |
+| `callpeak`                    | Identify enriched genomic regions (peaks).                                   |
+| `-t`                          | Two H3K4me3 BAM files, combined as treatment.                                |
+| `-c`                          | Two input DNA BAM files, combined as background controls.                    |
+| `-f BAM`                      | Specify BAM input format.                                                    |
+| `--call-summits`              | Identify local signal maxima within peaks.                                   |
+| `-p 0.01`                     | Set the p-value cutoff to 0.01.                                              |
+| `-n`                          | Specify the output file prefix and directory.                                |
 
 ### MACS outputs
 
