@@ -153,12 +153,25 @@ The example command below is how you can run it on 1 BAM file, but instead of ru
 #example command
 #docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bam -o /docker_workspace/chipseq_data/alz_H3K4me3_rep1.bw
 
-#using a for loop instead
-for i in *.bam;do
+# Using a for loop to convert BAM files to bigWig
+for i in *.bam; do
   echo "converting file $i"
-  docker run -v /home/ubuntu/workspace:/docker_workspace quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw -a -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz -i /docker_workspace/chipseq_data/$i -o /docker_workspace/chipseq_data/$(basename $i .bam).bw
+
+  docker run \
+    -v /home/ubuntu/workspace:/docker_workspace \
+    quay.io/wtsicgp/cgpbigwig:1.6.0 bam2bw \
+    -a \
+    -r /docker_workspace/ensembl-vep/homo_sapiens/108_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz \
+    -i /docker_workspace/chipseq_data/$i \
+    -o /docker_workspace/chipseq_data/$(basename $i .bam).bw
 done
 ```
+| Argument | Description                                       |
+| -------- | ------------------------------------------------- |
+| `-a`     | Enable generation of an autosomal coverage track. |
+| `-r`     | Specify the reference genome FASTA file.          |
+| `-i`     | Specify the input BAM file.                       |
+| `-o`     | Specify the output bigWig file.                   |
 
 A bigwig file is a compressed format that contains genomic coordinates and values associated with each. In this case, it will be depth over the entire genome.  It's important to remember that when making peak calls, MACS isn't using the raw depth, but is applying normalization to the data.  Nonetheless, this is often a reasonable way to examine the data, especially when the experiments are similar in terms of depth and quality.
 
