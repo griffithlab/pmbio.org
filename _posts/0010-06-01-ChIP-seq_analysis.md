@@ -166,12 +166,14 @@ for i in *.bam; do
     -o /docker_workspace/chipseq_data/$(basename $i .bam).bw
 done
 ```
-| Argument | Description                                       |
-| -------- | ------------------------------------------------- |
-| `-a`     | Enable generation of an autosomal coverage track. |
-| `-r`     | Specify the reference genome FASTA file.          |
-| `-i`     | Specify the input BAM file.                       |
-| `-o`     | Specify the output bigWig file.                   |
+
+| Argument | Description |
+|---|---|
+| `-a` | Enable generation of an autosomal coverage track. |
+| `-r` | Specify the reference genome FASTA file. |
+| `-i` | Specify the input BAM file. |
+| `-o` | Specify the output bigWig file. |
+
 
 A bigwig file is a compressed format that contains genomic coordinates and values associated with each. In this case, it will be depth over the entire genome.  It's important to remember that when making peak calls, MACS isn't using the raw depth, but is applying normalization to the data.  Nonetheless, this is often a reasonable way to examine the data, especially when the experiments are similar in terms of depth and quality.
 
